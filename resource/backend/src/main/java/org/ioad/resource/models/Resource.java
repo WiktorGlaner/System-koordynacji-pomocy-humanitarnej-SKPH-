@@ -1,11 +1,16 @@
 package org.ioad.resource.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
 
 @Entity
-@Table
+@Table(name = "resources")
+@DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("RESOURCE")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Resource {
     @Id
     @SequenceGenerator(
@@ -30,14 +35,15 @@ public class Resource {
     @Column(nullable = false, updatable = false)
     private String unit;
     @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDate addedDate;
     private Long organisationId;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ResourceStatus status;
+    private ResourceStatus status = ResourceStatus.AVAILABLE;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
-    private ResourceType type;
+    private ResourceType resourceType;
 
     public Long getId() {
         return id;
@@ -88,17 +94,11 @@ public class Resource {
         this.status = status;
     }
 
-    public ResourceType getType() {
-        return type;
+    public ResourceType getResourceType() {
+        return resourceType;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        addedDate = LocalDate.now();
-        status = ResourceStatus.AVAILABLE;
-    }
-
-    public Resource(Long id, String name, String location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType type) {
+    public Resource(Long id, String name, String location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType resourceType) {
         this.id = id;
         this.name = name;
         this.location = location;
@@ -106,20 +106,22 @@ public class Resource {
         this.quantity = quantity;
         this.unit = unit;
         this.organisationId = organisationId;
-        this.type = type;
+        this.resourceType = resourceType;
+        status = ResourceStatus.AVAILABLE;
     }
 
     public Resource() {
     }
 
-    public Resource(String name, String location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType type) {
+    public Resource(String name, String location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType resourceType) {
         this.name = name;
         this.location = location;
         this.expDate = expDate;
         this.quantity = quantity;
         this.unit = unit;
         this.organisationId = organisationId;
-        this.type = type;
+        this.resourceType = resourceType;
+        status = ResourceStatus.AVAILABLE;
     }
 
     public void restoreResource() {
@@ -127,10 +129,14 @@ public class Resource {
     }
 
     public void outOfComission() {
-        this.setStatus(ResourceStatus.EXPIRED);
+        this.setStatus(ResourceStatus.UNAVAILABLE);
     }
 
     public boolean isExpired() {
-        return this.getStatus() == ResourceStatus.EXPIRED;
+        boolean isExpired = this.getExpDate().isBefore(LocalDate.now());
+        if (isExpired) {
+            this.setStatus(ResourceStatus.EXPIRED);
+        }
+        return isExpired;
     }
 }

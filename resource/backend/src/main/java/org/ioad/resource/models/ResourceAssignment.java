@@ -31,4 +31,42 @@ public class ResourceAssignment {
 
     @Column(nullable = false, updatable = false)
     private LocalDate assignmentDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Resource getResource() {
+        return resource;
+    }
+
+    public Long getRequestId() {
+        return requestId;
+    }
+
+    public double getAssignedQuantity() {
+        return assignedQuantity;
+    }
+
+    public LocalDate getAssignmentDate() {
+        return assignmentDate;
+    }
+
+    public ResourceAssignment(Long id, Resource resource, Long requestId, double assignedQuantity) {
+        this.id = id;
+        this.resource = resource;
+        this.requestId = requestId;
+        this.assignedQuantity = assignedQuantity;
+        this.assignmentDate = LocalDate.now();
+    }
+
+    public ResourceAssignment() {
+    }
+
+    public ResourceAssignment(Resource resource, Long requestId, double assignedQuantity) {
+        this.resource = resource;
+        this.requestId = requestId;
+        this.assignedQuantity = assignedQuantity;
+        this.assignmentDate = LocalDate.now();
+    }
 }
