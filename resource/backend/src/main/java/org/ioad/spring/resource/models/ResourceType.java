@@ -1,4 +1,4 @@
-package org.ioad.resource.models;
+package org.ioad.spring.resource.models;
 
 public enum ResourceType {
     FOOD,

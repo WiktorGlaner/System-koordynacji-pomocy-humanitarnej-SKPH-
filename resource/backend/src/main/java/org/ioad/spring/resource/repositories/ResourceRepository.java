@@ -1,6 +1,9 @@
-package org.ioad.resource.repositories;
+package org.ioad.spring.resource.repositories;
 
-import org.ioad.resource.models.*;
+import org.ioad.spring.resource.models.Donation;
+import org.ioad.spring.resource.models.Resource;
+import org.ioad.spring.resource.models.ResourceStatus;
+import org.ioad.spring.resource.models.ResourceType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,7 +21,7 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
         @Query("SELECT d FROM Donation d")
         List<Donation> findAllDonation();
 
-        List<Resource> getByResourceType(@Param("resourceType")ResourceType resourceType);
+        List<Resource> getByResourceType(@Param("resourceType") ResourceType resourceType);
 
         @Query("SELECT d FROM Donation d WHERE d.resourceType = :resourceType")
         List<Donation> getByDonationType(@Param("resourceType")ResourceType resourceType);

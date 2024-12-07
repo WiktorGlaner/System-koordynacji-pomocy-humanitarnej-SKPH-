@@ -1,4 +1,4 @@
-package org.ioad.resource.models;
+package org.ioad.spring.resource.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;

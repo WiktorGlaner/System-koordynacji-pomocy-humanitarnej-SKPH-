@@ -1,13 +1,13 @@
-package org.ioad.resource;
+package org.ioad.spring.resource;
 
-import org.ioad.resource.exceptions.InsufficientResourceException;
-import org.ioad.resource.exceptions.ResourceAssignmentNotFound;
-import org.ioad.resource.exceptions.ResourceExpiredError;
-import org.ioad.resource.exceptions.ResourceNotFound;
-import org.ioad.resource.models.*;
-import org.ioad.resource.repositories.ResourceAssignmentRepository;
-import org.ioad.resource.repositories.ResourceRepository;
-import org.ioad.resource.services.ResourceService;
+import org.ioad.spring.resource.exceptions.InsufficientResourceException;
+import org.ioad.spring.resource.exceptions.ResourceAssignmentNotFound;
+import org.ioad.spring.resource.exceptions.ResourceExpiredError;
+import org.ioad.spring.resource.exceptions.ResourceNotFound;
+import org.ioad.spring.resource.models.*;
+import org.ioad.spring.resource.repositories.ResourceAssignmentRepository;
+import org.ioad.spring.resource.repositories.ResourceRepository;
+import org.ioad.spring.resource.services.ResourceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

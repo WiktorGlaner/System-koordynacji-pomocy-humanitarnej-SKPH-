@@ -1,6 +1,6 @@
-package org.ioad.resource.services;
+package org.ioad.spring.resource.services;
 
-import org.ioad.resource.models.*;
+import org.ioad.spring.resource.models.*;
 
 import java.util.List;
 

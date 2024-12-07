@@ -1,10 +1,10 @@
-package org.ioad.resource.services;
+package org.ioad.spring.resource.services;
 
 import jakarta.transaction.Transactional;
-import org.ioad.resource.exceptions.*;
-import org.ioad.resource.models.*;
-import org.ioad.resource.repositories.ResourceAssignmentRepository;
-import org.ioad.resource.repositories.ResourceRepository;
+import org.ioad.spring.resource.exceptions.*;
+import org.ioad.spring.resource.models.*;
+import org.ioad.spring.resource.repositories.ResourceAssignmentRepository;
+import org.ioad.spring.resource.repositories.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

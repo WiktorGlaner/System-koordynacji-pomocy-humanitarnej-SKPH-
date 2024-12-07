@@ -1,8 +1,8 @@
-package org.ioad.resource;
+package org.ioad.spring.resource;
 
-import org.ioad.resource.models.Resource;
-import org.ioad.resource.models.ResourceType;
-import org.ioad.resource.repositories.ResourceRepository;
+import org.ioad.spring.resource.models.Resource;
+import org.ioad.spring.resource.models.ResourceType;
+import org.ioad.spring.resource.repositories.ResourceRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

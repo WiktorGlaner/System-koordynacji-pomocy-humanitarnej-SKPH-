@@ -1,7 +1,7 @@
-package org.ioad.resource.controllers;
+package org.ioad.spring.resource.controllers;
 
-import org.ioad.resource.models.*;
-import org.ioad.resource.services.ResourceService;
+import org.ioad.spring.resource.models.*;
+import org.ioad.spring.resource.services.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

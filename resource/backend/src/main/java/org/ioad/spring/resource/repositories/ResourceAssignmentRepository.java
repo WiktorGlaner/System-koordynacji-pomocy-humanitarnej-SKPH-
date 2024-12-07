@@ -1,5 +1,5 @@
-package org.ioad.resource.repositories;
-import org.ioad.resource.models.ResourceAssignment;
+package org.ioad.spring.resource.repositories;
+import org.ioad.spring.resource.models.ResourceAssignment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

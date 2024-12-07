@@ -1,4 +1,4 @@
-package org.ioad.resource;
+package org.ioad.spring.resource;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

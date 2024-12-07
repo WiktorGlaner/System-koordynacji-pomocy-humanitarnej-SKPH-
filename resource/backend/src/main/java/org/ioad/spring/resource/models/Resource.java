@@ -1,8 +1,7 @@
-package org.ioad.resource.models;
+package org.ioad.spring.resource.models;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
 

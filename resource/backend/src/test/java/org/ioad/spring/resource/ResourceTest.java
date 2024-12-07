@@ -1,8 +1,8 @@
-package org.ioad.resource;
+package org.ioad.spring.resource;
 
-import org.ioad.resource.models.Resource;
-import org.ioad.resource.models.ResourceStatus;
-import org.ioad.resource.models.ResourceType;
+import org.ioad.spring.resource.models.Resource;
+import org.ioad.spring.resource.models.ResourceStatus;
+import org.ioad.spring.resource.models.ResourceType;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
