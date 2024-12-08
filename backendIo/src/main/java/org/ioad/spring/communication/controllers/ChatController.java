@@ -1,6 +1,6 @@
-package org.ioad.spring.security.postgresql.controllers;
+package org.ioad.spring.communication.controllers;
 
-import org.ioad.spring.security.postgresql.communication.ChatMessage;
+import org.ioad.spring.communication.models.ChatMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;

@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.websocket;
+package org.ioad.spring.communication.websocket;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

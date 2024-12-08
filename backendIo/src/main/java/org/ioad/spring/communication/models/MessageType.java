@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.communication;
+package org.ioad.spring.communication.models;
 
 public enum MessageType {
 

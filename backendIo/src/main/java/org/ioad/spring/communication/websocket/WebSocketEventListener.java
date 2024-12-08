@@ -1,10 +1,9 @@
-package org.ioad.spring.security.postgresql.websocket;
+package org.ioad.spring.communication.websocket;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
-import org.ioad.spring.security.postgresql.communication.ChatMessage;
-import org.ioad.spring.security.postgresql.communication.MessageType;
+import org.ioad.spring.communication.models.ChatMessage;
+import org.ioad.spring.communication.models.MessageType;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
