@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.security;
+package org.ioad.spring.security.postgresql.security;//package org.ioad.spring.security.postgresql.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -43,15 +43,15 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 //    authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 //  }
 
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+  @Bean
+  public DaoAuthenticationProvider authenticationProvider() {
+      DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+      authProvider.setUserDetailsService(userDetailsService);
+      authProvider.setPasswordEncoder(passwordEncoder());
 
-        return authProvider;
-    }
+      return authProvider;
+  }
 
 //  @Bean
 //  @Override

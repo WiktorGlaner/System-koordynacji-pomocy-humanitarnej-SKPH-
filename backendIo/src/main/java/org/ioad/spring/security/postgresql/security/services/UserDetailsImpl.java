@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.security.services;
+package org.ioad.spring.security.postgresql.security.services;//package org.ioad.spring.security.postgresql.security.services;
 
 import java.util.Collection;
 import java.util.List;
@@ -40,10 +40,10 @@ public class UserDetailsImpl implements UserDetails {
                                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                                .collect(Collectors.toList());
 
-    return new UserDetailsImpl(user.getId(), 
-                               user.getUsername(), 
+    return new UserDetailsImpl(user.getId(),
+                               user.getUsername(),
                                user.getEmail(),
-                               user.getPassword(), 
+                               user.getPassword(),
                                authorities);
   }
 

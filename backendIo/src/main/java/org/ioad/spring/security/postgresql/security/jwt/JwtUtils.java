@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.security.jwt;
+package org.ioad.spring.security.postgresql.security.jwt;//package org.ioad.spring.security.postgresql.security.jwt;
 
 import java.security.Key;
 import java.util.Date;
@@ -35,7 +35,7 @@ public class JwtUtils {
         .signWith(key(), SignatureAlgorithm.HS256)
         .compact();
   }
-  
+
   private Key key() {
     return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
   }
