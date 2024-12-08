@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-expand navbar-dark bg-dark">
-      <a href="/" class="navbar-brand">bezKoder</a>
+      <a href="/" class="navbar-brand">SKPH</a>
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
           <router-link to="/home" class="nav-link">
@@ -16,6 +16,12 @@
         </li>
         <li class="nav-item">
           <router-link v-if="currentUser" to="/user" class="nav-link">User</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/communication" class="nav-link">Chat</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/map" class="nav-link">Map</router-link>
         </li>
       </div>
 

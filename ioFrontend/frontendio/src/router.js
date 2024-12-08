@@ -7,6 +7,9 @@ const Profile = () => import("./components/Profile.vue")
 const BoardAdmin = () => import("./components/BoardAdmin.vue")
 const BoardModerator = () => import("./components/BoardModerator.vue")
 const BoardUser = () => import("./components/BoardUser.vue")
+const Communcation = () => import("./components/Communication.vue")
+const Map = () => import("./components/Map.vue")
+
 
 const routes = [
   {
@@ -25,6 +28,18 @@ const routes = [
   {
     path: "/register",
     component: Register,
+  },
+  {
+    path: "/communication",
+    name: "communication",
+    // lazy-loaded
+    component: Communcation,
+  },
+  {
+    path: "/map",
+    name: "map",
+    // lazy-loaded
+    component: Map,
   },
   {
     path: "/profile",
