@@ -58,6 +58,7 @@ public class ResourceService implements IResourceService {
     }
 
     @Transactional
+    @Override
     public void modifyResource(Long resourceId, String location, Long organisationId, ResourceStatus status) {
         Resource resource = resourceRepository.findById(resourceId).orElseThrow(
                 () -> new ResourceNotFound("resource with " + resourceId + " does not exist"));
@@ -83,6 +84,12 @@ public class ResourceService implements IResourceService {
     @Override
     public List<Resource> getResourceByType(ResourceType resourceType) {
         return resourceRepository.getByResourceType(resourceType);
+    }
+
+    @Override
+    public Resource getResourceById(Long resourceId) {
+        return resourceRepository.findById(resourceId)
+                .orElseThrow(() -> new ResourceNotFound("Resource not found with id: " + resourceId));
     }
 
     @Override
@@ -142,6 +149,7 @@ public class ResourceService implements IResourceService {
         resourceAssignmentRepository.deleteById(assignmentId);
     }
 
+    @Override
     public List<Donation> getByDonationDonorId(Long donorId) {
         return resourceRepository.getByDonationDonorId(donorId);
     }

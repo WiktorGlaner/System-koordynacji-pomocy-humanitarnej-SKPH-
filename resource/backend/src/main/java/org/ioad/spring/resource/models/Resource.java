@@ -106,7 +106,6 @@ public class Resource {
         this.unit = unit;
         this.organisationId = organisationId;
         this.resourceType = resourceType;
-        status = ResourceStatus.AVAILABLE;
     }
 
     public Resource() {
@@ -120,7 +119,6 @@ public class Resource {
         this.unit = unit;
         this.organisationId = organisationId;
         this.resourceType = resourceType;
-        status = ResourceStatus.AVAILABLE;
     }
 
     public void restoreResource() {

@@ -83,4 +83,9 @@ public class ResourceController {
     public List<ResourceAssignment> getResourceAssignments(@PathVariable("resourceId") Long resourceId) {
         return resourceService.getResourceAssignments(resourceId);
     }
+
+    @GetMapping(path = "/resource/{resourceId}")
+    public Resource getResourceById(@PathVariable("resourceId") Long resourceId) {
+        return resourceService.getResourceById(resourceId);
+    }
 }
