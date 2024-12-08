@@ -11,12 +11,8 @@ public class UserRoles {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
     private EUserRoles name;
-
-    // Konstruktor, który przyjmuje ERole
-
-
+    
     public UserRoles() {
     }
 
