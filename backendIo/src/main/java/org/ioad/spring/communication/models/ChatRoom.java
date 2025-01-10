@@ -6,16 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "chat_messages")
-public class ChatMessage {
+@Table(name = "chat_rooms")
+public class ChatRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,11 +26,5 @@ public class ChatMessage {
 
     @Column(name = "recipient_id", nullable = false)
     private String recipientId;
-
-    @Column(name = "content", nullable = false)
-    private String content;
-
-    @Column(name = "timestamp", nullable = false)
-    private Date timestamp;
 }
 
