@@ -8,5 +8,6 @@ import java.util.List;
 @Repository
 public interface ResourceAssignmentRepository extends JpaRepository<ResourceAssignment, Long> {
     List<ResourceAssignment> findByResourceId(Long resourceId);
+    List<ResourceAssignment> findByRequestId(Long requestId);
 }
 

@@ -15,4 +15,6 @@ public interface IResourceService {
     List<Donation> getByDonationDonorId(Long donorId);
     List<Resource> getAvailableResources();
     List<ResourceAssignment> getResourceAssignments(Long resourceId);
+    Resource getResourceById(Long resourceId);
+    List<ResourceAssignment> getAssignmentsByRequestId(Long requestId);
 }
