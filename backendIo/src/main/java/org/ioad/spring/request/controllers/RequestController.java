@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/request")
+@RequestMapping("/api/test")
 public class RequestController {
 
     @Autowired
@@ -38,7 +38,7 @@ public class RequestController {
             try {
                 requestService.addRequest(requestData.getLatitude(), requestData.getLongitude(),
                         userService.getUser(username).get(), requestData.getResourceType(), requestData.getAmount(),
-                        requestData.getDescription());
+                        requestData.getDescription(), requestData.getResourceName());
             } catch (Exception exception) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
             }
@@ -56,7 +56,7 @@ public class RequestController {
             try {
                 requestService.changeRequest(id,requestData.getLatitude(),
                         requestData.getLongitude(),requestData.getResourceType(),
-                        requestData.getAmount(),requestData.getDescription());
+                        requestData.getAmount(),requestData.getDescription(), requestData.getResourceName());
                 return ResponseEntity.ok("Request successfully changed");
             } catch (Exception exception) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());

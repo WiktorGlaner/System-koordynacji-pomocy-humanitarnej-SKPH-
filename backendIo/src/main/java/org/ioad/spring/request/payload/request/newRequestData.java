@@ -18,6 +18,9 @@ public class newRequestData {
     @NotBlank
     private Integer amount;
 
+    @NotBlank
+    private String resourceName;
+
     public String getDescription() {
         return description;
     }
@@ -56,5 +59,13 @@ public class newRequestData {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
     }
 }

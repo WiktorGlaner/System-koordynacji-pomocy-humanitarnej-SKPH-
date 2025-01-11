@@ -11,7 +11,7 @@ public interface IRequestService {
     public List<Request> getAllRequests();
     public Request getRequestById(Long requestId);
     public Request addRequest(Double latitude, Double longitude, UserInfo reporter,
-                              ResourceType resourceType, Integer amount, String description);
+                              ResourceType resourceType, Integer amount, String description, String resourceName);
     public boolean deleteRequest(Long requestId);
     public boolean deleteAllRequests();
     public List<Request> getAllRequestsByReporter(Long reporterId);
@@ -20,6 +20,6 @@ public interface IRequestService {
     public List<List<Double>> getAllLocations();
     public List<Double> getLocation(Long requestId);
     public Request changeRequest(Long requestId, Double newLatitude, Double newLongitude,
-                                 ResourceType newResourceType, Integer newAmount, String newDescription);
+                                 ResourceType newResourceType, Integer newAmount, String newDescription, String resourceName);
     public Request changeRequestStatus(Long requestId, EStatus newStatus);
 }

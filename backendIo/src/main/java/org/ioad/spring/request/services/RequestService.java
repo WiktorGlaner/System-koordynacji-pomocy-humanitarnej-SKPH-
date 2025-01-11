@@ -32,10 +32,10 @@ public class RequestService implements IRequestService {
 
     @Override
     public Request addRequest(Double latitude, Double longitude, UserInfo reporter,
-                              ResourceType resourceType, Integer amount, String description) {
+                              ResourceType resourceType, Integer amount, String description, String resourceName) {
         return requestRepository
                 .save(new Request(description, latitude, longitude,
-        reporter, resourceType, amount));
+        reporter, resourceType, amount, resourceName));
     }
 
     @Override
@@ -101,7 +101,7 @@ public class RequestService implements IRequestService {
 
     @Override
     public Request changeRequest(Long requestId, Double newLatitude, Double newLongitude,
-                                 ResourceType newResourceType, Integer newAmount, String newDescription) {
+                                 ResourceType newResourceType, Integer newAmount, String newDescription, String newResourceName) {
         Request request = requestRepository.findByRequestId(requestId);
         if (newLatitude != null) {
             request.setLatitude(newLatitude);
@@ -119,6 +119,9 @@ public class RequestService implements IRequestService {
         }
         if (newDescription != null) {
             request.setDescription(newDescription);
+        }
+        if(newResourceName != null) {
+            request.setResourceType(newResourceType);
         }
         return requestRepository.save(request);
     }
