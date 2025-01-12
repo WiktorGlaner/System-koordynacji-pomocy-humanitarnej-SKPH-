@@ -12,7 +12,7 @@ public class Donation extends Resource {
     @Column(updatable=false)
     private Long donorId;
 
-    public Donation(Long id, String name, String location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType type, Long donorId) {
+    public Donation(Long id, String name, Location location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType type, Long donorId) {
         super(id, name, location, expDate, quantity, unit, organisationId, type);
         this.donorId = donorId;
     }
@@ -20,7 +20,7 @@ public class Donation extends Resource {
     public Donation() {
     }
 
-    public Donation(String name, String location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType type, Long donorId) {
+    public Donation(String name, Location location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType type, Long donorId) {
         super(name, location, expDate, quantity, unit, organisationId, type);
         this.donorId = donorId;
     }

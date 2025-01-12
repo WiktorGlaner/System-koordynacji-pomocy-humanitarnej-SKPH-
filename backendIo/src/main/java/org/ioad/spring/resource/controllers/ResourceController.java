@@ -2,7 +2,10 @@ package org.ioad.spring.resource.controllers;
 
 import org.ioad.spring.resource.models.*;
 import org.ioad.spring.resource.services.ResourceService;
+import org.ioad.spring.resource.models.Location;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,12 +46,23 @@ public class ResourceController {
         resourceService.removeResource(resourceId);
     }
 
-    @PutMapping(path = "/resource/{resourceId}")
-    public void modifyResource(@PathVariable("resourceId") Long resourceId,
-                               @RequestParam(required = false) String location,
+    @PatchMapping(path = "/resource/{resourceId}")
+    public ResponseEntity<String> modifyResource(@PathVariable("resourceId") Long resourceId,
+                               @RequestParam(required = false) Double latitude,
+                               @RequestParam(required = false) Double longitude,
                                @RequestParam(required = false) Long organisationId,
                                @RequestParam(required = false) ResourceStatus status) {
-        resourceService.modifyResource(resourceId, location, organisationId, status);
+        try {
+            Location location = null;
+            if (latitude != null && longitude != null) {
+                location = new Location(latitude, longitude);
+            }
+            resourceService.modifyResource(resourceId, location, organisationId, status);
+            return ResponseEntity.ok("Resource modified successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
+        }
     }
 
     @PostMapping(path = "/donation")

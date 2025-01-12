@@ -5,6 +5,7 @@ import org.ioad.spring.resource.exceptions.*;
 import org.ioad.spring.resource.models.*;
 import org.ioad.spring.resource.repositories.ResourceAssignmentRepository;
 import org.ioad.spring.resource.repositories.ResourceRepository;
+import org.ioad.spring.resource.models.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,16 +65,16 @@ public class ResourceService implements IResourceService {
 
     @Transactional
     @Override
-    public void modifyResource(Long resourceId, String location, Long organisationId, ResourceStatus status) {
+    public void modifyResource(Long resourceId, Location location, Long organisationId, ResourceStatus status) {
         Resource resource = resourceRepository.findById(resourceId).orElseThrow(
                 () -> new ResourceNotFound("resource with " + resourceId + " does not exist"));
 
         if (location != null &&
-                !location.isEmpty() &&
-        !Objects.equals(resource.getLocation(), location)) {
+                !Objects.equals(resource.getLocation(), location)) {
+            System.out.println(resource.getLocation());
+            System.out.println(location);
             resource.setLocation(location);
         }
-
         if (organisationId != null &&
                 organisationId > 0 &&
                 !Objects.equals(resource.getOrganisationId(), organisationId)) {
