@@ -12,7 +12,7 @@ const BoardModerator = () => import("./components/BoardModerator.vue")
 const BoardUser = () => import("./components/BoardUser.vue")
 const Communcation = () => import("./components/Communication.vue")
 const Map = () => import("./components/Map.vue")
-
+const Organization = () => import("./components/Organization.vue")
 
 const routes = [
   {
@@ -80,6 +80,10 @@ const routes = [
     name: "user",
     // lazy-loaded
     component: BoardUser,
+  },
+  {
+    path: '/organization',
+    component: Organization,
   },
 ];
 

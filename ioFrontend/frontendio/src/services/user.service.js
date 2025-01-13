@@ -19,6 +19,18 @@ class UserService {
   getAdminBoard() {
     return axios.get(API_URL + 'admin', { headers: authHeader() });
   }
+
+  fillUserInformation(requestData) {
+    return axios.post(`${API_URL}/uploadUserData`, requestData, {
+      headers: authHeader()
+    });
+  }
+
+  fillOrganizationInformation(requestData) {
+    return axios.post(`${API_URL}/uploadOrganizationData`, requestData, {
+      headers: authHeader()
+    });
+  }
 }
 
 export default new UserService();
