@@ -25,8 +25,8 @@ public class Resource {
     private Long id;
     @Column(nullable = false, updatable = false)
     private String name;
-    @Column(nullable = false)
-    private String location;
+    @Embedded
+    private Location location;
     @Column(nullable = false, updatable = false)
     private LocalDate expDate;
     @Column(nullable = false, updatable = false)
@@ -53,11 +53,11 @@ public class Resource {
     }
 
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 
@@ -97,7 +97,7 @@ public class Resource {
         return resourceType;
     }
 
-    public Resource(Long id, String name, String location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType resourceType) {
+    public Resource(Long id, String name, Location location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType resourceType) {
         this.id = id;
         this.name = name;
         this.location = location;
@@ -106,13 +106,12 @@ public class Resource {
         this.unit = unit;
         this.organisationId = organisationId;
         this.resourceType = resourceType;
-        status = ResourceStatus.AVAILABLE;
     }
 
     public Resource() {
     }
 
-    public Resource(String name, String location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType resourceType) {
+    public Resource(String name, Location location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType resourceType) {
         this.name = name;
         this.location = location;
         this.expDate = expDate;
@@ -120,7 +119,6 @@ public class Resource {
         this.unit = unit;
         this.organisationId = organisationId;
         this.resourceType = resourceType;
-        status = ResourceStatus.AVAILABLE;
     }
 
     public void restoreResource() {
@@ -138,6 +136,4 @@ public class Resource {
         }
         return isExpired;
     }
-
-
 }

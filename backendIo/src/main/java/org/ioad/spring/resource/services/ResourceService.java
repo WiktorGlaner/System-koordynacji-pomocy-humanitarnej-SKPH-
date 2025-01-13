@@ -1,13 +1,16 @@
 package org.ioad.spring.resource.services;
 
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 import org.ioad.spring.resource.exceptions.*;
 import org.ioad.spring.resource.models.*;
 import org.ioad.spring.resource.repositories.ResourceAssignmentRepository;
 import org.ioad.spring.resource.repositories.ResourceRepository;
+import org.ioad.spring.resource.models.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -63,16 +66,17 @@ public class ResourceService implements IResourceService {
     }
 
     @Transactional
-    public void modifyResource(Long resourceId, String location, Long organisationId, ResourceStatus status) {
+    @Override
+    public void modifyResource(Long resourceId, Location location, Long organisationId, ResourceStatus status) {
         Resource resource = resourceRepository.findById(resourceId).orElseThrow(
                 () -> new ResourceNotFound("resource with " + resourceId + " does not exist"));
 
         if (location != null &&
-                !location.isEmpty() &&
-        !Objects.equals(resource.getLocation(), location)) {
+                !Objects.equals(resource.getLocation(), location)) {
+            System.out.println(resource.getLocation());
+            System.out.println(location);
             resource.setLocation(location);
         }
-
         if (organisationId != null &&
                 organisationId > 0 &&
                 !Objects.equals(resource.getOrganisationId(), organisationId)) {
@@ -90,7 +94,16 @@ public class ResourceService implements IResourceService {
         return resourceRepository.getByResourceType(resourceType);
     }
 
+    @Override
+    public Resource getResourceById(Long resourceId) {
+        return resourceRepository.findById(resourceId)
+                .orElseThrow(() -> new ResourceNotFound("Resource not found with id: " + resourceId));
+    }
 
+    @Override
+    public List<ResourceAssignment> getAssignmentsByRequestId(Long requestId) {
+        return resourceAssignmentRepository.findByRequestId(requestId);
+    }
 
     @Override
     public List<Donation> getByDonationType(ResourceType resourceType) {
@@ -149,7 +162,32 @@ public class ResourceService implements IResourceService {
         resourceAssignmentRepository.deleteById(assignmentId);
     }
 
+    @Override
     public List<Donation> getByDonationDonorId(Long donorId) {
         return resourceRepository.getByDonationDonorId(donorId);
+    }
+
+    public List<Resource> getFilteredResources(List<String> resourceTypeValues, Double organisationId, List<String> resourceStatusValues) {
+        return resourceRepository.findAll((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (resourceTypeValues != null && !resourceTypeValues.isEmpty()) {
+                List<ResourceType> resourceTypes = resourceTypeValues.stream()
+                        .map(value -> ResourceType.valueOf(value.toUpperCase()))
+                        .toList();
+                predicates.add(root.get("resourceType").in(resourceTypes));
+            }
+            if (organisationId != null) {
+                predicates.add(criteriaBuilder.equal(root.get("organisationId"), organisationId));
+            }
+            if (resourceStatusValues != null && !resourceStatusValues.isEmpty()) {
+                List<ResourceStatus> resourceStatuses = resourceStatusValues.stream()
+                        .map(value -> ResourceStatus.valueOf(value.toUpperCase()))
+                        .toList();
+                predicates.add(root.get("status").in(resourceStatuses));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        });
     }
 }
