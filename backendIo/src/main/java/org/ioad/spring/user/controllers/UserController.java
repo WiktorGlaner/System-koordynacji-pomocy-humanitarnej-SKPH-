@@ -28,11 +28,11 @@ public class UserController {
         return ResponseEntity.ok(organizations);
     }
 
-//    @GetMapping("/allVolunteers")
-//    public ResponseEntity<List<VolunteerDataResponse>> getAllVolunteers() {
-//        List<VolunteerDataResponse> volunteers = userService.getAllVolunteersInfo();
-//        return ResponseEntity.ok(volunteers);
-//    }
+    @GetMapping("/allVolunteers")
+    public ResponseEntity<List<VolunteerDataResponse>> getAllVolunteers(@RequestParam(name = "activity", required = false) Boolean activity) {
+        List<VolunteerDataResponse> volunteers = userService.getAllVolunteersInfo(activity);
+        return ResponseEntity.ok(volunteers);
+    }
 
     @GetMapping("/users/{username}")
     public ResponseEntity<Optional<UserInfo>> getUser(@PathVariable String username) {

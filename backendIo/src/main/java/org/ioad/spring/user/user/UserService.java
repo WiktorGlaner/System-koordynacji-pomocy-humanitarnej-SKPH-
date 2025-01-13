@@ -30,21 +30,36 @@ public class UserService implements IUserService {
         return organizationRepository.findAll();
     }
 
-//    @Override
-//    public List<UserInfo> getAllVolunteer() {
-//        return userInfoRepository.findByRole(EUserRoles.ROLE_VOLUNTEER);
-//    }
+    @Override
+    public List<UserInfo> getAllVolunteers() {
+        System.out.println("Getting all volunteers");
+        List<User> users = userRepository.getAllUsersByRole("ROLE_VOLUNTEER");
+        System.out.println("Users: " + users.size());
+        List<UserInfo> volunteers = new ArrayList<>();
+        for (User user : users) {
+            Optional<UserInfo> userInfo = userInfoRepository.findByUser(user);
+            userInfo.ifPresent(volunteers::add);
+        }
+        return volunteers;
+    }
 
-//    public List<VolunteerDataResponse> getAllVolunteersInfo() {
-//        List<UserInfo> users = userInfoRepository.findByRole(EUserRoles.ROLE_VOLUNTEER);
-//        List<VolunteerDataResponse> volunteerDataResponses = new ArrayList<>();
-//
-//        for (UserInfo userInfo : users) {
-//            VolunteerDataResponse response = new VolunteerDataResponse(userInfo.getName(), userInfo.getSurname(), userInfo.isActivity());
-//            volunteerDataResponses.add(response);
-//        }
-//        return volunteerDataResponses;
-//    }
+
+    public List<VolunteerDataResponse> getAllVolunteersInfo(Boolean activity) {
+        List<VolunteerDataResponse> volunteerDataResponses = new ArrayList<>();
+        List<UserInfo> volunteers = this.getAllVolunteers();
+
+        for (UserInfo userInfo : volunteers) {
+            if (activity == null || userInfo.isActivity() == activity) {
+                VolunteerDataResponse response = new VolunteerDataResponse(
+                        userInfo.getName(),
+                        userInfo.getSurname(),
+                        userInfo.isActivity()
+                );
+                volunteerDataResponses.add(response);
+            }
+        }
+        return volunteerDataResponses;
+    }
 
     @Override
     public Optional<UserInfo> getUser(String username) {
