@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <nav class="navbar navbar-expand navbar-dark bg-dark w-100">
       <a href="/" class="navbar-brand">SKPH</a>
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
@@ -51,10 +51,15 @@
           </a>
         </li>
       </div>
-      <div class="language-switcher">
-        <button @click="changeLanguage('en')">English</button>
-        <button @click="changeLanguage('pl')">Polski</button>
+      <div class="language-switche">
+        <button type="button" class="btn btn btn-link" @click="changeLanguage('en')">
+          <img src="./assets/en_flag.svg" alt="English" class="flag-icon" />
+        </button>
+        <button type="button" class="btn btn btn-link" @click="changeLanguage('pl')">
+          <img src="./assets/pl_flag.svg" alt="Polish" class="flag-icon" />
+        </button>
       </div>
+      
     </nav>
 
     <div class="container">
@@ -64,6 +69,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   computed: {
     currentUser() {
@@ -89,8 +95,18 @@ export default {
       this.$store.dispatch('auth/logout');
       this.$router.push('/login');
     },
-    changeLanguage(lang) {
+    async changeLanguage(lang) {
       this.$i18n.locale = lang;
+      try {
+        if (!this.currentUser || !this.currentUser.id) {
+          console.error('User is not logged in or ID is missing.');
+          return;
+        }
+        const response = await axios.get(`http://localhost:8080/lang/${this.currentUser.id}/${lang}`)
+        console.log('Language changed successfully:', response.data);
+      } catch (err){
+        console.error('Error while changing language:', err.response?.data || err.message);
+      }
     }
   }
 };
