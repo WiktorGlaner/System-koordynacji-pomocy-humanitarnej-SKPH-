@@ -26,6 +26,9 @@
         <li class="nav-item">
           <router-link to="/resource" class="nav-link">Resource</router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/organization" class="nav-link">Organization</router-link>
+        </li>
       </div>
 
       <div v-if="!currentUser" class="navbar-nav ml-auto">
