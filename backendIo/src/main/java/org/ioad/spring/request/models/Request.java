@@ -26,7 +26,9 @@ public class Request {
     @Column(length = 20)
     private EStatus status;
 
-    public Request(String description, double latitude, double longitude, UserInfo reporter, ResourceType resourceType, int amount) {
+    private String resourceName;
+
+    public Request(String description, double latitude, double longitude, UserInfo reporter, ResourceType resourceType, int amount, String resourceName) {
         this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -34,6 +36,7 @@ public class Request {
         this.resourceType = resourceType;
         this.amount = amount;
         this.status = EStatus.REGISTERED;
+        this.resourceName = resourceName;
     }
 
     public Request() {
@@ -71,6 +74,10 @@ public class Request {
         return status;
     }
 
+    public String getResourceName() {
+        return resourceName;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -93,6 +100,10 @@ public class Request {
 
     public void setStatus(EStatus status) {
         this.status = status;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
     }
 
 }

@@ -5,13 +5,11 @@ import org.ioad.spring.resource.models.ResourceType;
 
 public class UpdateRequestData {
     private String description;
-
     private Double latitude;
     private Double longitude;
-
     private ResourceType resourceType;
-
     private Integer amount;
+    private String resourceName;
 
     public String getDescription() {
         return description;
@@ -51,5 +49,13 @@ public class UpdateRequestData {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
     }
 }
