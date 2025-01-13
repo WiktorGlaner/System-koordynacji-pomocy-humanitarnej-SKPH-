@@ -1,6 +1,11 @@
 {
-  "users": "Użytkownicy",
-  "placeholder": "Wpisz swoją wiadomość...",
-  "send": "Wyślij",
-  "mapInfo": "Mapa jest niedostępna dla Twojej roli."
+  "chat-users": "Użytkownicy",
+  "chat-placeholder": "Wpisz swoją wiadomość...",
+  "chat-send": "Wyślij",
+  "map-Info": "Mapa jest niedostępna dla Twojej roli.",
+  "map-form-desc": "Opis:",
+  "map-form-rt": "Typ zasobu:",
+  "map-form-rn": "Nazwa zasobu:",
+  "map-form-am": "Ilość:",
+  "map-form-button": "Zatwierdź"
 }

@@ -1,6 +1,11 @@
 {
-  "users": "Users",
-  "placeholder": "Type your message...",
-  "send": "Send",
-  "mapInfo": "The map is not available for your role."
+  "chat-users": "Users",
+  "chat-placeholder": "Type your message...",
+  "chat-send": "Send",
+  "map-Info": "The map is not available for your role.",
+  "map-form-desc": "Description:",
+  "map-form-rt": "Resource Type:",
+  "map-form-rn": "Resource Name:",
+  "map-form-am": "Amount:",
+  "map-form-button": "Submit"
 }
