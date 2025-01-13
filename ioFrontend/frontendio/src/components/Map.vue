@@ -1,15 +1,28 @@
 <template>
   <div class="container">
-    <div id="map"></div>
+    <div v-if="!allowedRole">
+      <p style="color: red; text-align: center;">{{ $t('mapInfo') }}</p>
+    </div>
+    <div v-else id="map"></div>
   </div>
 </template>
+
 
 <script>
 export default {
   name: "Map",
+  data() {
+    return {
+      allowedRoles: ["ROLE_ORGANIZATION", "ROLE_AUTHORITY", "ROLE_VICTIM"],
+    };
+  },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
+    },
+    allowedRole() {
+      // Sprawdzamy, czy rola użytkownika znajduje się w dozwolonych rolach
+      return this.allowedRoles.some(role => this.currentUser.roles.includes(role));
     }
   },
   mounted() {
@@ -18,15 +31,24 @@ export default {
       return;
     }
 
-    // Inicjalizacja mapy
-    const map = L.map("map").setView([51.75, 19.45], 14);
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+    if (this.allowedRole) {
+      // Inicjalizacja mapy, tylko jeśli użytkownik ma dozwoloną rolę
+      const map = L.map("map").setView([51.75, 19.45], 14);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
 
-    this.loadResources();
-    this.loadRequests();
+      this.loadResources();
+
+      if (this.currentUser.roles.includes("ROLE_ORGANIZATION") || this.currentUser.roles.includes("ROLE_AUTHORITY")) {
+        this.loadAllRequests();
+      }
+
+      if (this.currentUser.roles.includes("ROLE_VICTIM")) {
+        this.loadUserRequests();
+      }
+    }
   },
   methods: {
     async loadResources() {
