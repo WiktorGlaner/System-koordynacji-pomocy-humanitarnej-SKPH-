@@ -1,5 +1,6 @@
 package org.ioad.spring.user.user;
 
+import org.ioad.spring.user.models.Application;
 import org.ioad.spring.user.models.Organization;
 import org.ioad.spring.user.models.UserInfo;
 import org.ioad.spring.security.postgresql.models.User;
@@ -9,6 +10,7 @@ import org.ioad.spring.user.payload.request.OrganizationDataRequest;
 import org.ioad.spring.user.payload.response.VolunteerDataResponse;
 import org.ioad.spring.user.repository.OrganizationRepository;
 import org.ioad.spring.user.repository.UserInfoRepository;
+import org.ioad.spring.user.repository.ApplicationRepository;
 import org.ioad.spring.security.postgresql.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ public class UserService implements IUserService {
     private OrganizationRepository organizationRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     @Override
     public List<Organization> getAllOrganizations() {
@@ -85,6 +89,18 @@ public class UserService implements IUserService {
         UserInfo userInfo = new UserInfo();
         userInfo.setUser(user);
         userInfoRepository.save(userInfo);
+    }
+
+    public void makeApplication(String username, Long id){
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserInfo userInfo = userInfoRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
+        Organization organization = organizationRepository.findById(id).orElseThrow(() -> new RuntimeException("Organization not found"));
+        Application application = new Application();
+        application.setUserInfo(userInfo);
+        application.setOrganization(organization);
+
+        applicationRepository.save(application);
     }
 
     public void fillOrganizationInformation(String username, OrganizationDataRequest request) {

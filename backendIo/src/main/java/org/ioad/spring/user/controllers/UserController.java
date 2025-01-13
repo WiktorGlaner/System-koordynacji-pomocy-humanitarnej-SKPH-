@@ -70,4 +70,12 @@ public class UserController {
         userService.fillUserInformation(username, request);
         return ResponseEntity.ok("Successfully added information about user");
     }
+
+    @PostMapping("/makeApplication")
+    public ResponseEntity<String> makeApplication(@RequestBody Long id) {
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        userService.makeApplication(username, id);
+        return ResponseEntity.ok("Successfully added made application");
+    }
 }
