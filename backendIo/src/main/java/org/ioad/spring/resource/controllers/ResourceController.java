@@ -22,13 +22,11 @@ public class ResourceController {
     }
 
     @GetMapping(path = "/resource")
-    public List<Resource> getResources(@RequestParam(required = false) String type) {
-        if (type == null) {
-            return resourceService.getAllResources();
-        } else {
-            ResourceType resourceType = ResourceType.valueOf(type.toUpperCase());
-            return resourceService.getResourceByType(resourceType);
-        }
+    public List<Resource> getResources(
+            @RequestParam(required = false, name = "type") List<String> ResourceTypeValues,
+            @RequestParam(required = false) Double organisationId,
+            @RequestParam(required = false, name = "status") List<String> ResourceStatusValues) {
+        return resourceService.getFilteredResources(ResourceTypeValues, organisationId, ResourceStatusValues);
     }
 
     @GetMapping(path = "/resource/available")

@@ -1,5 +1,6 @@
 package org.ioad.spring.resource.services;
 
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 import org.ioad.spring.resource.exceptions.*;
 import org.ioad.spring.resource.models.*;
@@ -9,6 +10,7 @@ import org.ioad.spring.resource.models.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -163,5 +165,29 @@ public class ResourceService implements IResourceService {
     @Override
     public List<Donation> getByDonationDonorId(Long donorId) {
         return resourceRepository.getByDonationDonorId(donorId);
+    }
+
+    public List<Resource> getFilteredResources(List<String> resourceTypeValues, Double organisationId, List<String> resourceStatusValues) {
+        return resourceRepository.findAll((root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (resourceTypeValues != null && !resourceTypeValues.isEmpty()) {
+                List<ResourceType> resourceTypes = resourceTypeValues.stream()
+                        .map(value -> ResourceType.valueOf(value.toUpperCase()))
+                        .toList();
+                predicates.add(root.get("resourceType").in(resourceTypes));
+            }
+            if (organisationId != null) {
+                predicates.add(criteriaBuilder.equal(root.get("organisationId"), organisationId));
+            }
+            if (resourceStatusValues != null && !resourceStatusValues.isEmpty()) {
+                List<ResourceStatus> resourceStatuses = resourceStatusValues.stream()
+                        .map(value -> ResourceStatus.valueOf(value.toUpperCase()))
+                        .toList();
+                predicates.add(root.get("status").in(resourceStatuses));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        });
     }
 }
