@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping
+@CrossOrigin(origins = "*")
 public class ResourceController {
 
     private final ResourceService resourceService;
