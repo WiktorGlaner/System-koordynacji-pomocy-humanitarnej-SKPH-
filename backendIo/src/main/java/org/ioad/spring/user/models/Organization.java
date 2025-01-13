@@ -18,7 +18,7 @@ public class Organization {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    //@NotBlank
     @Column(name = "name")
     private String name;
 

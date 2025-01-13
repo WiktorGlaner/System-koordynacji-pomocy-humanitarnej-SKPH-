@@ -116,11 +116,14 @@ public class AuthController {
                 roles.add(foundRole);
             });
         }
-
         user.setRoles(roles);
         userRepository.save(user);
-        iUserService.addUserInfo(signUpRequest.getUsername());
         langService.addLangRecord("en", user);
+        if (roles.stream().anyMatch(role -> role.getName().equals(ERole.ROLE_ORGANIZATION))) {
+            iUserService.addOrganizationInfo(signUpRequest.getUsername());
+        } else {
+            iUserService.addUserInfo(signUpRequest.getUsername());
+        }
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 }
