@@ -114,6 +114,19 @@ export default {
       } catch (err){
         console.error('Error while changing language:', err.response?.data || err.message);
       }
+    },
+    async setLangAfterLogin(){
+      try {
+        if (!this.currentUser || !this.currentUser.id) {
+          console.error('User is not logged in or ID is missing.');
+          return;
+        }
+        const response = await axios.get(`http://localhost:8080/lang/getlang/${this.currentUser.id}`)
+        this.$i18n.locale = response.data
+        console.log('Language changed successfully:', response.data);
+      } catch (err){
+        console.error('Error while changing language:', err.response?.data || err.message);
+      }
     }
   }
 };

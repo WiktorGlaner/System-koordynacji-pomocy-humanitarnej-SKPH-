@@ -77,6 +77,7 @@ export default {
 
       this.$store.dispatch("auth/login", user).then(
         () => {
+          this.$root.setLangAfterLogin();
           this.$router.push("/profile");
         },
         (error) => {
