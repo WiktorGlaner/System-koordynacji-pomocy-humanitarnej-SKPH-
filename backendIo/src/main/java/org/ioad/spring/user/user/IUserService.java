@@ -12,4 +12,5 @@ public interface IUserService {
     List<UserInfo> getAllVolunteers();
     void addUserInfo(String username);
     void addOrganizationInfo(String username);
+    void changeActivity(Boolean active, String username);
 }

@@ -24,6 +24,9 @@ public class Task {
     @Column(name = "task_id")
     private Long id;
 
+        @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    private List<UserInfo> volunteers;
+
     @Column(nullable = false)
     private String title;
 

@@ -47,7 +47,7 @@
     },
     methods: {
       async fetchOrganizations() {
-        const API_URL = "http://localhost:8080/api/test"; // Zamień na prawidłowy URL backendu
+        const API_URL = "http://localhost:8080/api/user"; // Zamień na prawidłowy URL backendu
         try {
           const response = await axios.get(`${API_URL}/allOrganizations`, {
             headers: authHeader()
