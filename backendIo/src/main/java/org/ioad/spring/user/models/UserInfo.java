@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ioad.spring.security.postgresql.models.User;
+import org.ioad.spring.task.model.Task;
 
 @Setter
 @Getter
@@ -42,6 +43,10 @@ public class UserInfo {
     @ManyToOne
     @JoinColumn(name = "OrganizationId", nullable = true)
     private Organization organization;
+
+    @ManyToOne
+    @JoinColumn(name = "task_id", nullable = true)
+    private Task task;
 
     public UserInfo() {
 

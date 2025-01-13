@@ -102,7 +102,7 @@ export default {
         pesel: this.pesel,
       };
       console.log('Current User:', this.currentUser.username);
-      UserService.fillUserInformation(requestData, this.currentUser.accessToken)
+      UserService.fillUserInformation(requestData)
           .then(response => {
             console.log(response.data)
             // this.updatedUser = updatedUser;
@@ -118,7 +118,7 @@ export default {
         name: this.name,
       };
       console.log('Current User:', this.currentUser.username);
-      UserService.fillOrganizationInformation(requestData, this.currentUser.accessToken)
+      UserService.fillOrganizationInformation(requestData)
           .then(response => {
             console.log(response.data)
             // this.updatedUser = updatedUser;

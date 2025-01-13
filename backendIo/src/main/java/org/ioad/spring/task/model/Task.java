@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ioad.spring.request.models.Request;
 import org.ioad.spring.resource.models.Resource;
+import org.ioad.spring.user.models.UserInfo;
 
 import java.util.List;
 
@@ -22,6 +23,9 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id")
     private Long id;
+
+        @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    private List<UserInfo> volunteers;
 
     @Column(nullable = false)
     private String title;
