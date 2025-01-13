@@ -32,9 +32,7 @@ public class UserService implements IUserService {
 
     @Override
     public List<UserInfo> getAllVolunteers() {
-        System.out.println("Getting all volunteers");
         List<User> users = userRepository.getAllUsersByRole("ROLE_VOLUNTEER");
-        System.out.println("Users: " + users.size());
         List<UserInfo> volunteers = new ArrayList<>();
         for (User user : users) {
             Optional<UserInfo> userInfo = userInfoRepository.findByUser(user);
@@ -70,6 +68,16 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public void addOrganizationInfo(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Organization not found"));
+
+        Organization organization = new Organization();
+        organization.setUser(user);
+        organizationRepository.save(organization);
+    }
+
+    @Override
     public void addUserInfo(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -83,22 +91,16 @@ public class UserService implements IUserService {
         User user = userRepository.findByUsername(username).orElseThrow(()
                 -> new RuntimeException("Organization not found"));
 
-        Organization organization = organizationRepository.findByUser(user).orElseGet(()
-                -> {
-                    Organization newOrganization = new Organization();
-                    newOrganization.setUser(user);
-                    newOrganization.setName(request.getName());
-
-                    return newOrganization;
+        Optional<Organization> organization = organizationRepository.findByUser(user);
+        organization.ifPresent(value -> {
+            value.setName(request.getName());
+            organizationRepository.save(value);
         });
-
-        organization.setName(request.getName());
-        organizationRepository.save(organization);
     }
 
     public void fillAuthorityInformation(String username, AuthorityDataRequest request) {
         User user = userRepository.findByUsername(username).orElseThrow(()
-                -> new RuntimeException("Organization not found"));
+                -> new RuntimeException("Authority not found"));
 
         UserInfo userInfo = userInfoRepository.findByUser(user).orElseGet(()
                 -> {
@@ -107,7 +109,7 @@ public class UserService implements IUserService {
             newUserInfo.setName(request.getName());
             newUserInfo.setSurname(request.getSurname());
             newUserInfo.setPesel(request.getPesel());
-            newUserInfo.setPosition(request.getPosition());
+//            newUserInfo.setPosition(request.getPosition());
 
             return newUserInfo;
         });
@@ -116,7 +118,7 @@ public class UserService implements IUserService {
         userInfo.setName(request.getName());
         userInfo.setSurname(request.getSurname());
         userInfo.setPesel(request.getPesel());
-        userInfo.setPosition(request.getPosition());
+//        userInfo.setPosition(request.getPosition());
         userInfoRepository.save(userInfo);
     }
 
@@ -124,23 +126,12 @@ public class UserService implements IUserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        UserInfo userInfo = userInfoRepository.findByUser(user).orElseGet(()
-                -> {
-            UserInfo newUserInfo = new UserInfo();
-            newUserInfo.setUser(user);
-            newUserInfo.setName(request.getName());
-            newUserInfo.setSurname(request.getSurname());
-            newUserInfo.setPesel(request.getPesel());
-
-            return newUserInfo;
-        });
-
-        userInfo.setUser(user);
-        userInfo.setName(request.getName());
-        userInfo.setSurname(request.getSurname());
-        userInfo.setPesel(request.getPesel());
-
-        userInfoRepository.save(userInfo);
-
+        Optional<UserInfo> userInfo = userInfoRepository.findByUser(user);
+        userInfo.ifPresent(value -> {
+                    value.setName(request.getName());
+                    value.setSurname(request.getSurname());
+                    value.setPesel(request.getPesel());
+                    userInfoRepository.save(value);
+                });
     }
 }

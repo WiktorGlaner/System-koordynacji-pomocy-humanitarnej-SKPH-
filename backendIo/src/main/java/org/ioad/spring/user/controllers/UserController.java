@@ -10,6 +10,7 @@ import org.ioad.spring.user.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,23 +41,24 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
     
-
-    @PostMapping("/{username}/uploadOrganization-data")
-    public ResponseEntity<String> fillOrganizationInformation(@PathVariable String username,
+    @PreAuthorize("hasRole('ROLE_ORGANIZATION')" )
+    @PostMapping("/uploadOrganizationData")
+    public ResponseEntity<String> fillOrganizationInformation(@RequestParam String username,
                                                                     @RequestBody OrganizationDataRequest request) {
         userService.fillOrganizationInformation(username, request);
         return ResponseEntity.ok("Successfully added information about organization");
     }
 
-    @PostMapping("/{username}/uploadAuthority-data")
-    public ResponseEntity<String> fillAuthorityInformation(@PathVariable String username,
-                                                                    @RequestBody AuthorityDataRequest request) {
-        userService.fillAuthorityInformation(username, request);
-        return ResponseEntity.ok("Successfully added information about authority");
-    }
+//    @PostMapping("/uploadAuthorityData")
+//    public ResponseEntity<String> fillAuthorityInformation(@RequestParam String username,
+//                                                                    @RequestBody AuthorityDataRequest request) {
+//        userService.fillAuthorityInformation(username, request);
+//        return ResponseEntity.ok("Successfully added information about authority");
+//    }
 
-    @PostMapping("/{username}/uploadUser-data")
-    public ResponseEntity<String> fillUserInformation(@PathVariable String username,
+    @PreAuthorize("hasRole('ROLE_VOLUNTEER') || hasRole('ROLE_VICTIM') || hasRole('ROLE_AUTHORITY') || hasRole('ROLE_DONOR')")
+    @PostMapping("/uploadUserData")
+    public ResponseEntity<String> fillUserInformation(@RequestParam String username,
                                                              @RequestBody FillDataRequest request) {
         userService.fillUserInformation(username, request);
         return ResponseEntity.ok("Successfully added information about user");
