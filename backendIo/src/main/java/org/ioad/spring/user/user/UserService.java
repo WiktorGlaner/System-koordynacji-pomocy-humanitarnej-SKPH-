@@ -4,9 +4,10 @@ import org.ioad.spring.user.models.Application;
 import org.ioad.spring.user.models.Organization;
 import org.ioad.spring.user.models.UserInfo;
 import org.ioad.spring.security.postgresql.models.User;
-import org.ioad.spring.user.payload.request.AuthorityDataRequest;
 import org.ioad.spring.user.payload.request.FillDataRequest;
 import org.ioad.spring.user.payload.request.OrganizationDataRequest;
+import org.ioad.spring.user.payload.response.OrganizationInfoDataResponse;
+import org.ioad.spring.user.payload.response.UserInfoDataResponse;
 import org.ioad.spring.user.payload.response.VolunteerDataResponse;
 import org.ioad.spring.user.repository.OrganizationRepository;
 import org.ioad.spring.user.repository.UserInfoRepository;
@@ -114,28 +115,26 @@ public class UserService implements IUserService {
         });
     }
 
-    public void fillAuthorityInformation(String username, AuthorityDataRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(()
-                -> new RuntimeException("Authority not found"));
+    public UserInfoDataResponse getUserInfo(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        UserInfo userInfo = userInfoRepository.findByUser(user).orElseGet(()
-                -> {
-            UserInfo newUserInfo = new UserInfo();
-            newUserInfo.setUser(user);
-            newUserInfo.setName(request.getName());
-            newUserInfo.setSurname(request.getSurname());
-            newUserInfo.setPesel(request.getPesel());
-//            newUserInfo.setPosition(request.getPosition());
+        Optional<UserInfo> userInfo = userInfoRepository.findByUser(user);
 
-            return newUserInfo;
-        });
+        return userInfo.map(value ->
+                new UserInfoDataResponse(value.getName(), value.getSurname(), value.getPesel())
+        ).orElseThrow(() -> new RuntimeException("UserInfo not found for user: " + username));
+    }
 
-        userInfo.setUser(user);
-        userInfo.setName(request.getName());
-        userInfo.setSurname(request.getSurname());
-        userInfo.setPesel(request.getPesel());
-//        userInfo.setPosition(request.getPosition());
-        userInfoRepository.save(userInfo);
+    public OrganizationInfoDataResponse getOrganizationInfo(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Optional<Organization> organization = organizationRepository.findByUser(user);
+
+        return organization.map(value ->
+                new OrganizationInfoDataResponse(value.getName())
+        ).orElseThrow(() -> new RuntimeException("UserInfo not found for user: " + username));
     }
 
     public void fillUserInformation(String username, FillDataRequest request) {

@@ -24,6 +24,11 @@
           <router-link to="/map" class="nav-link">Map</router-link>
         </li>
         <li class="nav-item">
+          <router-link to="/tasks" class="nav-link">
+            <font-awesome-icon icon="task" /> Tasks
+          </router-link>
+        </li>
+        <li class="nav-item">
           <router-link to="/resource" class="nav-link">Resource</router-link>
         </li>
         <li class="nav-item" v-if="currentUser && (currentUser.roles.includes('ROLE_AUTHORITY') || currentUser.roles.includes('ROLE_VOLUNTEER'))">
@@ -110,6 +115,19 @@ export default {
           return;
         }
         const response = await axios.get(`http://localhost:8080/lang/${this.currentUser.id}/${lang}`)
+        console.log('Language changed successfully:', response.data);
+      } catch (err){
+        console.error('Error while changing language:', err.response?.data || err.message);
+      }
+    },
+    async setLangAfterLogin(){
+      try {
+        if (!this.currentUser || !this.currentUser.id) {
+          console.error('User is not logged in or ID is missing.');
+          return;
+        }
+        const response = await axios.get(`http://localhost:8080/lang/getlang/${this.currentUser.id}`)
+        this.$i18n.locale = response.data
         console.log('Language changed successfully:', response.data);
       } catch (err){
         console.error('Error while changing language:', err.response?.data || err.message);
