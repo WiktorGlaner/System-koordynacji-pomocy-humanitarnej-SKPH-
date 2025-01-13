@@ -1,5 +1,6 @@
 {
   "users": "Użytkownicy",
   "placeholder": "Wpisz swoją wiadomość...",
-  "send": "Wyślij"
+  "send": "Wyślij",
+  "mapInfo": "Mapa jest niedostępna dla Twojej roli."
 }
