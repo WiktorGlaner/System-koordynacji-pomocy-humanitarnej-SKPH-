@@ -1,7 +1,7 @@
 package org.ioad.spring.task.model;
 
 public enum TaskStatus {
-    NOT_STARTED,
+//    NOT_STARTED,
     IN_PROGRESS,
     COMPLETED;
 }

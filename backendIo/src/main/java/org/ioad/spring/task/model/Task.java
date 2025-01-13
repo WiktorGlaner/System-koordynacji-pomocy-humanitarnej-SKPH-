@@ -40,26 +40,31 @@ public class Task {
 //
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "task_resource",  // Tabela pośrednia
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "resource_id")
-    )
-    private List<Resource> resourceList;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "task_resource",  // Tabela pośrednia
+//            joinColumns = @JoinColumn(name = "task_id"),
+//            inverseJoinColumns = @JoinColumn(name = "resource_id")
+//    )
+//    private List<Resource> resourceList;
 
     @ManyToOne
     @JoinColumn(name = "request_id", nullable = false) // Klucz obcy w tabeli Task
     private Request request;
 
+//    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+//    private List<UserInfo> volunteers;
+
     @Column(nullable = false)
     private String location;
 
     @Column(nullable = false)
-    private String status = "UnFinished";
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status = TaskStatus.IN_PROGRESS;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private int priority;
+    private TaskPriority priority;
 
     private int grade;
 
@@ -72,29 +77,20 @@ public class Task {
         this.grade = grade;
     }
 
-    public int getPriority() {
+    public TaskPriority getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public void setPriority(TaskPriority priority) {
         this.priority = priority;
     }
 
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
-    }
-
-
-    public List<Resource> getResourceList() {
-        return resourceList;
-    }
-
-    public void setResourceList(List<Resource> resourceList) {
-        this.resourceList = resourceList;
     }
 
     public Request getRequest() {
@@ -104,6 +100,15 @@ public class Task {
     public void setRequest(Request request) {
         this.request = request;
     }
+
+
+//    public List<UserInfo> getVolunteers() {
+//        return volunteers;
+//    }
+//
+//    public void setVolunteers(List<UserInfo> volunteers) {
+//        this.volunteers = volunteers;
+//    }
 
     public String getLocation() {
         return location;
