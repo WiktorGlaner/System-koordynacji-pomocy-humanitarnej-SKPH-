@@ -24,6 +24,11 @@
           <router-link to="/map" class="nav-link">Map</router-link>
         </li>
         <li class="nav-item">
+          <router-link to="/tasks" class="nav-link">
+            <font-awesome-icon icon="task" /> Tasks
+          </router-link>
+        </li>
+        <li class="nav-item">
           <router-link to="/resource" class="nav-link">Resource</router-link>
         </li>
       </div>

@@ -3,6 +3,8 @@ import Home from "./components/Home.vue";
 import Login from "./components/Login.vue";
 import Register from "./components/Register.vue";
 import Resource from "@/components/Resource.vue";
+import Tasks from "@/components/Tasks.vue";
+import Task from "@/components/Task.vue";
 // lazy-loaded
 const Profile = () => import("./components/Profile.vue")
 const BoardAdmin = () => import("./components/BoardAdmin.vue")
@@ -33,6 +35,15 @@ const routes = [
   {
     path: '/resource',
     component: Resource,
+  },
+  {
+    path: "/tasks",
+    component: Tasks,
+  },
+  {
+    path: "/task/:id",
+    component: Task,
+    props: true,
   },
   {
     path: "/communication",
