@@ -128,9 +128,6 @@ export default {
         //console.log("Resources:", resources);
 
         resources.forEach((resource) => {
-          L.marker([resource.location.latitude, resource.location.longitude])
-              .addTo(this.map)
-              .bindPopup(`<strong>${resource.name}</strong><br>${resource.quantity}`);
           this.newResourcePoints.push(resource);
         });
       } catch (error) {
@@ -148,15 +145,6 @@ export default {
         //console.log("Requests:", requests);
 
         requests.forEach((request) => {
-          L.circle([request.latitude, request.longitude],
-              {
-                color: 'red',
-                fillColor: '#f03',
-                fillOpacity: 0.5,
-                radius: 75
-              })
-              .addTo(this.map)
-              .bindPopup(`<strong>${request.reporter.user.username}</strong><br>${request.amount} ${request.resourceName}`);
           this.newRequestPoints.push(request);
         });
       } catch (error) {
@@ -174,15 +162,6 @@ export default {
         //console.log("Requests:", requests);
 
         requests.forEach((request) => {
-          L.circle([request.latitude, request.longitude],
-              {
-                color: 'red',
-                fillColor: '#f03',
-                fillOpacity: 0.5,
-                radius: 75
-              })
-              .addTo(this.map)
-              .bindPopup(`<strong>${request.reporter.user.username}</strong><br>${request.amount} ${request.resourceName}`);
           this.newRequestPoints.push(request);
         });
       } catch (error) {
@@ -199,9 +178,6 @@ export default {
         //console.log("Resources:", resources);
 
         resources.forEach((resource) => {
-          L.marker([resource.location.latitude, resource.location.longitude])
-              .addTo(this.map)
-              .bindPopup(`<strong>${resource.name}</strong><br>${resource.quantity}`);
           this.newResourcePoints.push(resource);
         });
       } catch (error) {
@@ -311,11 +287,27 @@ export default {
       if(!isEqual(this.newRequestPoints, this.requestPoints)){
         this.requestPoints = this.newRequestPoints
         console.log(this.requestPoints)
+        this.requestPoints.forEach((request) => {
+          L.circle([request.latitude, request.longitude],
+              {
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0.5,
+                radius: 75
+              })
+              .addTo(this.map)
+              .bindPopup(`<strong>${request.reporter.user.username}</strong><br>${request.amount} ${request.resourceName}`);
+        });
       }
 
       if(!isEqual(this.newResourcePoints, this.resourcePoints)){
         this.resourcePoints = this.newResourcePoints
         console.log(this.resourcePoints)
+        this.resourcePoints.forEach((resource) => {
+          L.marker([resource.location.latitude, resource.location.longitude])
+              .addTo(this.map)
+              .bindPopup(`<strong>${resource.name}</strong><br>${resource.quantity}`);
+        });
       }
 
     },
