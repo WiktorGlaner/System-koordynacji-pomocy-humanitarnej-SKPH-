@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 
+import org.ioad.spring.language.services.LangService;
 import org.ioad.spring.security.postgresql.repository.UserRepository;
 import org.ioad.spring.user.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,9 @@ public class AuthController {
 
     @Autowired
     IUserService iUserService;
+
+    @Autowired
+    LangService langService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -116,6 +120,7 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
         iUserService.addUserInfo(signUpRequest.getUsername());
+        langService.addLangRecord("en", user);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 }
