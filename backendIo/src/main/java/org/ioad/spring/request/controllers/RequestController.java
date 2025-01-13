@@ -32,6 +32,18 @@ public class RequestController {
         return ResponseEntity.ok(requests);
     }
 
+    //TO TEZ POTRZEBNE :*
+    @GetMapping("/{username}/requests")
+    public ResponseEntity<List<Request>> getAllRequestsForUser(@PathVariable String username) {
+        if (userService.getUser(username).isPresent()) {
+            List<Request> requests = requestService.getAllRequestsByReporter(userService.getUser(username).get().getId());
+            return ResponseEntity.ok(requests);
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping( "/{username}/requests/addrequest")
     public ResponseEntity<String> addRequest(@PathVariable String username, @RequestBody newRequestData requestData) {
         if (userService.getUser(username).isPresent()) {
