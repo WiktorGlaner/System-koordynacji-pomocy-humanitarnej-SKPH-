@@ -10,4 +10,5 @@ import java.util.List;
 public interface LangRepository extends JpaRepository<Language, Long> {
     //List<Language> findByUser_Id(Long userId);
     Language findFirstByUser_Id(Long userId);
+    Language getLanguageByUser_Id(Long userId);
 }

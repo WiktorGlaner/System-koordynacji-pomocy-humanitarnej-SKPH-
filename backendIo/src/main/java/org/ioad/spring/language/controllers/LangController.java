@@ -42,5 +42,17 @@ public class LangController {
         langRepository.save(language);
         return ResponseEntity.ok("Language changed to " + lang);
     }
+
+    @RequestMapping("/getlang/{id}")
+    public ResponseEntity<String> getUserLang(
+            @PathVariable Long id
+    ) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        Language language = langRepository.findFirstByUser_Id(user.getId());
+        return ResponseEntity.ok(language.getLanguage());
+    }
 }
 
