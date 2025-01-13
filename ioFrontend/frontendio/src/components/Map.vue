@@ -127,6 +127,9 @@ export default {
         const resources = await response.json();
         //console.log("Resources:", resources);
 
+        resources.forEach((resource) => {
+          this.newResourcePoints.push(resource);
+        });
       } catch (error) {
         console.error("Błąd ładowania zasobów:", error);
       }
@@ -141,6 +144,9 @@ export default {
         const requests = await response.json();
         //console.log("Requests:", requests);
 
+        requests.forEach((request) => {
+          this.newRequestPoints.push(request);
+        });
       } catch (error) {
         console.error("Błąd ładowania próśb:", error);
       }
@@ -155,6 +161,9 @@ export default {
         const requests = await response.json();
         //console.log("Requests:", requests);
 
+        requests.forEach((request) => {
+          this.newRequestPoints.push(request);
+        });
       } catch (error) {
         console.error("Błąd ładowania próśb:", error);
       }
@@ -168,6 +177,9 @@ export default {
         const resources = await response.json();
         //console.log("Resources:", resources);
 
+        resources.forEach((resource) => {
+          this.newResourcePoints.push(resource);
+        });
       } catch (error) {
         console.error("Błąd ładowania zasobów:", error);
       }
@@ -275,7 +287,7 @@ export default {
       if(!isEqual(this.newRequestPoints, this.requestPoints)){
         this.requestPoints = this.newRequestPoints
         console.log(this.requestPoints)
-        this.resourcePoints.forEach((request) => {
+        this.requestPoints.forEach((request) => {
           L.circle([request.latitude, request.longitude],
               {
                 color: 'red',
@@ -285,7 +297,6 @@ export default {
               })
               .addTo(this.map)
               .bindPopup(`<strong>${request.reporter.user.username}</strong><br>${request.amount} ${request.resourceName}`);
-          this.newRequestPoints.push(request);
         });
       }
 
@@ -296,7 +307,6 @@ export default {
           L.marker([resource.location.latitude, resource.location.longitude])
               .addTo(this.map)
               .bindPopup(`<strong>${resource.name}</strong><br>${resource.quantity}`);
-          this.newResourcePoints.push(resource);
         });
       }
 
