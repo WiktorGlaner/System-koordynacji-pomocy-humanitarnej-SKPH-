@@ -51,6 +51,10 @@
           </a>
         </li>
       </div>
+      <div class="language-switcher">
+        <button @click="changeLanguage('en')">English</button>
+        <button @click="changeLanguage('pl')">Polski</button>
+      </div>
     </nav>
 
     <div class="container">
@@ -84,6 +88,9 @@ export default {
     logOut() {
       this.$store.dispatch('auth/logout');
       this.$router.push('/login');
+    },
+    changeLanguage(lang) {
+      this.$i18n.locale = lang;
     }
   }
 };

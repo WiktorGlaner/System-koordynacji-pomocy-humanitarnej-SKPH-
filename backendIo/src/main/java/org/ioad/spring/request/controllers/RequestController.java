@@ -3,7 +3,9 @@ package org.ioad.spring.request.controllers;
 import org.ioad.spring.request.models.Request;
 import org.ioad.spring.request.payload.request.UpdateRequestData;
 import org.ioad.spring.request.payload.request.newRequestData;
+import org.ioad.spring.request.repository.RequestRepository;
 import org.ioad.spring.request.services.IRequestService;
+import org.ioad.spring.security.postgresql.models.User;
 import org.ioad.spring.user.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,14 @@ public class RequestController {
     private IRequestService requestService;
     @Autowired
     private IUserService userService; //ZAMIENIC POZNIEJ NA INT4ERFEJS
+    @Autowired
+    private RequestRepository requestRepository; //SORRY MORDECZKI ALE BYŁA FUSZERKA MUSIAŁEM ZROBIC ZA WAS BUZIACZKI
+
+    @GetMapping("/requests")
+    public ResponseEntity<List<Request>> getAllRequests() {
+        List<Request> requests = requestRepository.findAll();
+        return ResponseEntity.ok(requests);
+    }
 
     @GetMapping("/{username}/requests")
     public ResponseEntity<List<Request>> getAllRequestsForUser(@PathVariable String username) {
