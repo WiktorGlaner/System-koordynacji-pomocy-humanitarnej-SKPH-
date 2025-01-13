@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface IUserService {
     Optional<UserInfo> getUser(String username);
     List<Organization> getAllOrganizations();
-    List<UserInfo> getAllVolunteer();
+//    List<UserInfo> getAllVolunteer();
+    void addUserInfo(String username);
 }

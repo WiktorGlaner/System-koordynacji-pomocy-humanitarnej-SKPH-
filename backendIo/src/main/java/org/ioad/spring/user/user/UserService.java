@@ -1,6 +1,5 @@
 package org.ioad.spring.user.user;
 
-import org.ioad.spring.user.models.EUserRoles;
 import org.ioad.spring.user.models.Organization;
 import org.ioad.spring.user.models.UserInfo;
 import org.ioad.spring.security.postgresql.models.User;
@@ -31,21 +30,21 @@ public class UserService implements IUserService {
         return organizationRepository.findAll();
     }
 
-    @Override
-    public List<UserInfo> getAllVolunteer() {
-        return userInfoRepository.findByRole(EUserRoles.ROLE_VOLUNTEER);
-    }
+//    @Override
+//    public List<UserInfo> getAllVolunteer() {
+//        return userInfoRepository.findByRole(EUserRoles.ROLE_VOLUNTEER);
+//    }
 
-    public List<VolunteerDataResponse> getAllVolunteersInfo() {
-        List<UserInfo> users = userInfoRepository.findByRole(EUserRoles.ROLE_VOLUNTEER);
-        List<VolunteerDataResponse> volunteerDataResponses = new ArrayList<>();
-
-        for (UserInfo userInfo : users) {
-            VolunteerDataResponse response = new VolunteerDataResponse(userInfo.getName(), userInfo.getSurname(), userInfo.isActivity());
-            volunteerDataResponses.add(response);
-        }
-        return volunteerDataResponses;
-    }
+//    public List<VolunteerDataResponse> getAllVolunteersInfo() {
+//        List<UserInfo> users = userInfoRepository.findByRole(EUserRoles.ROLE_VOLUNTEER);
+//        List<VolunteerDataResponse> volunteerDataResponses = new ArrayList<>();
+//
+//        for (UserInfo userInfo : users) {
+//            VolunteerDataResponse response = new VolunteerDataResponse(userInfo.getName(), userInfo.getSurname(), userInfo.isActivity());
+//            volunteerDataResponses.add(response);
+//        }
+//        return volunteerDataResponses;
+//    }
 
     @Override
     public Optional<UserInfo> getUser(String username) {
@@ -53,6 +52,16 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
        return (userInfoRepository.findByUser(user));
+    }
+
+    @Override
+    public void addUserInfo(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUser(user);
+        userInfoRepository.save(userInfo);
     }
 
     public void fillOrganizationInformation(String username, OrganizationDataRequest request) {
@@ -94,13 +103,6 @@ public class UserService implements IUserService {
         userInfo.setPesel(request.getPesel());
         userInfo.setPosition(request.getPosition());
         userInfoRepository.save(userInfo);
-
-        try {
-            EUserRoles role = EUserRoles.valueOf(request.getRole());
-            userInfo.setRole(role);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid role provided: " + request.getRole());
-        }
     }
 
     public void fillUserInformation(String username, FillDataRequest request) {
@@ -122,13 +124,6 @@ public class UserService implements IUserService {
         userInfo.setName(request.getName());
         userInfo.setSurname(request.getSurname());
         userInfo.setPesel(request.getPesel());
-
-        try {
-            EUserRoles role = EUserRoles.valueOf(request.getRole());
-            userInfo.setRole(role);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid role provided: " + request.getRole());
-        }
 
         userInfoRepository.save(userInfo);
 

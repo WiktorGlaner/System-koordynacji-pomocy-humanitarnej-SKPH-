@@ -4,15 +4,6 @@ public class FillDataRequest {
     private String name;
     private String surname;
     private String pesel;
-    private String role;
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 
     public String getName() {
         return name;

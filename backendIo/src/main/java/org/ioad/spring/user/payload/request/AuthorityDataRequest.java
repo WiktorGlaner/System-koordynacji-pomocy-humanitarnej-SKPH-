@@ -4,19 +4,10 @@ public class AuthorityDataRequest {
     private String name;
     private String surname;
     private String pesel;
-    private String role;
     private String position;
 
     public String getPosition() {
         return position;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public void setPosition(String position) {

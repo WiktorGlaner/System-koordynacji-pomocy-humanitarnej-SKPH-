@@ -17,24 +17,15 @@ public class UserInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     @Column(name = "name")
     private String name;
 
-    @NotBlank
     @Column(name = "surname")
     private String surname;
 
-    @NotBlank
     @Size(max = 11)
     @Column(name = "pesel")
     private String pesel;
-
-
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private EUserRoles role;
 
     @Column(name = "position")
     private String position;
@@ -126,11 +117,4 @@ public class UserInfo {
         this.user = user;
     }
 
-    public EUserRoles getRole() {
-        return role;
-    }
-
-    public void setRole(EUserRoles role) {
-        this.role = role;
-    }
 }
