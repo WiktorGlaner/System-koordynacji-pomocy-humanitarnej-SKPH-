@@ -23,9 +23,20 @@
             <Field name="password" type="password" class="form-control" />
             <ErrorMessage name="password" class="error-feedback" />
           </div>
-
           <div class="form-group">
-            <button class="btn btn-primary btn-block" :disabled="loading">
+            <label for="role">Role</label>
+            <Field name="role" as="select" class="form-control">
+              <option value="" disabled>Select a role</option>
+              <option value="victim">Victim</option>
+              <option value="donor">Donor</option>
+              <option value="volunteer">Volunteer</option>
+              <option value="organization">Organization</option>
+              <option value="authority">Authority</option>
+            </Field>
+            <ErrorMessage name="role" class="error-feedback" />
+          </div>
+          <div class="form-group">
+            <button class="btn btn-primary btn-block mt-4 mx-auto d-block" :disabled="loading">
               <span
                 v-show="loading"
                 class="spinner-border spinner-border-sm"
@@ -75,6 +86,7 @@ export default {
         .required("Password is required!")
         .min(6, "Must be at least 6 characters!")
         .max(40, "Must be maximum 40 characters!"),
+      role: yup.string().required('Role is required')
     });
 
     return {
@@ -159,4 +171,5 @@ label {
 .error-feedback {
   color: red;
 }
+
 </style>
