@@ -133,4 +133,15 @@ public class UserService implements IUserService {
                     userInfoRepository.save(value);
                 });
     }
+
+    public void changeActivity(Boolean activity, String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Optional<UserInfo> userInfo = userInfoRepository.findByUser(user);
+        userInfo.ifPresent(value -> {
+            value.setActivity(activity);
+            userInfoRepository.save(value);
+        });
+    }
 }

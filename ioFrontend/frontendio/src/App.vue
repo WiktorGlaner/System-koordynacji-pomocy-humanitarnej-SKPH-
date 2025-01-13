@@ -26,7 +26,7 @@
         <li class="nav-item">
           <router-link to="/resource" class="nav-link">Resource</router-link>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" v-if="currentUser && (currentUser.roles.includes('ROLE_AUTHORITY') || currentUser.roles.includes('ROLE_VOLUNTEER'))">
           <router-link to="/organization" class="nav-link">Organization</router-link>
         </li>
       </div>
