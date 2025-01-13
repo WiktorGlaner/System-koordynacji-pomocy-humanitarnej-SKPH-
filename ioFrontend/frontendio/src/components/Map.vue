@@ -57,6 +57,7 @@
 
 <script>
 import isEqual from "lodash/isEqual";
+import {toRaw} from "vue";
 
 export default {
   name: "Map",
@@ -214,7 +215,7 @@ export default {
         const popup = L.popup()
             .setLatLng([lat, lng])
             .setContent(popupContent)
-            .openOn(this.map);
+            .openOn(toRaw(this.map));
 
         setTimeout(() => {
           document.getElementById("submit-request").addEventListener("click", async () => {
@@ -295,7 +296,7 @@ export default {
                 fillOpacity: 0.5,
                 radius: 75
               })
-              .addTo(this.map)
+              .addTo(toRaw(this.map))
               .bindPopup(`<strong>${request.reporter.user.username}</strong><br>${request.amount} ${request.resourceName}`);
         });
       }
@@ -303,9 +304,10 @@ export default {
       if(!isEqual(this.newResourcePoints, this.resourcePoints)){
         this.resourcePoints = this.newResourcePoints
         console.log(this.resourcePoints)
+
         this.resourcePoints.forEach((resource) => {
           L.marker([resource.location.latitude, resource.location.longitude])
-              .addTo(this.map)
+              .addTo(toRaw(this.map))
               .bindPopup(`<strong>${resource.name}</strong><br>${resource.quantity}`);
         });
       }
