@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import jakarta.validation.Valid;
 
 import org.ioad.spring.security.postgresql.repository.UserRepository;
+import org.ioad.spring.user.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,6 +52,9 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    IUserService iUserService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -111,7 +115,7 @@ public class AuthController {
 
         user.setRoles(roles);
         userRepository.save(user);
-
+        iUserService.addUserInfo(signUpRequest.getUsername());
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 }
