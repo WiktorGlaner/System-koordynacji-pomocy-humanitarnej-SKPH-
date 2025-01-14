@@ -32,8 +32,6 @@ public class TaskController {
         return ResponseEntity.ok(taskService.calculateAverageGradeForUser(username));
     }
     
-
-
     @GetMapping("/getTask")
     public ResponseEntity<ResponseTaskDTO> getTask(@Valid @RequestParam("id") long id) {
         ResponseTaskDTO task = taskService.getTask(id);
