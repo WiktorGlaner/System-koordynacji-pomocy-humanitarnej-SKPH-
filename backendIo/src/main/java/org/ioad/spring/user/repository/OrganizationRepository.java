@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization, Long> {
     Optional<Organization> findByUser(User user);
+
+    Optional<Organization> findById(Long id);
 }

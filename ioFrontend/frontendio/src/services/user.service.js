@@ -21,13 +21,25 @@ class UserService {
   }
 
   fillUserInformation(requestData) {
-    return axios.post(`${API_URL}/user/uploadUserData`, requestData, {
+    return axios.post(`http://localhost:8080/api/user/uploadUserData`, requestData, {
       headers: authHeader()
     });
   }
 
   fillOrganizationInformation(requestData) {
-    return axios.post(`${API_URL}/user/uploadOrganizationData`, requestData, {
+    return axios.post('http://localhost:8080/api/user/uploadOrganizationData', requestData, {
+      headers: authHeader()
+    });
+  }
+
+  getUserInfo() {
+    return axios.get('http://localhost:8080/api/user/getUserInfo', {
+      headers: authHeader()
+    });
+  }
+
+  getOrganizationInfo() {
+    return axios.get('http://localhost:8080/api/user/getOrganizationInfo', {
       headers: authHeader()
     });
   }
