@@ -1,6 +1,8 @@
 package org.ioad.spring.resource.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
@@ -11,6 +13,7 @@ import java.time.LocalDate;
 @DiscriminatorValue("RESOURCE")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Resource {
+    @Getter
     @Id
     @SequenceGenerator(
             name = "resource_sequence",
@@ -23,83 +26,48 @@ public class Resource {
     )
     @Column(name = "resource_id")
     private Long id;
+    @Getter
     @Column(nullable = false, updatable = false)
     private String name;
+    @Getter
+    @Setter
+    private String description;
+    @Setter
+    @Getter
+    @Column(nullable = false)
     @Embedded
     private Location location;
+    @Getter
     @Column(nullable = false, updatable = false)
     private LocalDate expDate;
-    @Column(nullable = false, updatable = false)
+    @Setter
+    @Getter
+    @Column(nullable = false)
     private Double quantity;
+    @Getter
     @Column(nullable = false, updatable = false)
     private String unit;
+    @Getter
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDate addedDate;
+    @Getter
+    @Column(nullable = false)
     private Long organisationId;
+    @Setter
+    @Getter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ResourceStatus status = ResourceStatus.AVAILABLE;
+    @Getter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
     private ResourceType resourceType;
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public LocalDate getExpDate() {
-        return expDate;
-    }
-
-    public Double getQuantity() {
-        return quantity;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public LocalDate getAddedDate() {
-        return addedDate;
-    }
-
-    public Long getOrganisationId() {
-        return organisationId;
-    }
-
-    public void setOrganisationId(Long organisationId) {
-        this.organisationId = organisationId;
-    }
-
-    public ResourceStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(ResourceStatus status) {
-        this.status = status;
-    }
-
-    public ResourceType getResourceType() {
-        return resourceType;
-    }
-
-    public Resource(Long id, String name, Location location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType resourceType) {
+    public Resource(Long id, String name, String description, Location location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType resourceType) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.location = location;
         this.expDate = expDate;
         this.quantity = quantity;
@@ -111,8 +79,9 @@ public class Resource {
     public Resource() {
     }
 
-    public Resource(String name, Location location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType resourceType) {
+    public Resource(String name, String description, Location location, LocalDate expDate, Double quantity, String unit, Long organisationId, ResourceType resourceType) {
         this.name = name;
+        this.description = description;
         this.location = location;
         this.expDate = expDate;
         this.quantity = quantity;
@@ -121,19 +90,19 @@ public class Resource {
         this.resourceType = resourceType;
     }
 
-    public void restoreResource() {
+    public void makeAvailable() {
         this.setStatus(ResourceStatus.AVAILABLE);
     }
 
-    public void outOfComission() {
-        this.setStatus(ResourceStatus.UNAVAILABLE);
+    public void fullyAssigned() {
+        this.setStatus(ResourceStatus.FULLY_ASSIGNED);
     }
 
     public boolean isExpired() {
-        boolean isExpired = this.getExpDate().isBefore(LocalDate.now());
-        if (isExpired) {
-            this.setStatus(ResourceStatus.EXPIRED);
-        }
-        return isExpired;
+        return this.status == ResourceStatus.EXPIRED;
+    }
+
+    public boolean isDamaged() {
+        return this.status == ResourceStatus.DAMAGED;
     }
 }

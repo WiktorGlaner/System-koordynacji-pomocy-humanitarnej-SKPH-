@@ -5,6 +5,7 @@ import router from "./router";
 import store from "./store";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 import { FontAwesomeIcon } from './plugins/font-awesome'
 import en from './locales/en.json';
 import pl from './locales/pl.json';

@@ -1,9 +1,11 @@
 package org.ioad.spring.resource.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
+@Getter
 @Entity
 @Table
 public class ResourceAssignment {
@@ -31,26 +33,6 @@ public class ResourceAssignment {
 
     @Column(nullable = false, updatable = false)
     private LocalDate assignmentDate;
-
-    public Long getId() {
-        return id;
-    }
-
-    public Resource getResource() {
-        return resource;
-    }
-
-    public Long getRequestId() {
-        return requestId;
-    }
-
-    public double getAssignedQuantity() {
-        return assignedQuantity;
-    }
-
-    public LocalDate getAssignmentDate() {
-        return assignmentDate;
-    }
 
     public ResourceAssignment(Long id, Resource resource, Long requestId, double assignedQuantity) {
         this.id = id;

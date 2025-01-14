@@ -10,6 +10,7 @@ import org.ioad.spring.resource.models.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,18 +43,41 @@ public class ResourceService implements IResourceService {
         return resourceAssignmentRepository.findAll();
     }
 
+
+    void validateResource(Resource resource) {
+        if (resource.getQuantity() <= 0) {
+            throw new InvalidArgument("Cannot assign negative quantity of: " + resource.getQuantity());
+        }else if(resource.getLocation().getLatitude() < -90 || resource.getLocation().getLatitude() > 90 ||
+                resource.getLocation().getLongitude() < -180 || resource.getLocation().getLongitude() > 180) {
+            throw new InvalidArgument("Cannot assign wrong value of longitude: " + resource.getLocation().getLongitude()
+                    + "or latitude: " + resource.getLocation().getLatitude());
+        }else if(resource.getName().isEmpty()){
+            throw new InvalidArgument("Cannot assign with empty name");
+        }else if(LocalDate.now().isAfter(resource.getExpDate())) {
+            throw new InvalidArgument("Cannot add resource with expiration date before current date," +
+                    " tried to add resource with expiration date: " +  resource.getExpDate()
+                    + "while current date is: " + LocalDate.now());
+        }
+    }
+
     public void addResource(Resource resource) {
-        //add validation later
+        validateResource(resource);
         resourceRepository.save(resource);
     }
 
     public void addDonation(Donation donation) {
-        //add validation later
+        validateResource(donation);
         resourceRepository.save(donation);
     }
 
     public void removeResource(Long resourceId) {
         boolean exists = resourceRepository.existsById(resourceId);
+        List<ResourceAssignment> resource = resourceAssignmentRepository.findByResourceId(resourceId);
+
+        if (!resource.isEmpty()) {
+            throw new InvalidArgument("Resource with id " + resourceId + " is assigned.");
+        }
+
         if (!exists) {
             throw new ResourceNotFound("Resource with id " + resourceId + " does not exists" );
         }
@@ -67,26 +91,30 @@ public class ResourceService implements IResourceService {
 
     @Transactional
     @Override
-    public void modifyResource(Long resourceId, Location location, Long organisationId, ResourceStatus status) {
+    public void modifyResource(Long resourceId, String description, Location location, Double quantity, ResourceStatus status) {
         Resource resource = resourceRepository.findById(resourceId).orElseThrow(
                 () -> new ResourceNotFound("resource with " + resourceId + " does not exist"));
 
+        if (description != null &&
+                !Objects.equals(resource.getDescription(), description)) {
+            resource.setDescription(description);
+        }
+
         if (location != null &&
                 !Objects.equals(resource.getLocation(), location)) {
-            System.out.println(resource.getLocation());
-            System.out.println(location);
             resource.setLocation(location);
         }
-        if (organisationId != null &&
-                organisationId > 0 &&
-                !Objects.equals(resource.getOrganisationId(), organisationId)) {
-            resource.setOrganisationId(organisationId);
+
+        if (quantity != null &&
+                !Objects.equals(resource.getQuantity(), quantity)) {
+            resource.setQuantity(quantity);
         }
 
         if (status != null &&
                 !Objects.equals(resource.getStatus(), status)) {
             resource.setStatus(status);
         }
+        validateResource(resource);
     }
 
     @Override
@@ -120,12 +148,7 @@ public class ResourceService implements IResourceService {
         return resourceAssignmentRepository.findByResourceId(resourceId);
     }
 
-    public double getAvailableQuantity(Resource resource) {
-        Double currentAssigned = resourceRepository.getTotalAssignedQuantity(resource.getId());
-
-        return resource.getQuantity() - currentAssigned;
-    }
-
+    @Transactional
     public void assignResource(Long resourceId, Long requestId, Double quantity) {
         Resource resource = resourceRepository.findById(resourceId).orElseThrow(
                 () -> new ResourceNotFound("Resource with id " + resourceId + " not found"));
@@ -134,31 +157,37 @@ public class ResourceService implements IResourceService {
             throw new ResourceExpiredError("Resource with id " + resourceId + " has expired.");
         }
 
-        if (resource.getStatus() != ResourceStatus.AVAILABLE) {
-            throw new ResourceUnavailableException("Resource with id " + resourceId + " is unavailable.");
+        if (resource.isDamaged()) {
+            throw new ResourceDamagedError("Resource with id " + resourceId + " is damaged.");
         }
 
-        Double availableQuantity = this.getAvailableQuantity(resource);
-
-        if (availableQuantity < quantity) {
+        if (resource.getQuantity() < quantity) {
             throw new InsufficientResourceException("Not enough quantity to assign resource with id "
-                    + resourceId + ", Available: " + availableQuantity + ", Requested: " + quantity);
-        } else if (availableQuantity.equals(quantity)) {
-            resource.outOfComission();
+                    + resourceId + ", Available: " + resource.getQuantity() + ", Requested: " + quantity);
+        } else if (resource.getQuantity().equals(quantity)) {
+            resource.fullyAssigned();
         } else {
-            resource.restoreResource();
+            resource.makeAvailable();
         }
 
         ResourceAssignment assignment = new ResourceAssignment(resource, requestId, quantity);
-
         resourceAssignmentRepository.save(assignment);
+
+        resource.setQuantity(resource.getQuantity() - quantity);
+        resourceRepository.save(resource);
     }
 
+    @Transactional
     public void revokeAssignment(Long assignmentId) {
         ResourceAssignment resourceAssignment = resourceAssignmentRepository.findById(assignmentId).orElseThrow(
                 () -> new ResourceAssignmentNotFound("Assignment with id " + assignmentId +" not found"));
 
-        resourceAssignment.getResource().restoreResource();
+        Resource resource = resourceAssignment.getResource();
+
+        resource.setQuantity(resource.getQuantity() + resourceAssignment.getAssignedQuantity());
+        resource.makeAvailable();
+        resourceRepository.save(resource);
+
         resourceAssignmentRepository.deleteById(assignmentId);
     }
 
@@ -173,7 +202,13 @@ public class ResourceService implements IResourceService {
 
             if (resourceTypeValues != null && !resourceTypeValues.isEmpty()) {
                 List<ResourceType> resourceTypes = resourceTypeValues.stream()
-                        .map(value -> ResourceType.valueOf(value.toUpperCase()))
+                        .map(value -> {
+                            try {
+                                return ResourceType.valueOf(value.toUpperCase());
+                            } catch (IllegalArgumentException e) {
+                                throw new InvalidArgument("No resource type with name: " + value);
+                            }
+                        })
                         .toList();
                 predicates.add(root.get("resourceType").in(resourceTypes));
             }
@@ -182,7 +217,13 @@ public class ResourceService implements IResourceService {
             }
             if (resourceStatusValues != null && !resourceStatusValues.isEmpty()) {
                 List<ResourceStatus> resourceStatuses = resourceStatusValues.stream()
-                        .map(value -> ResourceStatus.valueOf(value.toUpperCase()))
+                        .map(value -> {
+                            try {
+                                return ResourceStatus.valueOf(value.toUpperCase());
+                            } catch (IllegalArgumentException e) {
+                                throw new InvalidArgument("No resource status with name: " + value);
+                            }
+                        })
                         .toList();
                 predicates.add(root.get("status").in(resourceStatuses));
             }

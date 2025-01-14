@@ -2,5 +2,6 @@
   "users": "Users",
   "placeholder": "Type your message...",
   "send": "Send",
-  "mapInfo": "The map is not available for your role."
+  "mapInfo": "The map is not available for your role.",
+  "resources": "Resources"
 }

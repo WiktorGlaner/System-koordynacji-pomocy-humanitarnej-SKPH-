@@ -1,77 +1,140 @@
 <template>
-  <div class="container mt-4">
-    <h2 class="mb-4">Resources</h2>
-    <button
-        class="btn btn-primary mb-3"
-        @click="toggleAvailableOnly"
-    >
-      {{ showAvailableOnly ? 'Show All Resources' : 'Show Only Available Resources' }}
-    </button>
-    <div v-if="isLoading" class="text-center">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-    <div v-else>
-      <div class="row g-3">
-        <div
-            class="col-md-6"
-            v-for="resource in filteredResources"
-            :key="resource.id"
-        >
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">
-                {{ resource.name }}
-                <i
-                    :class="getIconClass(resource.resourceType)"
-                    class="ms-2"
-                    aria-hidden="true"
-                ></i>
-              </h5>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong>Ilość:</strong> {{ resource.quantity }} {{ resource.unit }}</li>
-                <li class="list-group-item"><strong>Status:</strong>
-                  <i
-                      :class="getIconStatusClass(resource.status)"
-                      class="ms-2"
-                      aria-hidden="true"
-                  ></i></li>
-                <li class="list-group-item"><strong>Lokalizacja:</strong>
-                  Szerokość geo: {{ resource.location.latitude }}, Długość geo: {{ resource.location.longitude }}
-                </li>
-                <li class="list-group-item"><strong>Data dodania:</strong> {{ resource.addedDate }}</li>
-                <li class="list-group-item"><strong>Data przeterminowania:</strong> {{ resource.expDate }}</li>
-                <li class="list-group-item"><strong>Przeterminowane:</strong> {{ resource.expired ? 'Tak' : 'Nie' }}</li>
-                <li class="list-group-item"><strong>Organisation ID:</strong> {{ resource.organisationId }}</li>
-              </ul>
-            </div>
-          </div>
+<div class="container mt-3">
+  <div class="mb-100">
+    <BCard>
+      <BRow class="mb-3">
+        <BCol md="6">
+          <BFormGroup label="Filter by Type">
+            <BFormCheckboxGroup v-model="statusFilter" stacked>
+              <BFormCheckbox value="EXPIRED">Expired</BFormCheckbox>
+              <BFormCheckbox value="AVAILABLE">Available</BFormCheckbox>
+              <BFormCheckbox value="FULLY_ASSIGNED">Fully Assigned</BFormCheckbox>
+              <BFormCheckbox value="DAMAGED">Damaged</BFormCheckbox>
+            </BFormCheckboxGroup>
+          </BFormGroup>
+        </BCol>
+
+        <BCol md="6">
+          <BFormGroup label="Filter by Status">
+            <BFormCheckboxGroup v-model="typeFilter" stacked>
+              <BFormCheckbox value="FOOD">Food</BFormCheckbox>
+              <BFormCheckbox value="TRANSPORT">Transport</BFormCheckbox>
+              <BFormCheckbox value="CLOTHING">Clothing</BFormCheckbox>
+              <BFormCheckbox value="MEDICAL">Medical</BFormCheckbox>
+              <BFormCheckbox value="FINANCIAL">Financial</BFormCheckbox>
+              <BFormCheckbox value="EQUIPMENT">Equipment</BFormCheckbox>
+              <BFormCheckbox value="HOUSING">Housing</BFormCheckbox>
+              <BFormCheckbox value="OTHER">Other</BFormCheckbox>
+            </BFormCheckboxGroup>
+          </BFormGroup>
+        </BCol>
+      </BRow>
+
+      <div v-if="isLoading" class="d-flex justify-content-center align-items-center" style="height: 200px;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
       </div>
-    </div>
+
+      <BTable
+          v-else
+          :items="paginatedResources"
+          :fields="fields"
+          striped
+          hover
+          responsive
+          :sort-by.sync="[{key: 'addedDate', order: 'desc'}]"
+          :sort-desc.sync="sortDesc"
+      >
+        <template #cell(name)="data">
+          <span class="d-flex align-items-center">
+            <i :class="getTypeIcon(data.item.resourceType)" class="me-2"></i>
+            {{data.item.name}}
+          </span>
+        </template>
+
+        <template #cell(description)="data">
+          <span :title="data.item.description">
+            {{ truncateText(data.item.description, 50) }}
+          </span>
+        </template>
+
+        <template #cell(status)="data">
+          <span  class="badge"
+                 :class="getStatusClass(data.item.status)">
+            {{ data.item.status }}
+          </span>
+        </template>
+
+        <template #cell(quantity)="data">
+          {{ data.item.quantity }} {{ data.item.unit }}
+        </template>
+      </BTable>
+
+      <BPagination
+          v-model="currentPage"
+          :total-rows="filteredResources.length"
+          :per-page="perPage"
+          align="center"
+          class="mt-3"
+      />
+    </BCard>
+
   </div>
+</div>
 </template>
 
 <script>
+import { BCard, BRow, BCol, BFormGroup, BFormCheckboxGroup, BFormCheckbox, BTable, BPagination} from 'bootstrap-vue-next';
 import ResourceService from "@/services/resource.service.js";
 
 export default {
+  components: {
+    BCard,
+    BRow,
+    BCol,
+    BFormGroup,
+    BFormCheckboxGroup,
+    BFormCheckbox,
+    BTable,
+    BPagination,
+  },
   data() {
     return {
       resources: [],
-      isLoading: false,
-      showAvailableOnly: false,
+      isLoading: true,
+      typeFilter: [],
+      statusFilter: [],
+      fields: [
+        { key: "name", label: "Name", sortable: true },
+        { key: "description", label: "Description" },
+        { key: "quantity", label: "Quantity", sortable: true},
+        { key: "status", label: "Status"},
+        { key: "addedDate", label: "Added Date", sortable: true },
+        { key: "expDate", label: "Expiration Date", sortable: true },
+      ],
+      sortDesc: false,
+      perPage: 5,
+      currentPage: 1,
     };
   },
   computed: {
     filteredResources() {
-      return this.showAvailableOnly
-          ? this.resources.filter(resource => resource.status === "AVAILABLE")
-          : this.resources;
+      return this.resources.filter((resource) => {
+        const matchesType =
+            this.typeFilter.length === 0 || this.typeFilter.includes(resource.resourceType);
+        const matchesStatus =
+            this.statusFilter.length === 0 || this.statusFilter.includes(resource.status);
+        return matchesType && matchesStatus;
+      });
+    },
+    paginatedResources() {
+      const start = (this.currentPage - 1) * this.perPage;
+      const end = start + this.perPage;
+      return this.filteredResources.slice(start, end);
     },
   },
-  created() {
+  mounted() {
     this.fetchResources();
   },
   methods: {
@@ -80,41 +143,42 @@ export default {
       try {
         const response = await ResourceService.getAllResources();
         this.resources = response.data;
-        console.log(this.resources);
       } catch (error) {
         console.error(error);
       } finally {
         this.isLoading = false;
       }
     },
-    toggleAvailableOnly() {
-      this.showAvailableOnly = !this.showAvailableOnly;
-    },
-    getIconClass(resourceType) {
+    getTypeIcon(type) {
       const icons = {
-        FOOD: 'fas fa-utensils',
-        TRANSPORT: 'fas fa-bus',
-        CLOTHING: 'fas fa-tshirt',
-        MEDICAL: 'fas fa-briefcase-medical',
-        FINANCIAL: 'fas fa-dollar-sign',
-        EQUIPMENT: 'fas fa-cogs',
-        HOUSING: 'fas fa-home',
-        OTHER: 'fas fa-ellipsis-h',
+        FOOD: "fas fa-utensils",
+        TRANSPORT: "fas fa-car",
+        CLOTHING: "fas fa-tshirt",
+        MEDICAL: "fas fa-briefcase-medical",
+        FINANCIAL: "fas fa-dollar-sign",
+        EQUIPMENT: "fas fa-tools",
+        HOUSING: "fas fa-home",
+        OTHER: "fas fa-ellipsis-h",
       };
-      return icons[resourceType] || 'fas fa-question-circle';
+      return icons[type] || "fas fa-question";
     },
-    getIconStatusClass(resourceStatus) {
-      const icons = {
-        EXPIRED: 'fas fa-clock',
-        AVAILABLE: 'fas fa-check-circle',
-        UNAVAILABLE: 'fas fa-times-circle'
+    getStatusClass(type) {
+      const classes = {
+        EXPIRED: "bg-danger",
+        AVAILABLE: "bg-success",
+        FULLY_ASSIGNED: "bg-warning",
+        DAMAGED: "bg-secondary",
       };
-      return icons[resourceStatus] || 'fas fa-question-circle';
+      return classes[type] || "badge-secondary";
+    },
+    truncateText(text, length) {
+      if (!text) return '';
+      return text.length > length ? text.substring(0, length) + '...' : text;
     }
   },
 };
 </script>
 
-<style>
+<style scoped>
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css";
 </style>
