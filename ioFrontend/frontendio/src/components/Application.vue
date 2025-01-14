@@ -1,17 +1,17 @@
 <template>
   <div class="container">
-    <h2 class="text-center">Aplikacje do organizacji</h2>
+    <h2 class="text-center">{{ $t('application-title') }}</h2>
     <table class="table table-striped">
       <thead>
       <tr>
         <th>ID</th>
-        <th>Imię</th>
-        <th>Nazwisko</th>
-        <th>Status</th>
-        <th>Akcja</th> <!-- Dodajemy kolumnę na przycisk -->
+        <th>{{ $t('profile-name') }}</th>
+        <th>{{ $t('profile-surname') }}</th>
+        <th>{{ $t('application-status') }}</th>
+        <th>{{ $t('application-action') }}</th> <!-- Dodajemy kolumnę na przycisk -->
       </tr>
       </thead>
-      <tbody v-for="(application, index) in applications" :key="application.id">
+      <tbody v-for="(application) in applications" :key="application.id">
       <tr>
         <td>{{ application.id }}</td>
         <td>{{ application.name }}</td>
@@ -19,26 +19,26 @@
         <td>
           <!-- Status aplikacji -->
           <span v-if="!nullExists[application.id]" class="badge" :class="approvalStatus[application.id] ? 'badge-success' : 'badge-danger'">
-                {{ approvalStatus[application.id] ? 'Zatwierdzona' : 'Odrzucona' }}
+                {{ approvalStatus[application.id] ? $t('application-accept-status') : $t('application-reject-status') }}
           </span>
         </td>
         <td>
           <!-- Przycisk wyświetlający szczegóły -->
           <button @click="toogleForm(application.id)" class="btn btn-info">
-            {{ showForm[application.id] ? 'Ukryj szczegóły' : 'Pokaż szczegóły' }}
+            {{ showForm[application.id] ? $t('application-details-hide') : $t('application-details-show') }}
           </button>
           <button v-if="nullExists[application.id]" @click="acceptApplication(application.id)" class="btn btn-success">
-            {{ 'Akceptuj' }}
+            {{ $t('application-accept') }}
           </button>
           <button v-if="nullExists[application.id]" @click="rejectApplication(application.id)" class="btn btn-danger">
-            {{ 'Odrzuć' }}
+            {{ $t('application-reject') }}
           </button>
         </td>
       </tr>
       <tr v-if="this.showForm[application.id]">
         <td>Pesel: {{application.pesel}}</td>
         <td>Email: {{application.email}}</td>
-        <td>Nazwa użytkownika: {{application.username}}</td>
+        <td>{{ $t('profile-username') }}: {{application.username}}</td>
       </tr>
       </tbody>
     </table>
@@ -79,7 +79,7 @@ export default {
 
         }
       } catch (err) {
-        this.error = err.message || "Nieznany błąd";
+        this.error = err.message || $t('organiztion-error4'); ;
         this.loading = false;
       }
     },
@@ -120,7 +120,7 @@ export default {
               headers: authHeader(),
             }
         );
-        this.successMessage = `Aplikacja o ID: ${applicationId} została zaakceptowana`;
+        this.successMessage = `${this.$t('application-success-accept')} ${applicationId}`;
         setTimeout(() => (this.successMessage = null), 3000);
         this.nullExists[applicationId] = false;
         this.approvalStatus[applicationId] = true;
@@ -142,7 +142,7 @@ export default {
               headers: authHeader(),
             }
         );
-        this.successMessage = `Aplikacja o ID: ${applicationId} została odrzucona`;
+        this.successMessage = `${this.$t('application-success-reject')} ${applicationId}`;
         setTimeout(() => (this.successMessage = null), 3000);
         this.nullExists[applicationId] = false;
         this.approvalStatus[applicationId] = false;
