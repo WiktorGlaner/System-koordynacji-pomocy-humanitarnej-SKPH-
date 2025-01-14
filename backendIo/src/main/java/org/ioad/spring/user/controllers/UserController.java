@@ -170,6 +170,6 @@ public class UserController {
     public ResponseEntity<String> deleteVolunteer(@RequestBody ApplicationRequest request) {
         Long id = request.getId();
         userService.deleteVolunteer(id);
-        
+        return ResponseEntity.ok("Successfully deleted volunteer");
     }
 }

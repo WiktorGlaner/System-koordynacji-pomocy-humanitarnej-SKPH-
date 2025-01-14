@@ -66,5 +66,10 @@
   "application-accept-status": "Accepted",
   "application-reject-status": "Rejected",
   "application-message-accept": "The application with ID has been accepted:",
-  "application-message-reject": "The application with ID has been rejected:"
+  "application-message-reject": "The application with ID has been rejected:",
+  "volunteer-busy": "Busy",
+  "volunteer-free": "Available",
+  "volunteer-delete": "Delete",
+  "volunteer-messege-detete": "The volunteer with name and surname has been deleted:",
+  "volunteer-title": "Volunteer list"
 }

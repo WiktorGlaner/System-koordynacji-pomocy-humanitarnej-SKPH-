@@ -66,5 +66,10 @@
   "application-accept-status": "Zatwierdzona",
   "application-reject-status": "Odrzucona",
   "application-message-accept": "Zaakceptowano wniosek o ID:",
-  "application-message-reject": "Odrzucono wniosek o ID:"
+  "application-message-reject": "Odrzucono wniosek o ID:",
+  "volunteer-busy": "Zajęty",
+  "volunteer-free": "Dostępny",
+  "volunteer-delete": "Usuń",
+  "volunteer-messege-detete": "Usunięto wolontariusza o imieniu i nazwisku:",
+  "volunteer-title": "Lista wolontariuszy"
 }

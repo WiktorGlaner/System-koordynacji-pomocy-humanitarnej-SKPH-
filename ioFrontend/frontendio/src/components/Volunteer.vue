@@ -1,36 +1,36 @@
 <template>
   <div class="container">
-    <h2 class="text-center">Lista wolontariuszy</h2>
+    <h2 class="text-center">{{ $t('volunteer-title') }}</h2>
     <table class="table table-striped">
       <thead>
       <tr>
         <th>ID</th>
-        <th>Imię</th>
-        <th>Nazwisko</th>
-        <th>Status</th>
-        <th>Akcja</th>
+        <th>{{ $t('profile-name') }}</th>
+        <th>{{ $t('profile-surname') }}</th>
+        <th>{{ $t('application-status') }}</th>
+        <th>{{ $t('application-action') }}</th>
       </tr>
       </thead>
-      <tbody v-for="(volunteers, index) in volunteers" :key="volunteers.id">
+      <tbody v-for="(volunteers) in volunteers" :key="volunteers.id">
       <tr>
         <td>{{ volunteers.id }}</td>
         <td>{{ volunteers.name }}</td>
         <td>{{ volunteers.surname }}</td>
-        <td>{{ volunteers.activity ? 'Zajęty' : 'Wolny' }}</td>
+        <td>{{ volunteers.activity ? $t('volunteer-busy') : $t('volunteer-free') }}</td>
         <td>
 <!--          &lt;!&ndash; Przycisk wyświetlający szczegóły &ndash;&gt;-->
           <button @click="toogleForm(volunteers.id)" class="btn btn-info">
-            {{ showForm[volunteers.id] ? 'Ukryj szczegóły' : 'Pokaż szczegóły' }}
+            {{ showForm[volunteers.id] ? $t('application-details-hide') : $t('application-details-show') }}
           </button>
-          <button @click="deleteVolunteer(volunteers.id)" class="btn btn-danger">
-            {{ 'Usuń' }}
+          <button @click="deleteVolunteer(volunteers.id, volunteers.name, volunteers.surname)" class="btn btn-danger">
+            {{  $t('volunteer-delete') }}
           </button>
         </td>
       </tr>
       <tr v-if="this.showForm[volunteers.id]">
         <td>Pesel: {{volunteers.pesel}}</td>
         <td>Email: {{volunteers.email}}</td>
-        <td>Nazwa użytkownika: {{volunteers.username}}</td>
+        <td>{{ $t('profile-username') }}: {{volunteers.username}}</td>
       </tr>
       </tbody>
     </table>
@@ -38,10 +38,10 @@
       {{ successMessage }}
     </div>
     <div v-if="loading" class="text-center">
-      <i class="fas fa-spinner fa-spin"></i> Ładowanie danych...
+      <i class="fas fa-spinner fa-spin"></i> {{ $t('organization-loading') }}
     </div>
     <div v-if="error" class="alert alert-danger">
-      Wystąpił błąd podczas ładowania danych: {{ error }}
+      {{ $t('organization-error1') }} {{ error }}
     </div>
   </div>
 </template>
@@ -76,14 +76,14 @@ export default {
         this.volunteers = response.data;
         this.loading = false;
       } catch (err) {
-        this.error = err.message || "Nieznany błąd";
+        this.error = err.message || $t('organization-error4');
         this.loading = false;
       }
     },
     toogleForm(volunteersId) {
       this.showForm[volunteersId] = !this.showForm[volunteersId];
     },
-    async deleteVolunteer(userId) {
+    async deleteVolunteer(userId, name, surname) {
       const API_URL = "http://localhost:8080/api/user"; // Prawidłowy URL backendu
       try {
         const requestData = {
@@ -97,7 +97,7 @@ export default {
               headers: authHeader(),
             }
         );
-        this.successMessage = `Wolontariusz o ID: ${userId} została usunięty`;
+        this.successMessage = `${this.$t('volunteer-messege-detete')}: ${name} ${surname}`;
         setTimeout(() => (this.successMessage = null), 3000);
         this.fetchVolunteers()
       } catch (err) {
