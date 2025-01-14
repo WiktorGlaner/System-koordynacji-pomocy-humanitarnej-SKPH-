@@ -26,5 +26,22 @@
   "map-2table-type": "Name",
   "map-2table-coordinates": "Location",
   "map-center": "Show on map",
-  "resources": "Resources"
+  "resources": "Resources",
+  "profile-title1": "Account Data",
+  "profile-title2": "Personal Data",
+  "profile-title3" : "Organization data",
+  "profile-username": "Username",
+  "profile-role": "Role",
+  "profile-name": "Name",
+  "profile-surname": "Surname",
+  "profile-edit1": "Edit data",
+  "profile-edit2": "Stop editing",
+  "profile-save": "Save",
+  "profile-null": "Not provided",
+  "profile-victim": "Victim",
+  "profile-volunteer": "Volunteer",
+  "profile-donor": "Donor",
+  "profile-authority": "Authority",
+  "profile-organization": "Organization",
+  "profile-organization-name": "Organization name"
 }
