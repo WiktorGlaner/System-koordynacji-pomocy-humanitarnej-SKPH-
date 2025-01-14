@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class ApplicationDataResponse {
     private boolean exists;
+    private boolean nullExists = false;
 
     public ApplicationDataResponse(boolean exists) {
         this.exists = exists;

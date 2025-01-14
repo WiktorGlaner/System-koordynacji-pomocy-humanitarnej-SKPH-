@@ -113,4 +113,20 @@ public class UserController {
         return ResponseEntity.ok(applicationDataResponse);
     }
 
+    @PostMapping("/deleteApplication")
+    public ResponseEntity<String> deleteApplication(@RequestBody ApplicationRequest request) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long organizationId = request.getId();
+        userService.deleteApplication(username, organizationId);
+        return ResponseEntity.ok("Successfully deleted application");
+    }
+
+    @PostMapping("/getApprovalStatus")
+    public ResponseEntity<ApplicationDataResponse> getApprovalStatus(@RequestBody ApplicationRequest request) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long organizationId = request.getId();
+        ApplicationDataResponse applicationDataResponse =  userService.getApprovalStatus(username, organizationId);
+        return ResponseEntity.ok(applicationDataResponse);
+    }
+
 }

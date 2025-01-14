@@ -16,6 +16,7 @@ import org.ioad.spring.user.repository.ApplicationRepository;
 import org.ioad.spring.security.postgresql.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -172,5 +173,30 @@ public class UserService implements IUserService {
             value.setActivity(activity);
             userInfoRepository.save(value);
         });
+    }
+
+    @Transactional
+    public void deleteApplication(String username, Long id) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserInfo userInfo = userInfoRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = userInfo.getId();
+        applicationRepository.deleteApplicationByOrganizationIdAndUserInfoId(id, userId);
+    }
+
+    public ApplicationDataResponse getApprovalStatus(String username, Long id) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserInfo userInfo = userInfoRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = userInfo.getId();
+        Application approval = applicationRepository.findApprovalByOrganizationIdAndUserInfoId(id, userId);
+        System.out.println(approval.getApproval());
+        if (approval.getApproval() == null) {
+            ApplicationDataResponse applicationDataResponse = new ApplicationDataResponse(false);
+            applicationDataResponse.setNullExists(true);
+            return applicationDataResponse;
+        }
+        ApplicationDataResponse applicationDataResponse = new ApplicationDataResponse(approval.getApproval());
+        return applicationDataResponse;
     }
 }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.function.BooleanSupplier;
+
 @Setter
 @Getter
 @Entity
@@ -23,6 +25,9 @@ public class Application {
     @ManyToOne
     @JoinColumn(name = "UserInfoID", nullable = true)
     private UserInfo userInfo;
+
+    @Column(name = "Approval ")
+    private Boolean approval;
 
     public Application() {
     }
