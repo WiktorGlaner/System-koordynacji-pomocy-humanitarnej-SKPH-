@@ -1,5 +1,6 @@
 package org.ioad.spring.user.controllers;
 
+import jakarta.validation.Valid;
 import org.ioad.spring.security.postgresql.payload.response.MessageResponse;
 import org.ioad.spring.user.payload.request.FillDataRequest;
 import org.ioad.spring.user.payload.request.OrganizationDataRequest;
@@ -11,6 +12,7 @@ import org.ioad.spring.user.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -56,7 +58,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_ORGANIZATION')" )
     @PostMapping("/uploadOrganizationData")
-    public ResponseEntity<MessageResponse> fillOrganizationInformation(@RequestBody OrganizationDataRequest request) {
+    public ResponseEntity<MessageResponse> fillOrganizationInformation(@Valid @RequestBody OrganizationDataRequest request) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         userService.fillOrganizationInformation(username, request);
@@ -72,7 +74,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_VOLUNTEER') || hasRole('ROLE_VICTIM') || hasRole('ROLE_AUTHORITY') || hasRole('ROLE_DONOR')")
     @PostMapping("/uploadUserData")
-    public ResponseEntity<MessageResponse> fillUserInformation(@RequestBody FillDataRequest request) {
+    public ResponseEntity<MessageResponse> fillUserInformation(@Valid @RequestBody FillDataRequest request) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         userService.fillUserInformation(username, request);
@@ -85,5 +87,19 @@ public class UserController {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         userService.makeApplication(username, id);
         return ResponseEntity.ok("Successfully added made application");
+    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<MessageResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        String errorMessage = ex.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(error -> error.getDefaultMessage())
+                .findFirst()
+                .orElse("Validation error");
+
+        MessageResponse messageResponse = new MessageResponse(errorMessage);
+        return ResponseEntity.badRequest().body(messageResponse);
     }
 }

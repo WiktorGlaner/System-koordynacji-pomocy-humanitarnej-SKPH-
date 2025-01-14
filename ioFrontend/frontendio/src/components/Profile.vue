@@ -5,22 +5,22 @@
         <strong>{{currentUser.username}}</strong> Profile
       </h3>
     </header>
-    <p>
-      <strong>Token:</strong>
-      {{currentUser.accessToken}} ... {{currentUser.accessToken.substr(currentUser.accessToken.length - 20)}}
+
+    <p v-if="currentUser.roles.includes('ROLE_VICTIM')">
+      You have registered like a victim
     </p>
-    <p>
-      <strong>Id:</strong>
-      {{currentUser.id}}
+    <p v-if="currentUser.roles.includes('ROLE_DONOR')">
+      You have registered like a donor
     </p>
-    <p>
-      <strong>Email:</strong>
-      {{currentUser.email}}
+    <p v-if="currentUser.roles.includes('ROLE_AUTHORITY')">
+      You have registered like a authority
     </p>
-    <strong>Authorities:</strong>
-    <ul>
-      <li v-for="role in currentUser.roles" :key="role">{{role}}</li>
-    </ul>
+    <p v-if="currentUser.roles.includes('ROLE_ORGANIZATION')">
+      You have registered like a organization
+    </p>
+    <p v-if="currentUser.roles.includes('ROLE_VOLUNTEER')">
+      You have registered like a volunteer
+    </p>
 
     <!-- Nowy przycisk do pobierania danych -->
     <button @click="fetchUserProfile(currentUser.roles)" class="btn btn-primary">
@@ -44,6 +44,10 @@
           <input v-model="userData.pesel" id="pesel" type="text" class="form-control" />
         </div>
         <div class="form-group">
+          <label for="email">Email:</label>
+          <input v-model="currentUser.email" id="email" type="email" class="form-control" readonly />
+        </div>
+        <div class="form-group">
           <button type="submit" class="btn btn-success">Save</button>
         </div>
       </form>
@@ -61,7 +65,11 @@
       <form @submit.prevent="submitOrganizationForm">
         <div class="form-group">
           <label for="organizationName">Organization name:</label>
-          <input v-model="organizationData.name" id="name" type="text" class="form-control" />
+          <input v-model="organizationData.name" id="organizationName" type="text" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input v-model="currentUser.email" id="email" type="email" class="form-control" readonly />
         </div>
         <div class="form-group">
           <button type="submit" class="btn btn-success">Submit</button>
@@ -136,16 +144,21 @@ export default {
     },
     submitForm() {
       UserService.fillUserInformation(this.userData)
-        .then(response => {
-          this.successful = true;
-          this.message = response.data.message;
-          console.log('Profile updated:', response.data);
-        })
-        .catch(error => {
-          this.message = error.response.data;
-          this.successful = false;
-          this.error = error.response ? error.response.data : 'Error';
-        });
+    .then(response => {
+      this.successful = true;
+      this.message = response.data.message;
+      console.log('Profile updated:', response.data);
+    })
+    .catch(error => {
+      this.successful = false;
+      if (error.response && error.response.data) {
+        this.message = error.response.data.message;
+        this.error = error.response.data.message;
+      } else {
+        this.message = 'Error';
+        this.error = 'Error';
+      }
+    });
     },
     submitOrganizationForm() {
       UserService.fillOrganizationInformation(this.organizationData)
@@ -155,10 +168,15 @@ export default {
             this.message = response.data.message;
           })
           .catch(error => {
-            this.message = error.response.data;
-            this.successful = false;
-            this.error = error.response ? error.response.data : 'Error';
-          });
+          this.successful = false;
+          if (error.response && error.response.data) {
+            this.message = error.response.data.message;
+            this.error = error.response.data.message;
+          } else {
+            this.message = 'Error';
+            this.error = 'Error';
+          }
+        });
     },
   },
 };
