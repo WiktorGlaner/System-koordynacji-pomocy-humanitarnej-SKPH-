@@ -83,6 +83,7 @@ public class UserController {
         return ResponseEntity.ok(new MessageResponse("Successfully added information about user"));
     }
 
+    @PreAuthorize("hasRole('ROLE_VOLUNTEER')")
     @PostMapping("/makeApplication")
     public ResponseEntity<String> makeApplication(@RequestBody ApplicationRequest request) {
 
@@ -105,6 +106,7 @@ public class UserController {
         MessageResponse messageResponse = new MessageResponse(errorMessage);
         return ResponseEntity.badRequest().body(messageResponse);
     }
+
     @PostMapping("/checkApplicationExists")
     public ResponseEntity<ApplicationDataResponse> checkApplicationExists(@RequestBody ApplicationRequest request) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -113,6 +115,7 @@ public class UserController {
         return ResponseEntity.ok(applicationDataResponse);
     }
 
+    @PreAuthorize("hasRole('ROLE_VOLUNTEER')")
     @PostMapping("/deleteApplication")
     public ResponseEntity<String> deleteApplication(@RequestBody ApplicationRequest request) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -120,7 +123,7 @@ public class UserController {
         userService.deleteApplication(username, organizationId);
         return ResponseEntity.ok("Successfully deleted application");
     }
-
+    
     @PostMapping("/getApprovalStatus")
     public ResponseEntity<ApplicationDataResponse> getApprovalStatus(@RequestBody ApplicationRequest request) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();

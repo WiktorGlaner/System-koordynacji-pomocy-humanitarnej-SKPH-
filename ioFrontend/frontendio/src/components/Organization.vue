@@ -13,7 +13,7 @@
         <td>{{ organization.id }}</td>
         <td>{{ organization.name }}</td>
         <td>
-          <div v-if="applicationExists[organization.id]">
+          <div v-if="applicationExists[organization.id] && currentUser.roles.includes('ROLE_VOLUNTEER')">
             <button
                 @click="removeApplication(organization.id)"
                 class="btn btn-danger"
@@ -25,7 +25,7 @@
                 {{ approvalStatus[organization.id] ? 'Zatwierdzona' : 'Odrzucona' }}
             </span>
           </div>
-          <div v-else>
+          <div v-else-if="currentUser.roles.includes('ROLE_VOLUNTEER')">
             <!-- Przycisk składania aplikacji -->
             <button
                 @click="addApplication(organization.id)"
