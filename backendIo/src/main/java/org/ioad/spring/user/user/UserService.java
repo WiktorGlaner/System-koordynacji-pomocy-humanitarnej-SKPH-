@@ -6,6 +6,7 @@ import org.ioad.spring.user.models.UserInfo;
 import org.ioad.spring.security.postgresql.models.User;
 import org.ioad.spring.user.payload.request.FillDataRequest;
 import org.ioad.spring.user.payload.request.OrganizationDataRequest;
+import org.ioad.spring.user.payload.response.ApplicationDataResponse;
 import org.ioad.spring.user.payload.response.OrganizationInfoDataResponse;
 import org.ioad.spring.user.payload.response.UserInfoDataResponse;
 import org.ioad.spring.user.payload.response.VolunteerDataResponse;
@@ -135,6 +136,18 @@ public class UserService implements IUserService {
         return organization.map(value ->
                 new OrganizationInfoDataResponse(value.getName())
         ).orElseThrow(() -> new RuntimeException("UserInfo not found for user: " + username));
+    }
+
+    // Przykład metody w serwisie
+    public ApplicationDataResponse isApplicationExist(Long organizationId, String username) {
+        // Sprawdzamy, czy w bazie danych istnieje aplikacja o danym id organizacji i użytkownika
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserInfo userInfo = userInfoRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = userInfo.getId();
+        Boolean exitst = applicationRepository.existsByOrganizationIdAndUserInfoId(organizationId, userId);
+        ApplicationDataResponse applicationDataResponse = new ApplicationDataResponse(exitst);
+        return applicationDataResponse;
     }
 
     public void fillUserInformation(String username, FillDataRequest request) {
