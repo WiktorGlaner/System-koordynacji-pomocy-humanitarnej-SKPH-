@@ -45,7 +45,7 @@
     <div v-if="loading" class="text-center">
       <i class="fas fa-spinner fa-spin"></i> {{ $t('organization-loading') }}
     </div>
-    
+
     <div v-if="error" class="alert alert-danger">
       {{ $t('organization-error1') }}: {{ error }}
     </div>

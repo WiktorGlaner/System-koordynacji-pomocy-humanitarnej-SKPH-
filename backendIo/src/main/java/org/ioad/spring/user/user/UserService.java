@@ -77,6 +77,31 @@ public class UserService implements IUserService {
         return volunteerDataResponses;
     }
 
+    public List<VolunteerDataResponse> getAllVolunteersInfoByOrganizationId(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Organization organization = organizationRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<VolunteerDataResponse> volunteerDataResponses = new ArrayList<>();
+        List<UserInfo> volunteers = this.getAllVolunteers();
+
+        for (UserInfo userInfo : volunteers) {
+            if (userInfo.getOrganization() != null && userInfo.getOrganization().getId() == organization.getId()) {
+                VolunteerDataResponse response = new VolunteerDataResponse(
+                        userInfo.getUser().getUsername(),
+                        userInfo.getPesel(),
+                        userInfo.getUser().getEmail(),
+                        userInfo.getId(),
+                        userInfo.isActivity(),
+                        userInfo.getSurname(),
+                        userInfo.getName()
+                );
+                volunteerDataResponses.add(response);
+            }
+        }
+        return volunteerDataResponses;
+    }
+
     @Override
     public Optional<UserInfo> getUser(String username) {
         User user = userRepository.findByUsername(username)
@@ -264,5 +289,11 @@ public class UserService implements IUserService {
         Application application = applicationRepository.findById(id).orElseThrow(() -> new RuntimeException("Application not found"));
         application.setApproval(false);
         applicationRepository.save(application);
+    }
+
+    public void deleteVolunteer(Long id) {
+        UserInfo userInfo = userInfoRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        userInfo.setOrganization(null);
+        userInfoRepository.save(userInfo);
     }
 }

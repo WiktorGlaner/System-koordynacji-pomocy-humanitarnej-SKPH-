@@ -40,6 +40,13 @@ public class UserController {
         return ResponseEntity.ok(volunteers);
     }
 
+    @GetMapping("/allVolunteersByOrganizationId")
+    public ResponseEntity<List<VolunteerDataResponse>> getAllVolunteers() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<VolunteerDataResponse> volunteers = userService.getAllVolunteersInfoByOrganizationId(username);
+        return ResponseEntity.ok(volunteers);
+    }
+
     @PreAuthorize("hasRole('ROLE_VOLUNTEER') || hasRole('ROLE_VICTIM') || hasRole('ROLE_AUTHORITY') || hasRole('ROLE_DONOR')")
     @GetMapping("/getUserInfo")
     public ResponseEntity<UserInfoDataResponse> getUserInfo() {
@@ -157,5 +164,12 @@ public class UserController {
         Long id = request.getId();
         userService.rejectApplication(id);
         return ResponseEntity.ok("Successfully added rejected application");
+    }
+
+    @PostMapping("/deleteVolunteer")
+    public ResponseEntity<String> deleteVolunteer(@RequestBody ApplicationRequest request) {
+        Long id = request.getId();
+        userService.deleteVolunteer(id);
+        
     }
 }
