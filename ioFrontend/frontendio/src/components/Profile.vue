@@ -1,51 +1,68 @@
 <template>
   <div class="container">
-    <header class="jumbotron">
-      <h3>
-        <strong>{{currentUser.username}}</strong> Profile
-      </h3>
-    </header>
+    <div class="jumbotron">
+      <h1>Account Data</h1>
+    </div>
+    <div class="profile-row">
+      <div class="profile-item">
+        <p class="label">Username</p>
+        <p class="value">{{ currentUser.username }}</p>
+      </div>
+      <div class="profile-item">
+        <p class="label">Email</p>
+        <p class="value">{{ currentUser.email }}</p>
+      </div>
+      <div class="profile-item">
+        <p class="label">Role</p>
+        <p class="value">
+          <span v-if="currentUser.roles.includes('ROLE_VICTIM')">Victim</span>
+          <span v-else-if="currentUser.roles.includes('ROLE_DONOR')">Donor</span>
+          <span v-else-if="currentUser.roles.includes('ROLE_AUTHORITY')">Authority</span>
+          <span v-else-if="currentUser.roles.includes('ROLE_ORGANIZATION')">Organization</span>
+          <span v-else-if="currentUser.roles.includes('ROLE_VOLUNTEER')">Volunteer</span>
+        </p>
+      </div>
+    </div>
+  </div>
 
-    <p v-if="currentUser.roles.includes('ROLE_VICTIM')">
-      You have registered like a victim
-    </p>
-    <p v-if="currentUser.roles.includes('ROLE_DONOR')">
-      You have registered like a donor
-    </p>
-    <p v-if="currentUser.roles.includes('ROLE_AUTHORITY')">
-      You have registered like a authority
-    </p>
-    <p v-if="currentUser.roles.includes('ROLE_ORGANIZATION')">
-      You have registered like a organization
-    </p>
-    <p v-if="currentUser.roles.includes('ROLE_VOLUNTEER')">
-      You have registered like a volunteer
-    </p>
-
-    <!-- Nowy przycisk do pobierania danych -->
-    <button @click="fetchUserProfile(currentUser.roles)" class="btn btn-primary">
-      {{showForm ? "Hide profile data" : "Show profile data"}}
-    </button>
+  <div v-if="userData" class="container">
+    <div class="jumbotron">
+      <h1>Personal Data</h1>
+    </div>
+    <div class="profile-row">
+      <div class="profile-item">
+        <p class="label">Name</p>
+        <p class="value">{{ userData && userData.name ? userData.name : "Not provided" }}</p>
+      </div>
+      <div class="profile-item">
+        <p class="label">Surname</p>
+        <p class="value">{{ userData && userData.surname ? userData.surname : "Not provided" }}</p>
+      </div>
+      <div class="profile-item">
+        <p class="label">PESEL</p>
+        <p class="value">{{ userData && userData.pesel ? userData.pesel : "Not provided" }}</p>
+      </div>
+      <div class="priofile-item"> 
+        <button @click="toogleForm()" class="btn btn-primary">
+          {{showForm ? "Stop editing" : "Edit profile"}}
+        </button>
+      </div>
+    </div>    
 
     <!-- Wyświetlanie formularza na podstawie stanu danych -->
-    <div v-if="showForm && userData" class="form-container">
-      <h4>{{ isProfileComplete ? "Edytuj dane" : "Uzupełnij dane" }}</h4>
+    <div v-if="showForm" class="form-container">
       <form @submit.prevent="submitForm">
         <div class="form-group">
           <label for="name">Name:</label>
-          <input v-model="userData.name" id="name" type="text" class="form-control" />
+          <input v-model="changeData.name" id="name" type="text" class="form-control" />
         </div>
         <div class="form-group">
           <label for="surname">Surname:</label>
-          <input v-model="userData.surname" id="surname" type="text" class="form-control" />
+          <input v-model="changeData.surname" id="surname" type="text" class="form-control" />
         </div>
         <div class="form-group">
           <label for="pesel">PESEL:</label>
-          <input v-model="userData.pesel" id="pesel" type="text" class="form-control" />
-        </div>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input v-model="currentUser.email" id="email" type="email" class="form-control" readonly />
+          <input v-model="changeData.pesel" id="pesel" type="text" class="form-control" />
         </div>
         <div class="form-group">
           <button type="submit" class="btn btn-success">Save</button>
@@ -59,17 +76,28 @@
         {{ message }}
       </div>
     </div>
+  </div>
 
-    <div v-if="showForm && currentUser.roles.includes('ROLE_ORGANIZATION') && organizationData" class="form-container">
-      <h4>Add organization data</h4>
+  <div v-if="currentUser.roles.includes('ROLE_ORGANIZATION')" class="container">
+    <div class="jumbotron">
+      <h1>Organization Data</h1>
+    </div>
+    <div class="profile-row">
+      <div class="profile-item-organization">
+        <p class="label">Organization name</p>
+        <p class="value">{{ organizationData && organizationData.name ? organizationData.name : "Not provided" }}</p>
+      </div>
+      <div class="priofile-item"> 
+        <button @click="toogleForm()" class="btn btn-primary">
+          {{showForm ? "Stop editing" : "Edit profile"}}
+        </button>
+      </div>
+    </div>   
+    <div v-if="showForm" class="form-container">
       <form @submit.prevent="submitOrganizationForm">
         <div class="form-group">
           <label for="organizationName">Organization name:</label>
-          <input v-model="organizationData.name" id="organizationName" type="text" class="form-control" />
-        </div>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input v-model="currentUser.email" id="email" type="email" class="form-control" readonly />
+          <input v-model="changeDataOrg.name" id="organizationName" type="text" class="form-control" />
         </div>
         <div class="form-group">
           <button type="submit" class="btn btn-success">Submit</button>
@@ -83,7 +111,6 @@
         {{ message }}
         </div>
     </div>
-    
   </div>
 </template>
 
@@ -94,6 +121,14 @@ export default {
   name: 'Profile',
   data() {
     return {
+      changeData: {
+        name: "",
+        surname: "",
+        pesel: ""
+      },
+      changeDataOrg: {
+        name: ""
+      },
       userData: null,
       organizationData: null,
       isProfileComplete: false,
@@ -111,15 +146,18 @@ export default {
   mounted() {
     if (!this.currentUser) {
       this.$router.push('/login');
+    } else {
+      this.fetchUserProfile(this.currentUser.roles);
+      console.log(this.userData);
     }
   },
   methods: {
-    fetchUserProfile(user) {
-      this.showForm = !this.showForm;
-      if (user.includes('ROLE_ORGANIZATION')) {
+    fetchUserProfile(roles) {
+      if (roles.includes('ROLE_ORGANIZATION')) {
         UserService.getOrganizationInfo()
         .then(response => {
           this.organizationData = response.data;
+          this.changeDataOrg = { ...this.organizationData };
           this.isProfileComplete = !!(
             this.organizationData
           );
@@ -131,6 +169,7 @@ export default {
         UserService.getUserInfo()
         .then(response => {
           this.userData = response.data;
+          this.changeData = { ...this.userData };
           this.isProfileComplete = !!(
             this.userData.name &&
             this.userData.surname &&
@@ -143,9 +182,10 @@ export default {
       }
     },
     submitForm() {
-      UserService.fillUserInformation(this.userData)
+      UserService.fillUserInformation(this.changeData)
     .then(response => {
       this.successful = true;
+      this.userData = { ...this.changeData };
       this.message = response.data.message;
       console.log('Profile updated:', response.data);
     })
@@ -164,6 +204,7 @@ export default {
       UserService.fillOrganizationInformation(this.organizationData)
           .then(response => {
             console.log(response.data.message)
+            this.organizationData = { ...this.changeDataOrg };
             this.successful = true;
             this.message = response.data.message;
           })
@@ -178,19 +219,55 @@ export default {
           }
         });
     },
+    toogleForm() {
+      this.message = "";
+      this.showForm = !this.showForm;
+    }
   },
 };
 </script>
 
 <style scoped>
-.form-container {
+.container {
+  width: 80%;
+  margin: 0 auto;
   margin-top: 20px;
-  padding: 15px;
+  padding: 20px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  background: #f9f9f9;
+  border-radius: 8px;
+  background-color: #f9f9f9;
 }
-.form-container .form-group {
-  margin-bottom: 10px;
+
+.jumbotron {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Odstęp między elementami */
+}
+
+.profile-item {
+  flex: 1;
+  text-align: center;
+}
+
+.profile-item-organization {
+  flex: 1;
+  text-align: left;
+}
+
+.label {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.value {
+  font-size: 1.2rem;
+  color: #333;
 }
 </style>
