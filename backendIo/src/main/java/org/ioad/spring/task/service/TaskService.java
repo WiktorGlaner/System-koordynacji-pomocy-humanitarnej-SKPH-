@@ -7,7 +7,6 @@ import org.ioad.spring.request.services.RequestService;
 import org.ioad.spring.resource.models.Resource;
 import org.ioad.spring.resource.models.ResourceAssignment;
 import org.ioad.spring.resource.services.ResourceService;
-import org.ioad.spring.security.postgresql.models.User;
 import org.ioad.spring.task.TaskServiceCommunication;
 import org.ioad.spring.task.exceptions.*;
 import org.ioad.spring.task.model.*;
