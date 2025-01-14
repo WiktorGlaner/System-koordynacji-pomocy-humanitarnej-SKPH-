@@ -5,8 +5,8 @@ import java.util.List;
 public class CreateTaskDTO {
     private Task task;
     private Long requestID;
+    private List<String> volunteers;
     private List<ResourcePair> resources;
-//    private List<Long> volunteers;
 
     // Gettery i settery
     public Task getTask() {
@@ -25,6 +25,14 @@ public class CreateTaskDTO {
         this.requestID = requestID;
     }
 
+    public List<String> getVolunteers() {
+        return volunteers;
+    }
+
+    public void setVolunteers(List<String> volunteers) {
+        this.volunteers = volunteers;
+    }
+
     public List<ResourcePair> getResources() {
         return resources;
     }
@@ -32,12 +40,4 @@ public class CreateTaskDTO {
     public void setResources(List<ResourcePair> resources) {
         this.resources = resources;
     }
-
-//    public List<Long> getVolunteers() {
-//        return volunteers;
-//    }
-//
-//    public void setVolunteers(List<Long> volunteers) {
-//        this.volunteers = volunteers;
-//    }
 }

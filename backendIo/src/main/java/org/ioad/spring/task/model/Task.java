@@ -24,7 +24,12 @@ public class Task {
     @Column(name = "task_id")
     private Long id;
 
-        @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+        name = "task_volunteers",
+        joinColumns = @JoinColumn(name = "task_id"),
+        inverseJoinColumns = @JoinColumn(name = "id")
+    )
     private List<UserInfo> volunteers;
 
     @Column(nullable = false)
@@ -35,25 +40,9 @@ public class Task {
     @Column(nullable = false)
     private String organization;
 
-    //    @ElementCollection
-//    private List<Integer> volunteers;
-//
-
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "task_resource",  // Tabela pośrednia
-//            joinColumns = @JoinColumn(name = "task_id"),
-//            inverseJoinColumns = @JoinColumn(name = "resource_id")
-//    )
-//    private List<Resource> resourceList;
-
     @ManyToOne
     @JoinColumn(name = "request_id", nullable = false) // Klucz obcy w tabeli Task
     private Request request;
-
-//    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
-//    private List<UserInfo> volunteers;
 
     @Column(nullable = false)
     private String location;
@@ -101,14 +90,13 @@ public class Task {
         this.request = request;
     }
 
+    public List<UserInfo> getVolunteers() {
+        return volunteers;
+    }
 
-//    public List<UserInfo> getVolunteers() {
-//        return volunteers;
-//    }
-//
-//    public void setVolunteers(List<UserInfo> volunteers) {
-//        this.volunteers = volunteers;
-//    }
+    public void setVolunteers(List<UserInfo> volunteers) {
+        this.volunteers = volunteers;
+    }
 
     public String getLocation() {
         return location;

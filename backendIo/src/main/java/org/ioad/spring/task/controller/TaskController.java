@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+
 @RequestMapping("/api/test")
 @RestController
 public class TaskController {
@@ -20,11 +21,17 @@ public class TaskController {
     private TaskService taskService;
 
     @PostMapping("/createTask")
-    public ResponseEntity<ResponseTaskDTO> createTask(@RequestBody CreateTaskDTO createTaskDTO) {
+    public ResponseEntity<ResponseTaskDTO> createTask(@Valid @RequestBody CreateTaskDTO createTaskDTO) {
         validateCreateTaskData(createTaskDTO);
         ResponseTaskDTO createdTask = taskService.createTask(createTaskDTO);
         return ResponseEntity.ok(createdTask);
     }
+
+    @GetMapping("/calculateGrade")
+    public ResponseEntity<Double> calculateAverageGradeForUser(@RequestParam String username) {
+        return ResponseEntity.ok(taskService.calculateAverageGradeForUser(username));
+    }
+    
 
 
     @GetMapping("/getTask")
@@ -101,6 +108,16 @@ public class TaskController {
 
         if (createTaskDTO.getRequestID() == null) {
             throw new MissingRequiredDataException("Request ID must be provided.");
+        }
+
+        List<String> volunteers = createTaskDTO.getVolunteers();
+
+        if (volunteers == null || volunteers.isEmpty()) {
+            throw new MissingRequiredDataException("At least one volunteer must be provided.");
+        }
+
+        if (volunteers.stream().anyMatch(volunteer -> volunteer == null || volunteer.trim().isEmpty())) {
+            throw new MissingRequiredDataException("Volunteer names must not be null or empty.");
         }
 
         List<ResourcePair> resources = createTaskDTO.getResources();

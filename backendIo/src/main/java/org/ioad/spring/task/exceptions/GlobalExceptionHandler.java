@@ -42,4 +42,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleIllegalStateException(IllegalStateException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler(DuplicateTaskException.class)
+    public ResponseEntity<String> handleDuplicateTaskException(DuplicateTaskException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(VolunteerNotFoundException.class)
+    public ResponseEntity<String> handleVolunteerNotFoundException(VolunteerNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 }

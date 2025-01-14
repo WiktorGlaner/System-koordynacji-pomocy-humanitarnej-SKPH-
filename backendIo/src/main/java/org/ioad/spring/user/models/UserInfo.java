@@ -44,10 +44,6 @@ public class UserInfo {
     @JoinColumn(name = "OrganizationId", nullable = true)
     private Organization organization;
 
-    @ManyToOne
-    @JoinColumn(name = "task_id", nullable = true)
-    private Task task;
-
     public UserInfo() {
 
     }

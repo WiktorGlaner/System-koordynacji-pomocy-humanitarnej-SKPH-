@@ -7,16 +7,20 @@ import org.ioad.spring.request.services.RequestService;
 import org.ioad.spring.resource.models.Resource;
 import org.ioad.spring.resource.models.ResourceAssignment;
 import org.ioad.spring.resource.services.ResourceService;
+import org.ioad.spring.security.postgresql.models.User;
 import org.ioad.spring.task.TaskServiceCommunication;
 import org.ioad.spring.task.exceptions.*;
 import org.ioad.spring.task.model.*;
 import org.ioad.spring.task.repository.TaskRepo;
+import org.ioad.spring.user.models.UserInfo;
+import org.ioad.spring.user.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService implements TaskServiceCommunication {
@@ -29,11 +33,16 @@ public class TaskService implements TaskServiceCommunication {
 
         Long requestID = createTaskDTO.getRequestID();
         List<ResourcePair> resources = createTaskDTO.getResources();
-//        List<Long> volunteerIds = createTaskDTO.getVolunteers();
+        List<String> volunteerUsernames = createTaskDTO.getVolunteers();
 
         Request request = getRequest(requestID);
         if (request == null) {
             throw new RequestNotFoundException("Request with ID " + requestID + " not found.");
+        }
+
+        Optional<Task> existingTask = taskRepo.findByRequest(request);
+        if (existingTask.isPresent()) {
+            throw new DuplicateTaskException("A task for request ID " + requestID + " already exists.");
         }
 
         for (ResourcePair resourcePair : resources) {
@@ -47,16 +56,21 @@ public class TaskService implements TaskServiceCommunication {
             assignResource(resourcePair.getId(), requestID, resourcePair.getQuantity());
         }
 
-//        for (Long volunteerId : volunteerIds) {
-//            getVoluntirbyID
-//            if(volunteer == null) {
-//                throw new VolunteerNotFoundException("Volunteer with ID " + volunteer + " not found.");
-//            }
-//             jesli znajdziesz wolontiusza przypisz go to tymczasowej listy,
-//             która uzjesz w seterze zeby ustawic wolontariuszy
-//        }
+        List<UserInfo> volunteers = new ArrayList<>();
+        
+        for (String volunteerUsername : volunteerUsernames) {
+            Optional<UserInfo> volunteer = getUserByUsename(volunteerUsername);
+            if (volunteer.isEmpty()) {
+                throw new VolunteerNotFoundException("Volunteer with username " + volunteerUsername + " not found.");
+            }
+            volunteers.add(volunteer.get());
+        }
 
+        for (String volunteerUsername : volunteerUsernames) {
+            changeActivity(true, volunteerUsername);
+        }
 
+        task.setVolunteers(volunteers);
         task.setRequest(request);
         changeRequestStatus(requestID, EStatus.IN_PROGRESS);
 
@@ -82,6 +96,9 @@ public class TaskService implements TaskServiceCommunication {
                 throw new IllegalStateException("Task is already completed and cannot be completed again.");
             }
             existingTask.setStatus(TaskStatus.COMPLETED);
+            for (UserInfo volunteer : existingTask.getVolunteers()) {
+                changeActivity(false, volunteer.getUser().getUsername());
+            }
             changeRequestStatus(existingTask.getRequest().getRequestId(), EStatus.COMPLETED);
             taskRepo.save(existingTask);
             return buildResponseTaskDTO(existingTask);
@@ -139,6 +156,22 @@ public class TaskService implements TaskServiceCommunication {
         }).orElseThrow(() -> new TaskNotFoundException("Task not found with id " + id));
 
         return buildResponseTaskDTO(task);
+    }
+
+    
+    public Double calculateAverageGradeForUser(String username) {
+        List<Task> completedTasks = taskRepo.findByVolunteers_User_UsernameAndStatus(username, TaskStatus.COMPLETED);
+
+        if (completedTasks.isEmpty()) {
+            return 0.0;
+        }
+
+        int totalGrade = 0;
+        for (Task task : completedTasks) {
+            totalGrade += task.getGrade();
+        }
+
+        return (double) totalGrade / completedTasks.size();
     }
 
 
@@ -218,6 +251,9 @@ public class TaskService implements TaskServiceCommunication {
     @Autowired
     ResourceService resourceService;
 
+    @Autowired
+    UserService userService;
+
     @Override
     public List<Integer> getAllVolunteers() {
         return List.of();
@@ -258,4 +294,19 @@ public class TaskService implements TaskServiceCommunication {
     public List<ResourceAssignment> getResourcesInTask(Long id) {
         return resourceService.getAssignmentsByRequestId(id);
     }
+
+    @Override
+    public Optional<UserInfo> getUserByUsename(String username) {
+        try {
+            return userService.getUser(username);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public void changeActivity(Boolean active, String username) {
+        userService.changeActivity(active, username);
+    }
+
 }
