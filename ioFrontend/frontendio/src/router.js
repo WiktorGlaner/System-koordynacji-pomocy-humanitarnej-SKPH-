@@ -13,6 +13,8 @@ const BoardUser = () => import("./components/BoardUser.vue")
 const Communcation = () => import("./components/Communication.vue")
 const Map = () => import("./components/Map.vue")
 const Organization = () => import("./components/Organization.vue")
+const Volunteer = () => import("./components/Volunteer.vue")
+const Application = () => import("./components/Application.vue")
 
 const routes = [
   {
@@ -84,6 +86,14 @@ const routes = [
   {
     path: '/organization',
     component: Organization,
+  },
+  {
+    path: '/volunteer',
+    component: Volunteer,
+  },
+  {
+    path: '/application',
+    component: Application,
   },
 ];
 

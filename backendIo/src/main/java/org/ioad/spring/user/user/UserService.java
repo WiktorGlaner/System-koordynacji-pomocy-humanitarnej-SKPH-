@@ -33,8 +33,19 @@ public class UserService implements IUserService {
     private ApplicationRepository applicationRepository;
 
     @Override
-    public List<Organization> getAllOrganizations() {
-        return organizationRepository.findAll();
+    public List<OrganizationInfoDataResponse> getAllOrganizations() {
+        List<OrganizationInfoDataResponse> organizationInfoDataResponses = new ArrayList<>();
+        List<Organization> organizations = organizationRepository.findAll();
+
+        for (Organization organization : organizations) {
+            OrganizationInfoDataResponse response = new OrganizationInfoDataResponse(
+                    organization.getId(),
+                    organization.getName(),
+                    organization.getUser().getUsername()
+                );
+            organizationInfoDataResponses.add(response);
+            }
+        return organizationInfoDataResponses;
     }
 
     @Override
@@ -190,7 +201,6 @@ public class UserService implements IUserService {
         UserInfo userInfo = userInfoRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
         Long userId = userInfo.getId();
         Application approval = applicationRepository.findApprovalByOrganizationIdAndUserInfoId(id, userId);
-        System.out.println(approval.getApproval());
         if (approval.getApproval() == null) {
             ApplicationDataResponse applicationDataResponse = new ApplicationDataResponse(false);
             applicationDataResponse.setNullExists(true);
@@ -198,5 +208,61 @@ public class UserService implements IUserService {
         }
         ApplicationDataResponse applicationDataResponse = new ApplicationDataResponse(approval.getApproval());
         return applicationDataResponse;
+    }
+
+    public ApplicationDataResponse getApprovalStatus(Long id) {
+        Application approval = applicationRepository.findById(id).orElseThrow(() -> new RuntimeException("Application not found"));
+        if (approval.getApproval() == null) {
+            ApplicationDataResponse applicationDataResponse = new ApplicationDataResponse(false);
+            applicationDataResponse.setNullExists(true);
+            return applicationDataResponse;
+        }
+        ApplicationDataResponse applicationDataResponse = new ApplicationDataResponse(approval.getApproval());
+        return applicationDataResponse;
+    }
+
+    public List<ApplicationDataResponse> getApplicationByOrganizationId(String username) {
+
+        List<ApplicationDataResponse> applicationDataResponses = new ArrayList<>();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Organization organization = organizationRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Application> applications = applicationRepository.findAllByOrganizationId(organization.getId());
+
+        for (Application application : applications) {
+            ApplicationDataResponse response = new ApplicationDataResponse(
+                    application.getUserInfo().getUser().getUsername(),
+                    application.getUserInfo().getUser().getEmail(),
+                    application.getUserInfo().getPesel(),
+                    application.getUserInfo().getSurname(),
+                    application.getUserInfo().getName(),
+                    application.getId()
+            );
+            if (application.getApproval() == null) {
+                response.setNullExists(true);
+                response.setExists(false);
+            } else {
+                response.setExists(true);
+            }
+            applicationDataResponses.add(response);
+        }
+        System.out.println(applicationDataResponses);
+        return applicationDataResponses;
+    }
+
+    public void acceptApplication(Long id) {
+        Application application = applicationRepository.findById(id).orElseThrow(() -> new RuntimeException("Application not found"));
+        application.setApproval(true);
+        applicationRepository.save(application);
+        application.getUserInfo().setOrganization(application.getOrganization());
+        userInfoRepository.save(application.getUserInfo());
+    }
+
+    public void rejectApplication(Long id) {
+        Application application = applicationRepository.findById(id).orElseThrow(() -> new RuntimeException("Application not found"));
+        application.setApproval(false);
+        applicationRepository.save(application);
     }
 }

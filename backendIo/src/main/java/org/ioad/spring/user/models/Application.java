@@ -26,7 +26,7 @@ public class Application {
     @JoinColumn(name = "UserInfoID", nullable = true)
     private UserInfo userInfo;
 
-    @Column(name = "Approval ")
+    @Column(name = "Approval")
     private Boolean approval;
 
     public Application() {

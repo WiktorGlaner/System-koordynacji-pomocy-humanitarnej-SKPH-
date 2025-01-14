@@ -9,7 +9,6 @@ import org.ioad.spring.user.payload.response.ApplicationDataResponse;
 import org.ioad.spring.user.payload.response.OrganizationInfoDataResponse;
 import org.ioad.spring.user.payload.response.UserInfoDataResponse;
 import org.ioad.spring.user.payload.response.VolunteerDataResponse;
-import org.ioad.spring.user.models.Organization;
 import org.ioad.spring.user.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +29,8 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_VOLUNTEER') || hasRole('ROLE_AUTHORITY')" )
     @GetMapping("/allOrganizations")
-    public ResponseEntity<List<Organization>> getAllOrganizations() {
-        List<Organization> organizations = userService.getAllOrganizations();
+    public ResponseEntity<List<OrganizationInfoDataResponse>> getAllOrganizations() {
+        List<OrganizationInfoDataResponse> organizations = userService.getAllOrganizations();
         return ResponseEntity.ok(organizations);
     }
 
@@ -123,7 +122,7 @@ public class UserController {
         userService.deleteApplication(username, organizationId);
         return ResponseEntity.ok("Successfully deleted application");
     }
-    
+
     @PostMapping("/getApprovalStatus")
     public ResponseEntity<ApplicationDataResponse> getApprovalStatus(@RequestBody ApplicationRequest request) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -132,4 +131,31 @@ public class UserController {
         return ResponseEntity.ok(applicationDataResponse);
     }
 
+    @GetMapping("/getApplicationByOrganizationId")
+    public List<ApplicationDataResponse> getApplicationByOrganizationId() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userService.getApplicationByOrganizationId(username);
+    }
+
+    @PostMapping("/getApprovalStatusById")
+    public ResponseEntity<ApplicationDataResponse> getApprovalStatusById(@RequestBody ApplicationRequest request) {
+        Long id = request.getId();
+        ApplicationDataResponse applicationDataResponse =  userService.getApprovalStatus(id);
+        return ResponseEntity.ok(applicationDataResponse);
+    }
+
+    @PostMapping("/acceptApplication")
+    public ResponseEntity<String> acceptApplication(@RequestBody ApplicationRequest request) {
+
+        Long id = request.getId();
+        userService.acceptApplication(id);
+        return ResponseEntity.ok("Successfully added accepted application");
+    }
+
+    @PostMapping("/rejectApplication")
+    public ResponseEntity<String> rejectApplication(@RequestBody ApplicationRequest request) {
+        Long id = request.getId();
+        userService.rejectApplication(id);
+        return ResponseEntity.ok("Successfully added rejected application");
+    }
 }
