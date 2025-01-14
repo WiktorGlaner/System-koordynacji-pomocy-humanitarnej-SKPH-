@@ -42,6 +42,15 @@
       </tr>
       </tbody>
     </table>
+    <div v-if="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+    <div v-if="loading" class="text-center">
+      <i class="fas fa-spinner fa-spin"></i> Ładowanie danych...
+    </div>
+    <div v-if="error" class="alert alert-danger">
+      Wystąpił błąd podczas ładowania danych: {{ error }}
+    </div>
   </div>
 </template>
 
@@ -56,7 +65,8 @@ export default {
       applications: [], // Lista aplikacji
       expandedInfo: {}, // Zmienna przechowująca informacje o widoczności szczegółów dla aplikacji
       loading: true, // Flaga ładowania
-      error: null, // Obsługa błędów
+      error: null,
+      successMessage: null,// Obsługa błędów
       showForm: {},
       approvalStatus: {},
       nullExists: {},

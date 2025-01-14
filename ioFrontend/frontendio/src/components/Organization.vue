@@ -38,6 +38,9 @@
       </tr>
       </tbody>
     </table>
+    <div v-if="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
     <div v-if="loading" class="text-center">
       <i class="fas fa-spinner fa-spin"></i> Ładowanie danych...
     </div>
