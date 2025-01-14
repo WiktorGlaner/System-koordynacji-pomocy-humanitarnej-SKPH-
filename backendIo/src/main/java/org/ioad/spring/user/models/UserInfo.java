@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ioad.spring.security.postgresql.models.User;
+import org.ioad.spring.task.model.Task;
 
 @Setter
 @Getter

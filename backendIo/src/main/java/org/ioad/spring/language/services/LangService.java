@@ -18,4 +18,7 @@ public class LangService {
         langRepository.save(language);
     }
 
+    public String getUserLang(Long id) {
+        return langRepository.findFirstByUser_Id(id).getLanguage();
+    }
 }

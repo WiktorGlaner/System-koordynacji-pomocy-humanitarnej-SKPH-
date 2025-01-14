@@ -3,7 +3,7 @@
     <div class="chat-container" id="chat-page">
       <div class="users-list">
         <div class="users-list-container">
-          <h2>{{ $t('users') }}</h2>
+          <h2>{{ $t('chat-users') }}</h2>
           <ul id="connectedUsers">
             <li
                 v-for="user in connectedUsers"
@@ -42,9 +42,9 @@
               autocomplete="off"
               type="text"
               v-model="messageInput"
-              :placeholder="$t('placeholder')"
+              :placeholder="$t('chat-placeholder')"
           />
-          <button type="submit">{{ $t('send') }}</button>
+          <button type="submit">{{ $t('chat-send') }}</button>
         </form>
       </div>
     </div>
