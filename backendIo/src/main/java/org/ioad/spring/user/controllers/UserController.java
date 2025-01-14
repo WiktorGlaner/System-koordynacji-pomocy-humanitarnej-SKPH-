@@ -2,8 +2,10 @@ package org.ioad.spring.user.controllers;
 
 import jakarta.validation.Valid;
 import org.ioad.spring.security.postgresql.payload.response.MessageResponse;
+import org.ioad.spring.user.payload.request.ApplicationRequest;
 import org.ioad.spring.user.payload.request.FillDataRequest;
 import org.ioad.spring.user.payload.request.OrganizationDataRequest;
+import org.ioad.spring.user.payload.response.ApplicationDataResponse;
 import org.ioad.spring.user.payload.response.OrganizationInfoDataResponse;
 import org.ioad.spring.user.payload.response.UserInfoDataResponse;
 import org.ioad.spring.user.payload.response.VolunteerDataResponse;
@@ -82,10 +84,11 @@ public class UserController {
     }
 
     @PostMapping("/makeApplication")
-    public ResponseEntity<String> makeApplication(@RequestBody Long id) {
+    public ResponseEntity<String> makeApplication(@RequestBody ApplicationRequest request) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        userService.makeApplication(username, id);
+        Long organizationId = request.getId();
+        userService.makeApplication(username, organizationId);
         return ResponseEntity.ok("Successfully added made application");
     }
 
@@ -102,4 +105,12 @@ public class UserController {
         MessageResponse messageResponse = new MessageResponse(errorMessage);
         return ResponseEntity.badRequest().body(messageResponse);
     }
+    @PostMapping("/checkApplicationExists")
+    public ResponseEntity<ApplicationDataResponse> checkApplicationExists(@RequestBody ApplicationRequest request) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long organizationId = request.getId();
+        ApplicationDataResponse applicationDataResponse = userService.isApplicationExist(organizationId, username);
+        return ResponseEntity.ok(applicationDataResponse);
+    }
+
 }
