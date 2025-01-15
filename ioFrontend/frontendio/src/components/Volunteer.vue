@@ -18,19 +18,19 @@
         <td>{{ volunteers.surname }}</td>
         <td>{{ volunteers.activity ? $t('volunteer-busy') : $t('volunteer-free') }}</td>
         <td>
-<!--          &lt;!&ndash; Przycisk wyświetlający szczegóły &ndash;&gt;-->
-          <button @click="toogleForm(volunteers.id)" class="btn btn-info">
-            {{ showForm[volunteers.id] ? $t('application-details-hide') : $t('application-details-show') }}
+          <button
+              class="btn btn-primary btn-sm text-center w-40"
+              @click="goToVolunteerDetails(volunteers.id)"
+          >
+            <font-awesome-icon icon="info-circle" /> {{  $t('profile-info') }}
           </button>
-          <button @click="deleteVolunteer(volunteers.id, volunteers.name, volunteers.surname)" class="btn btn-danger">
-            {{  $t('volunteer-delete') }}
+          <button
+              class="btn btn-danger btn-sm text-center w-40"
+              @click="deleteVolunteer(volunteers.id, volunteers.name, volunteers.surname)"
+          >
+            <font-awesome-icon icon="user-minus" /> {{  $t('volunteer-delete') }}
           </button>
         </td>
-      </tr>
-      <tr v-if="this.showForm[volunteers.id]">
-        <td>Pesel: {{volunteers.pesel}}</td>
-        <td>Email: {{volunteers.email}}</td>
-        <td>{{ $t('profile-username') }}: {{volunteers.username}}</td>
       </tr>
       </tbody>
     </table>
@@ -59,7 +59,6 @@ export default {
       loading: true, // Flaga ładowania
       error: null,
       successMessage: null,// Obsługa błędów
-      showForm: {},
     };
   },
   mounted() {
@@ -72,16 +71,12 @@ export default {
         const response = await axios.get(`${API_URL}/allVolunteersByOrganizationId`, {
           headers: authHeader(),
         });
-        console.log(response.data);
         this.volunteers = response.data;
         this.loading = false;
       } catch (err) {
         this.error = err.message || $t('organization-error4');
         this.loading = false;
       }
-    },
-    toogleForm(volunteersId) {
-      this.showForm[volunteersId] = !this.showForm[volunteersId];
     },
     async deleteVolunteer(userId, name, surname) {
       const API_URL = "http://localhost:8080/api/user"; // Prawidłowy URL backendu
@@ -103,7 +98,10 @@ export default {
       } catch (err) {
         console.error("Błąd pobierania statusu approval:", err.message);
       }
-    }
+    },
+    goToVolunteerDetails(volunteerId) {
+      this.$router.push(`/volunteer/info/${volunteerId}`);
+    },
   }
 };
 </script>

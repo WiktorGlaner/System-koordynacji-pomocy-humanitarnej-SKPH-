@@ -18,27 +18,29 @@
         <td>{{ application.surname }}</td>
         <td>
           <!-- Status aplikacji -->
-          <span v-if="!nullExists[application.id]" class="badge" :class="approvalStatus[application.id] ? 'badge-success' : 'badge-danger'">
+          <span v-if="!nullExists[application.id]" class="badge text-center w-40" :class="approvalStatus[application.id] ? 'badge-success' : 'badge-danger'">
                 {{ approvalStatus[application.id] ? $t('application-accept-status') : $t('application-reject-status') }}
           </span>
         </td>
         <td>
           <!-- Przycisk wyświetlający szczegóły -->
-          <button @click="toogleForm(application.id)" class="btn btn-info">
-            {{ showForm[application.id] ? $t('application-details-hide') : $t('application-details-show') }}
+          <button
+              class="btn btn-primary btn-sm text-center w-40"
+              @click="goToVolunteerDetails(application.userId)"
+          >
+            <font-awesome-icon icon="info-circle" /> {{  $t('profile-info') }}
           </button>
-          <button v-if="nullExists[application.id]" @click="acceptApplication(application.id)" class="btn btn-success">
-            {{ $t('application-accept') }}
+          <button v-if="nullExists[application.id]"
+                  @click="acceptApplication(application.id)" class="btn btn-success btn-sm text-center w-40"
+          >
+            <font-awesome-icon icon="check" /> {{  $t('application-accept') }}
           </button>
-          <button v-if="nullExists[application.id]" @click="rejectApplication(application.id)" class="btn btn-danger">
-            {{ $t('application-reject') }}
+          <button v-if="nullExists[application.id]"
+                  @click="rejectApplication(application.id)" class="btn btn-danger btn-sm text-center w-40"
+          >
+            <font-awesome-icon icon="circle-xmark" /> {{  $t('application-reject') }}
           </button>
         </td>
-      </tr>
-      <tr v-if="this.showForm[application.id]">
-        <td>Pesel: {{application.pesel}}</td>
-        <td>Email: {{application.email}}</td>
-        <td>{{ $t('profile-username') }}: {{application.username}}</td>
       </tr>
       </tbody>
     </table>
@@ -48,7 +50,7 @@
     <div v-if="loading" class="text-center">
       <i class="fas fa-spinner fa-spin"></i> Ładowanie danych...
     </div>
-    <div v-if="error" class="alert alert-danger">
+    <div v-if="error" class="alert alert-danger ">
       Wystąpił błąd podczas ładowania danych: {{ error }}
     </div>
   </div>
@@ -67,7 +69,6 @@ export default {
       loading: true, // Flaga ładowania
       error: null,
       successMessage: null,// Obsługa błędów
-      showForm: {},
       approvalStatus: {},
       nullExists: {},
     };
@@ -92,9 +93,6 @@ export default {
         this.error = err.message || $t('organiztion-error4'); ;
         this.loading = false;
       }
-    },
-    toogleForm(applicationId) {
-      this.showForm[applicationId] = !this.showForm[applicationId];
     },
     async fetchApprovalStatus(applicationId) {
       const API_URL = "http://localhost:8080/api/user"; // Prawidłowy URL backendu
@@ -159,7 +157,10 @@ export default {
       } catch (err) {
         console.error("Błąd pobierania statusu approval:", err.message);
       }
-    }
+    },
+    goToVolunteerDetails(volunteerId) {
+      this.$router.push(`/application/info/${volunteerId}`);
+    },
   }
 };
 </script>
@@ -175,14 +176,6 @@ export default {
 
 .text-center {
   text-align: center;
-}
-
-.badge {
-  color: black;
-  font-size: 1em;
-  padding: 0.3em 0.8em;
-  margin-left: 30px;
-  border-radius: 0.2em;
 }
 
 .btn {
