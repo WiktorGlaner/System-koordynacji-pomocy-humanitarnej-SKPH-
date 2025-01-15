@@ -34,6 +34,12 @@
         <li class="nav-item" v-if="currentUser && (currentUser.roles.includes('ROLE_AUTHORITY') || currentUser.roles.includes('ROLE_VOLUNTEER'))">
           <router-link to="/organization" class="nav-link">Organization</router-link>
         </li>
+        <li class="nav-item" v-if="currentUser && currentUser.roles.includes('ROLE_ORGANIZATION')">
+          <router-link to="/volunteer" class="nav-link">Volunteer</router-link>
+        </li>
+        <li class="nav-item" v-if="currentUser && currentUser.roles.includes('ROLE_ORGANIZATION')">
+          <router-link to="/application" class="nav-link">Application</router-link>
+        </li>
       </div>
       <div class="right_panel navbar-nav ms-auto">
         <div v-if="!currentUser" class="navbar-nav ml-auto">

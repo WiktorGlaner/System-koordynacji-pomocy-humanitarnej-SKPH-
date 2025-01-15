@@ -1,11 +1,11 @@
 <template>
   <div class="container">
     <div class="jumbotron">
-      <h1>Account Data</h1>
+      <h1>{{ $t('profile-title1') }}</h1>
     </div>
     <div class="profile-row">
       <div class="profile-item">
-        <p class="label">Username</p>
+        <p class="label">{{ $t('profile-username') }}</p>
         <p class="value">{{ currentUser.username }}</p>
       </div>
       <div class="profile-item">
@@ -13,13 +13,13 @@
         <p class="value">{{ currentUser.email }}</p>
       </div>
       <div class="profile-item">
-        <p class="label">Role</p>
+        <p class="label">{{ $t('profile-role') }}</p>
         <p class="value">
-          <span v-if="currentUser.roles.includes('ROLE_VICTIM')">Victim</span>
-          <span v-else-if="currentUser.roles.includes('ROLE_DONOR')">Donor</span>
-          <span v-else-if="currentUser.roles.includes('ROLE_AUTHORITY')">Authority</span>
-          <span v-else-if="currentUser.roles.includes('ROLE_ORGANIZATION')">Organization</span>
-          <span v-else-if="currentUser.roles.includes('ROLE_VOLUNTEER')">Volunteer</span>
+          <span v-if="currentUser.roles.includes('ROLE_VICTIM')">{{ $t('profile-victim') }}</span>
+          <span v-else-if="currentUser.roles.includes('ROLE_DONOR')">{{ $t('profile-donor') }}</span>
+          <span v-else-if="currentUser.roles.includes('ROLE_AUTHORITY')">{{ $t('profile-authority') }}</span>
+          <span v-else-if="currentUser.roles.includes('ROLE_ORGANIZATION')">{{ $t('profile-organization') }}</span>
+          <span v-else-if="currentUser.roles.includes('ROLE_VOLUNTEER')">{{ $t('profile-volunteer') }}</span>
         </p>
       </div>
     </div>
@@ -27,24 +27,24 @@
 
   <div v-if="userData" class="container">
     <div class="jumbotron">
-      <h1>Personal Data</h1>
+      <h1>{{ $t('profile-title2') }}</h1>
     </div>
     <div class="profile-row">
       <div class="profile-item">
-        <p class="label">Name</p>
-        <p class="value">{{ userData && userData.name ? userData.name : "Not provided" }}</p>
+        <p class="label">{{ $t('profile-name') }}</p>
+        <p class="value">{{ userData && userData.name ? userData.name : $t('profile-null') }}</p>
       </div>
       <div class="profile-item">
-        <p class="label">Surname</p>
-        <p class="value">{{ userData && userData.surname ? userData.surname : "Not provided" }}</p>
+        <p class="label">{{ $t('profile-surname') }}</p>
+        <p class="value">{{ userData && userData.surname ? userData.surname : $t('profile-null') }}</p>
       </div>
       <div class="profile-item">
         <p class="label">PESEL</p>
-        <p class="value">{{ userData && userData.pesel ? userData.pesel : "Not provided" }}</p>
+        <p class="value">{{ userData && userData.pesel ? userData.pesel : $t('profile-null') }}</p>
       </div>
       <div class="priofile-item"> 
         <button @click="toogleForm()" class="btn btn-primary">
-          {{showForm ? "Stop editing" : "Edit profile"}}
+          {{showForm ?  $t('profile-edit2') : $t('profile-edit1')}}
         </button>
       </div>
     </div>    
@@ -53,19 +53,22 @@
     <div v-if="showForm" class="form-container">
       <form @submit.prevent="submitForm">
         <div class="form-group">
-          <label for="name">Name:</label>
+          <label for="name">{{ $t('profile-name') }}</label>
           <input v-model="changeData.name" id="name" type="text" class="form-control" />
+          <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
         </div>
         <div class="form-group">
-          <label for="surname">Surname:</label>
+          <label for="surname">{{ $t('profile-surname') }}</label>
           <input v-model="changeData.surname" id="surname" type="text" class="form-control" />
+          <span v-if="errors.surname" class="text-danger">{{ errors.surname }}</span>
         </div>
         <div class="form-group">
           <label for="pesel">PESEL:</label>
           <input v-model="changeData.pesel" id="pesel" type="text" class="form-control" />
+          <span v-if="errors.pesel" class="text-danger">{{ errors.pesel }}</span>
         </div>
         <div class="form-group">
-          <button type="submit" class="btn btn-success">Save</button>
+          <button type="submit" class="btn btn-success">{{ $t('profile-save') }}</button>
         </div>
       </form>
       <div
@@ -80,27 +83,28 @@
 
   <div v-if="currentUser.roles.includes('ROLE_ORGANIZATION')" class="container">
     <div class="jumbotron">
-      <h1>Organization Data</h1>
+      <h1>{{ $t('profile-title3') }}</h1>
     </div>
     <div class="profile-row">
       <div class="profile-item-organization">
-        <p class="label">Organization name</p>
-        <p class="value">{{ organizationData && organizationData.name ? organizationData.name : "Not provided" }}</p>
+        <p class="label">{{ $t('profile-organization-name') }}</p>
+        <p class="value">{{ organizationData && organizationData.name ? organizationData.name : $t('profile-null') }}</p>
       </div>
       <div class="priofile-item"> 
         <button @click="toogleForm()" class="btn btn-primary">
-          {{showForm ? "Stop editing" : "Edit profile"}}
+          {{showForm ? $t('profile-edit2') : $t('profile-edit1')}}
         </button>
       </div>
     </div>   
     <div v-if="showForm" class="form-container">
       <form @submit.prevent="submitOrganizationForm">
         <div class="form-group">
-          <label for="organizationName">Organization name:</label>
+          <label for="organizationName">{{ $t('profile-organization-name') }}</label>
           <input v-model="changeDataOrg.name" id="organizationName" type="text" class="form-control" />
+          <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
         </div>
         <div class="form-group">
-          <button type="submit" class="btn btn-success">Submit</button>
+          <button type="submit" class="btn btn-success">{{ $t('profile-save') }}</button>
         </div>
       </form>
       <div
@@ -135,14 +139,43 @@ export default {
       error: null,
       showForm: false,
       successful: false,
-      message: ""
+      message: "",
     };
   },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
+    },
+    errors() {
+      const errors = {
+        name: null,
+        surname: null,
+        pesel: null
+      };
+      
+      if (this.currentUser.roles.includes('ROLE_ORGANIZATION')) {
+         if (!this.changeDataOrg.name) {
+          errors.name = this.$t('profile-organization-required');
+      } 
+    } else {
+        if (!this.changeData.name ) {
+        errors.name = this.$t('profile-name-required');
+      }
+
+      if (!this.changeData.surname) {
+        errors.surname = this.$t('profile-surname-required');
+      }
+
+      if (!this.changeData.pesel) {
+        errors.pesel = this.$t('profile-pesel-required');
+      } else if (!/^\d{11}$/.test(this.changeData.pesel)) {
+        errors.pesel = this.$t('profile-pesel-invalid');
+      }
+      
     }
+    return errors;
   },
+},
   mounted() {
     if (!this.currentUser) {
       this.$router.push('/login');
@@ -181,43 +214,52 @@ export default {
         });
       }
     },
+    validateForm() {
+      return !this.errors.name && !this.errors.surname && !this.errors.pesel;
+    },
+    validateOrganizationForm() {
+      return !this.errors.name;
+    },
     submitForm() {
-      UserService.fillUserInformation(this.changeData)
-    .then(response => {
-      this.successful = true;
-      this.userData = { ...this.changeData };
-      this.message = response.data.message;
-      console.log('Profile updated:', response.data);
-    })
-    .catch(error => {
-      this.successful = false;
-      if (error.response && error.response.data) {
-        this.message = error.response.data.message;
-        this.error = error.response.data.message;
-      } else {
-        this.message = 'Error';
-        this.error = 'Error';
-      }
-    });
+      if (this.validateForm()) {
+        UserService.fillUserInformation(this.changeData)
+      .then(response => {
+        this.successful = true;
+        this.userData = { ...this.changeData };
+        this.message = this.$t('profile-success');
+      })
+      .catch(error => {
+        this.successful = false;
+        if (error.response && error.response.data) {
+          this.message = this.$t('profile-error1');
+          this.error = error.response.data
+        } else {
+          this.message = this.$t('profile-error2');
+          this.error = this.$t('profile-error2');
+        }
+      });
+    }
     },
     submitOrganizationForm() {
+      if (this.validateOrganizationForm()) {
       UserService.fillOrganizationInformation(this.organizationData)
           .then(response => {
             console.log(response.data.message)
             this.organizationData = { ...this.changeDataOrg };
             this.successful = true;
-            this.message = response.data.message;
+            this.message = this.$t('profile-success');
           })
           .catch(error => {
           this.successful = false;
           if (error.response && error.response.data) {
-            this.message = error.response.data.message;
-            this.error = error.response.data.message;
+            this.message = this.$t('profile-error1');
+            this.error = error.response.data
           } else {
-            this.message = 'Error';
-            this.error = 'Error';
+            this.message = this.$t('profile-error2');
+            this.error = this.$t('profile-error2');
           }
         });
+      }
     },
     toogleForm() {
       this.message = "";

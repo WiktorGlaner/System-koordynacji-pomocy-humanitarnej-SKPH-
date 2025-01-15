@@ -16,6 +16,7 @@ import org.ioad.spring.user.repository.ApplicationRepository;
 import org.ioad.spring.security.postgresql.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -32,8 +33,19 @@ public class UserService implements IUserService {
     private ApplicationRepository applicationRepository;
 
     @Override
-    public List<Organization> getAllOrganizations() {
-        return organizationRepository.findAll();
+    public List<OrganizationInfoDataResponse> getAllOrganizations() {
+        List<OrganizationInfoDataResponse> organizationInfoDataResponses = new ArrayList<>();
+        List<Organization> organizations = organizationRepository.findAll();
+
+        for (Organization organization : organizations) {
+            OrganizationInfoDataResponse response = new OrganizationInfoDataResponse(
+                    organization.getId(),
+                    organization.getName(),
+                    organization.getUser().getUsername()
+                );
+            organizationInfoDataResponses.add(response);
+            }
+        return organizationInfoDataResponses;
     }
 
     @Override
@@ -58,6 +70,31 @@ public class UserService implements IUserService {
                         userInfo.getName(),
                         userInfo.getSurname(),
                         userInfo.isActivity()
+                );
+                volunteerDataResponses.add(response);
+            }
+        }
+        return volunteerDataResponses;
+    }
+
+    public List<VolunteerDataResponse> getAllVolunteersInfoByOrganizationId(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Organization organization = organizationRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<VolunteerDataResponse> volunteerDataResponses = new ArrayList<>();
+        List<UserInfo> volunteers = this.getAllVolunteers();
+
+        for (UserInfo userInfo : volunteers) {
+            if (userInfo.getOrganization() != null && userInfo.getOrganization().getId() == organization.getId()) {
+                VolunteerDataResponse response = new VolunteerDataResponse(
+                        userInfo.getUser().getUsername(),
+                        userInfo.getPesel(),
+                        userInfo.getUser().getEmail(),
+                        userInfo.getId(),
+                        userInfo.isActivity(),
+                        userInfo.getSurname(),
+                        userInfo.getName()
                 );
                 volunteerDataResponses.add(response);
             }
@@ -172,5 +209,91 @@ public class UserService implements IUserService {
             value.setActivity(activity);
             userInfoRepository.save(value);
         });
+    }
+
+    @Transactional
+    public void deleteApplication(String username, Long id) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserInfo userInfo = userInfoRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = userInfo.getId();
+        applicationRepository.deleteApplicationByOrganizationIdAndUserInfoId(id, userId);
+    }
+
+    public ApplicationDataResponse getApprovalStatus(String username, Long id) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserInfo userInfo = userInfoRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = userInfo.getId();
+        Application approval = applicationRepository.findApprovalByOrganizationIdAndUserInfoId(id, userId);
+        if (approval.getApproval() == null) {
+            ApplicationDataResponse applicationDataResponse = new ApplicationDataResponse(false);
+            applicationDataResponse.setNullExists(true);
+            return applicationDataResponse;
+        }
+        ApplicationDataResponse applicationDataResponse = new ApplicationDataResponse(approval.getApproval());
+        return applicationDataResponse;
+    }
+
+    public ApplicationDataResponse getApprovalStatus(Long id) {
+        Application approval = applicationRepository.findById(id).orElseThrow(() -> new RuntimeException("Application not found"));
+        if (approval.getApproval() == null) {
+            ApplicationDataResponse applicationDataResponse = new ApplicationDataResponse(false);
+            applicationDataResponse.setNullExists(true);
+            return applicationDataResponse;
+        }
+        ApplicationDataResponse applicationDataResponse = new ApplicationDataResponse(approval.getApproval());
+        return applicationDataResponse;
+    }
+
+    public List<ApplicationDataResponse> getApplicationByOrganizationId(String username) {
+
+        List<ApplicationDataResponse> applicationDataResponses = new ArrayList<>();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Organization organization = organizationRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Application> applications = applicationRepository.findAllByOrganizationId(organization.getId());
+
+        for (Application application : applications) {
+            ApplicationDataResponse response = new ApplicationDataResponse(
+                    application.getUserInfo().getUser().getUsername(),
+                    application.getUserInfo().getUser().getEmail(),
+                    application.getUserInfo().getPesel(),
+                    application.getUserInfo().getSurname(),
+                    application.getUserInfo().getName(),
+                    application.getId()
+            );
+            if (application.getApproval() == null) {
+                response.setNullExists(true);
+                response.setExists(false);
+            } else {
+                response.setExists(true);
+            }
+            applicationDataResponses.add(response);
+        }
+        System.out.println(applicationDataResponses);
+        return applicationDataResponses;
+    }
+
+    public void acceptApplication(Long id) {
+        Application application = applicationRepository.findById(id).orElseThrow(() -> new RuntimeException("Application not found"));
+        application.setApproval(true);
+        applicationRepository.save(application);
+        application.getUserInfo().setOrganization(application.getOrganization());
+        userInfoRepository.save(application.getUserInfo());
+    }
+
+    public void rejectApplication(Long id) {
+        Application application = applicationRepository.findById(id).orElseThrow(() -> new RuntimeException("Application not found"));
+        application.setApproval(false);
+        applicationRepository.save(application);
+    }
+
+    public void deleteVolunteer(Long id) {
+        UserInfo userInfo = userInfoRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        userInfo.setOrganization(null);
+        userInfoRepository.save(userInfo);
     }
 }
