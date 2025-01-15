@@ -98,7 +98,6 @@
               id="resource-expDate"
               v-model="newResource.expDate"
               type="date"
-              required
               :min="todayPlusOneDay"
               :state="isExpDateValid"
           />
@@ -135,7 +134,7 @@ export default {
         type: 'OTHER',
         latitude: 0,
         longitude: 0,
-        expDate: this.nextDay(),
+        expDate: null,
         unit: this.$t('resources-unit-pcs')
       },
     }
@@ -167,7 +166,6 @@ export default {
           };
 
           const response = await ResourceService.addResource(resourceData);
-          console.log(response);
           this.showAddResourceModal = false;
 
           this.$emit('resource-add', response.data);
@@ -189,7 +187,7 @@ export default {
         type: 'OTHER',
         latitude: 0,
         longitude: 0,
-        expDate: this.nextDay(),
+        expDate: null,
         unit: this.$t('resources-unit-pcs')
       };
     },
@@ -254,7 +252,10 @@ export default {
           && this.newResource.longitude > -90 && this.newResource.longitude < 90;
     },
     isExpDateValid() {
-      return this.newResource.expDate !== '' && this.newResource.expDate >= this.todayPlusOneDay;
+      if (this.newResource.type === 'FOOD' || this.newResource.type === 'MEDICAL') {
+        return this.newResource.expDate !== '' && this.newResource.expDate >= this.todayPlusOneDay;
+      }
+      return true;
     },
   }
 }

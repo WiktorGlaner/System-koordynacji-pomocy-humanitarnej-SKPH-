@@ -55,10 +55,10 @@ public class ResourceService implements IResourceService {
                     + " or latitude: " + resource.getLocation().getLatitude());
         }else if(resource.getName() == null || resource.getName().isEmpty()){
             throw new InvalidArgument("Cannot assign with empty name");
-        }else if(resource.getExpDate() == null || LocalDate.now().isAfter(resource.getExpDate())) {
-            throw new InvalidArgument("Cannot add resource with expiration date before current date," +
-                    " tried to add resource with expiration date: " +  resource.getExpDate()
-                    + " while current date is: " + LocalDate.now());
+        }else if(requiresExpirationDate(resource.getResourceType()) && (resource.getExpDate() == null || LocalDate.now().isAfter(resource.getExpDate()))) {
+            throw new InvalidArgument("The resource type '" + resource.getResourceType()
+                    + "' requires a valid expiration date. Provided expiration date is missing. "
+                    + "Please specify an expiration date is in the future.");
         }else if(resource.getUnit() == null) {
             throw new InvalidArgument("Cannot add resource with null unit.");
         }else if(resource.getOrganisationId() == null) {
@@ -248,5 +248,24 @@ public class ResourceService implements IResourceService {
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
+    }
+
+    @Transactional
+    public void updateExpiredStatus() {
+        LocalDate today = LocalDate.now();
+        List<Resource> expiringResources = resourceRepository.findByExpDateBeforeAndStatus(today, ResourceStatus.AVAILABLE);
+
+        for (Resource resource : expiringResources) {
+            resource.setStatus(ResourceStatus.EXPIRED);
+        }
+
+        resourceRepository.saveAll(expiringResources);
+    }
+
+    private boolean requiresExpirationDate(ResourceType type) {
+        return switch (type) {
+            case FOOD, MEDICAL -> true;
+            case TRANSPORT, FINANCIAL, HOUSING, CLOTHING, EQUIPMENT, OTHER -> false;
+        };
     }
 }
