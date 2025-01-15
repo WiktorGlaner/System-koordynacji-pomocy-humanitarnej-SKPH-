@@ -25,7 +25,7 @@
         </li>
         <li class="nav-item">
           <router-link to="/tasks" class="nav-link">
-            <font-awesome-icon icon="task" /> Tasks
+             Tasks
           </router-link>
         </li>
         <li class="nav-item">

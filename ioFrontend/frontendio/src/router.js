@@ -4,7 +4,8 @@ import Login from "./components/Login.vue";
 import Register from "./components/Register.vue";
 import Resource from "@/components/Resource.vue";
 import Tasks from "@/components/Tasks.vue";
-import Task from "@/components/Task.vue";
+import TaskInfo from "@/components/TaskInfo.vue";
+import TaskEdit from "./components/TaskEdit.vue";
 // lazy-loaded
 const Profile = () => import("./components/Profile.vue")
 const BoardAdmin = () => import("./components/BoardAdmin.vue")
@@ -37,12 +38,22 @@ const routes = [
     component: Resource,
   },
   {
-    path: "/tasks",
-    component: Tasks,
+  path: "/tasks",
+  component: Tasks,
   },
   {
-    path: "/task/:id",
-    component: Task,
+  path: "/tasks/info/:id",
+  component: TaskInfo,
+  props: true,
+  },
+  {
+  path: "/tasks/edit/:id",
+  component: TaskEdit,
+  props: true,
+  },
+  {
+    path: "/tasks/rate/:id",
+    component: TaskEdit,
     props: true,
   },
   {
