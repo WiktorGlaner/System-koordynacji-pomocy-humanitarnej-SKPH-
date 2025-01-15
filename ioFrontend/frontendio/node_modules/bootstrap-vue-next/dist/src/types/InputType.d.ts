@@ -1,0 +1,1 @@
+export type InputType = 'text' | 'number' | 'email' | 'password' | 'search' | 'url' | 'tel' | 'date' | 'time' | 'range' | 'color' | 'datetime' | 'datetime-local' | 'month' | 'week';
