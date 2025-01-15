@@ -26,6 +26,10 @@ public interface TaskServiceCommunication {
     List<ResourceAssignment> getResourcesInTask(Long id);
 
     //Integracja z modułem User
+    //Bierzemy
     Optional<UserInfo> getUserByUsename(String username);
     void changeActivity(Boolean active, String username);
+
+    //Udostępniamy
+    Double calculateAverageGradeForUser(String username);
 }

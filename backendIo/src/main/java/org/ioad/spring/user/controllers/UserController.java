@@ -9,7 +9,6 @@ import org.ioad.spring.user.payload.response.ApplicationDataResponse;
 import org.ioad.spring.user.payload.response.OrganizationInfoDataResponse;
 import org.ioad.spring.user.payload.response.UserInfoDataResponse;
 import org.ioad.spring.user.payload.response.VolunteerDataResponse;
-import org.ioad.spring.user.models.Organization;
 import org.ioad.spring.user.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +29,21 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_VOLUNTEER') || hasRole('ROLE_AUTHORITY')" )
     @GetMapping("/allOrganizations")
-    public ResponseEntity<List<Organization>> getAllOrganizations() {
-        List<Organization> organizations = userService.getAllOrganizations();
+    public ResponseEntity<List<OrganizationInfoDataResponse>> getAllOrganizations() {
+        List<OrganizationInfoDataResponse> organizations = userService.getAllOrganizations();
         return ResponseEntity.ok(organizations);
     }
 
     @GetMapping("/allVolunteers")
     public ResponseEntity<List<VolunteerDataResponse>> getAllVolunteers(@RequestParam(name = "activity", required = false) Boolean activity) {
         List<VolunteerDataResponse> volunteers = userService.getAllVolunteersInfo(activity);
+        return ResponseEntity.ok(volunteers);
+    }
+
+    @GetMapping("/allVolunteersByOrganizationId")
+    public ResponseEntity<List<VolunteerDataResponse>> getAllVolunteers() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<VolunteerDataResponse> volunteers = userService.getAllVolunteersInfoByOrganizationId(username);
         return ResponseEntity.ok(volunteers);
     }
 
@@ -83,6 +89,7 @@ public class UserController {
         return ResponseEntity.ok(new MessageResponse("Successfully added information about user"));
     }
 
+    @PreAuthorize("hasRole('ROLE_VOLUNTEER')")
     @PostMapping("/makeApplication")
     public ResponseEntity<String> makeApplication(@RequestBody ApplicationRequest request) {
 
@@ -93,18 +100,19 @@ public class UserController {
     }
 
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<MessageResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        String errorMessage = ex.getBindingResult()
-                .getAllErrors()
-                .stream()
-                .map(error -> error.getDefaultMessage())
-                .findFirst()
-                .orElse("Validation error");
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ResponseEntity<MessageResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+//        String errorMessage = ex.getBindingResult()
+//                .getAllErrors()
+//                .stream()
+//                .map(error -> error.getDefaultMessage())
+//                .findFirst()
+//                .orElse("Validation error");
+//
+//        MessageResponse messageResponse = new MessageResponse(errorMessage);
+//        return ResponseEntity.badRequest().body(messageResponse);
+//    }
 
-        MessageResponse messageResponse = new MessageResponse(errorMessage);
-        return ResponseEntity.badRequest().body(messageResponse);
-    }
     @PostMapping("/checkApplicationExists")
     public ResponseEntity<ApplicationDataResponse> checkApplicationExists(@RequestBody ApplicationRequest request) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -113,4 +121,55 @@ public class UserController {
         return ResponseEntity.ok(applicationDataResponse);
     }
 
+    @PreAuthorize("hasRole('ROLE_VOLUNTEER')")
+    @PostMapping("/deleteApplication")
+    public ResponseEntity<String> deleteApplication(@RequestBody ApplicationRequest request) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long organizationId = request.getId();
+        userService.deleteApplication(username, organizationId);
+        return ResponseEntity.ok("Successfully deleted application");
+    }
+
+    @PostMapping("/getApprovalStatus")
+    public ResponseEntity<ApplicationDataResponse> getApprovalStatus(@RequestBody ApplicationRequest request) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long organizationId = request.getId();
+        ApplicationDataResponse applicationDataResponse =  userService.getApprovalStatus(username, organizationId);
+        return ResponseEntity.ok(applicationDataResponse);
+    }
+
+    @GetMapping("/getApplicationByOrganizationId")
+    public List<ApplicationDataResponse> getApplicationByOrganizationId() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userService.getApplicationByOrganizationId(username);
+    }
+
+    @PostMapping("/getApprovalStatusById")
+    public ResponseEntity<ApplicationDataResponse> getApprovalStatusById(@RequestBody ApplicationRequest request) {
+        Long id = request.getId();
+        ApplicationDataResponse applicationDataResponse =  userService.getApprovalStatus(id);
+        return ResponseEntity.ok(applicationDataResponse);
+    }
+
+    @PostMapping("/acceptApplication")
+    public ResponseEntity<String> acceptApplication(@RequestBody ApplicationRequest request) {
+
+        Long id = request.getId();
+        userService.acceptApplication(id);
+        return ResponseEntity.ok("Successfully added accepted application");
+    }
+
+    @PostMapping("/rejectApplication")
+    public ResponseEntity<String> rejectApplication(@RequestBody ApplicationRequest request) {
+        Long id = request.getId();
+        userService.rejectApplication(id);
+        return ResponseEntity.ok("Successfully added rejected application");
+    }
+
+    @PostMapping("/deleteVolunteer")
+    public ResponseEntity<String> deleteVolunteer(@RequestBody ApplicationRequest request) {
+        Long id = request.getId();
+        userService.deleteVolunteer(id);
+        return ResponseEntity.ok("Successfully deleted volunteer");
+    }
 }

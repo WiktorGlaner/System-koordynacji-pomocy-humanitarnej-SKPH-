@@ -4,7 +4,8 @@ import Login from "./components/Login.vue";
 import Register from "./components/Register.vue";
 import Resource from "@/components/Resource.vue";
 import Tasks from "@/components/Tasks.vue";
-import Task from "@/components/Task.vue";
+import TaskInfo from "@/components/TaskInfo.vue";
+import TaskEdit from "./components/TaskEdit.vue";
 // lazy-loaded
 const Profile = () => import("./components/Profile.vue")
 const BoardAdmin = () => import("./components/BoardAdmin.vue")
@@ -13,6 +14,8 @@ const BoardUser = () => import("./components/BoardUser.vue")
 const Communcation = () => import("./components/Communication.vue")
 const Map = () => import("./components/Map.vue")
 const Organization = () => import("./components/Organization.vue")
+const Volunteer = () => import("./components/Volunteer.vue")
+const Application = () => import("./components/Application.vue")
 
 const routes = [
   {
@@ -37,12 +40,22 @@ const routes = [
     component: Resource,
   },
   {
-    path: "/tasks",
-    component: Tasks,
+  path: "/tasks",
+  component: Tasks,
   },
   {
-    path: "/task/:id",
-    component: Task,
+  path: "/tasks/info/:id",
+  component: TaskInfo,
+  props: true,
+  },
+  {
+  path: "/tasks/edit/:id",
+  component: TaskEdit,
+  props: true,
+  },
+  {
+    path: "/tasks/rate/:id",
+    component: TaskEdit,
     props: true,
   },
   {
@@ -84,6 +97,14 @@ const routes = [
   {
     path: '/organization',
     component: Organization,
+  },
+  {
+    path: '/volunteer',
+    component: Volunteer,
+  },
+  {
+    path: '/application',
+    component: Application,
   },
 ];
 
