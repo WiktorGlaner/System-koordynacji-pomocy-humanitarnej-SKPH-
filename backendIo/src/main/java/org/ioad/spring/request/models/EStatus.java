@@ -4,7 +4,6 @@ public enum EStatus {
 
     REGISTERED,
     IN_PROGRESS,
-    COMPLETED,
-    PENDING_RESOURCES
+    COMPLETED
 
 }

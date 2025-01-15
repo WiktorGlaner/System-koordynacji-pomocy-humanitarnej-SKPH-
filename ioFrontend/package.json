@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.1",
+    "@fortawesome/free-solid-svg-icons": "^6.7.1",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "axios": "^1.7.8",
+    "bootstrap": "^5.3.3",
+    "vee-validate": "^4.14.7",
+    "vuex": "^4.1.0",
+    "yup": "^1.4.0"
+  }
+}

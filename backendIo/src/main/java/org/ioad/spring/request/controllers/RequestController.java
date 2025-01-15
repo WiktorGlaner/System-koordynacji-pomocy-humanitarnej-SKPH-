@@ -3,7 +3,9 @@ package org.ioad.spring.request.controllers;
 import org.ioad.spring.request.models.Request;
 import org.ioad.spring.request.payload.request.UpdateRequestData;
 import org.ioad.spring.request.payload.request.newRequestData;
+import org.ioad.spring.request.repository.RequestRepository;
 import org.ioad.spring.request.services.IRequestService;
+import org.ioad.spring.security.postgresql.models.User;
 import org.ioad.spring.user.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,23 +15,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/test")
+@RequestMapping("/api/request")
+@CrossOrigin(origins = "*")
 public class RequestController {
 
     @Autowired
     private IRequestService requestService;
     @Autowired
-    private IUserService userService;
+    private IUserService userService; //ZAMIENIC POZNIEJ NA INT4ERFEJS
+    @Autowired
+    private RequestRepository requestRepository; //SORRY MORDECZKI ALE BYŁA FUSZERKA MUSIAŁEM ZROBIC ZA WAS BUZIACZKI
 
-    @GetMapping("/{username}/requests")
-    public ResponseEntity<List<Request>> getAllRequestsForUser(@PathVariable String username) {
-        if (userService.getUser(username).isPresent()) {
-            List<Request> requests = requestService.getAllRequestsByReporter(userService.getUser(username).get().getId());
-            return ResponseEntity.ok(requests);
-        }
-        else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/requests")
+    public ResponseEntity<List<Request>> getAllRequests() {
+        List<Request> requests = requestRepository.findAll();
+        return ResponseEntity.ok(requests);
     }
 
     @PostMapping( "/{username}/requests/addrequest")
@@ -78,5 +78,4 @@ public class RequestController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found");
     }
-
 }
