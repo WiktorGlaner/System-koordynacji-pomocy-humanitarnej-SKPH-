@@ -55,14 +55,17 @@
         <div class="form-group">
           <label for="name">{{ $t('profile-name') }}</label>
           <input v-model="changeData.name" id="name" type="text" class="form-control" />
+          <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
         </div>
         <div class="form-group">
           <label for="surname">{{ $t('profile-surname') }}</label>
           <input v-model="changeData.surname" id="surname" type="text" class="form-control" />
+          <span v-if="errors.surname" class="text-danger">{{ errors.surname }}</span>
         </div>
         <div class="form-group">
           <label for="pesel">PESEL:</label>
           <input v-model="changeData.pesel" id="pesel" type="text" class="form-control" />
+          <span v-if="errors.pesel" class="text-danger">{{ errors.pesel }}</span>
         </div>
         <div class="form-group">
           <button type="submit" class="btn btn-success">{{ $t('profile-save') }}</button>
@@ -98,6 +101,7 @@
         <div class="form-group">
           <label for="organizationName">{{ $t('profile-organization-name') }}</label>
           <input v-model="changeDataOrg.name" id="organizationName" type="text" class="form-control" />
+          <span v-if="errors.name" class="text-danger">{{ errors.name }}</span>
         </div>
         <div class="form-group">
           <button type="submit" class="btn btn-success">{{ $t('profile-save') }}</button>
@@ -135,14 +139,43 @@ export default {
       error: null,
       showForm: false,
       successful: false,
-      message: ""
+      message: "",
     };
   },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
+    },
+    errors() {
+      const errors = {
+        name: null,
+        surname: null,
+        pesel: null
+      };
+      
+      if (this.currentUser.roles.includes('ROLE_ORGANIZATION')) {
+         if (!this.changeDataOrg.name) {
+          errors.name = this.$t('profile-organization-required');
+      } 
+    } else {
+        if (!this.changeData.name ) {
+        errors.name = this.$t('profile-name-required');
+      }
+
+      if (!this.changeData.surname) {
+        errors.surname = this.$t('profile-surname-required');
+      }
+
+      if (!this.changeData.pesel) {
+        errors.pesel = this.$t('profile-pesel-required');
+      } else if (!/^\d{11}$/.test(this.changeData.pesel)) {
+        errors.pesel = this.$t('profile-pesel-invalid');
+      }
+      
     }
+    return errors;
   },
+},
   mounted() {
     if (!this.currentUser) {
       this.$router.push('/login');
@@ -181,43 +214,52 @@ export default {
         });
       }
     },
+    validateForm() {
+      return !this.errors.name && !this.errors.surname && !this.errors.pesel;
+    },
+    validateOrganizationForm() {
+      return !this.errors.name;
+    },
     submitForm() {
-      UserService.fillUserInformation(this.changeData)
-    .then(response => {
-      this.successful = true;
-      this.userData = { ...this.changeData };
-      this.message = response.data.message;
-      console.log('Profile updated:', response.data);
-    })
-    .catch(error => {
-      this.successful = false;
-      if (error.response && error.response.data) {
-        this.message = error.response.data.message;
-        this.error = error.response.data.message;
-      } else {
-        this.message = 'Error';
-        this.error = 'Error';
-      }
-    });
+      if (this.validateForm()) {
+        UserService.fillUserInformation(this.changeData)
+      .then(response => {
+        this.successful = true;
+        this.userData = { ...this.changeData };
+        this.message = this.$t('profile-success');
+      })
+      .catch(error => {
+        this.successful = false;
+        if (error.response && error.response.data) {
+          this.message = this.$t('profile-error1');
+          this.error = error.response.data
+        } else {
+          this.message = this.$t('profile-error2');
+          this.error = this.$t('profile-error2');
+        }
+      });
+    }
     },
     submitOrganizationForm() {
+      if (this.validateOrganizationForm()) {
       UserService.fillOrganizationInformation(this.organizationData)
           .then(response => {
             console.log(response.data.message)
             this.organizationData = { ...this.changeDataOrg };
             this.successful = true;
-            this.message = response.data.message;
+            this.message = this.$t('profile-success');
           })
           .catch(error => {
           this.successful = false;
           if (error.response && error.response.data) {
-            this.message = error.response.data.message;
-            this.error = error.response.data.message;
+            this.message = this.$t('profile-error1');
+            this.error = error.response.data
           } else {
-            this.message = 'Error';
-            this.error = 'Error';
+            this.message = this.$t('profile-error2');
+            this.error = this.$t('profile-error2');
           }
         });
+      }
     },
     toogleForm() {
       this.message = "";
