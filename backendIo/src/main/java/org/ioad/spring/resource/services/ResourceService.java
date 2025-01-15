@@ -45,24 +45,30 @@ public class ResourceService implements IResourceService {
 
 
     void validateResource(Resource resource) {
-        if (resource.getQuantity() <= 0) {
+        if (resource.getQuantity() == null || resource.getQuantity() <= 0) {
             throw new InvalidArgument("Cannot assign negative quantity of: " + resource.getQuantity());
+        } else if (resource.getLocation() == null) {
+            throw new InvalidArgument("Cannot assign with null location.");
         }else if(resource.getLocation().getLatitude() < -90 || resource.getLocation().getLatitude() > 90 ||
                 resource.getLocation().getLongitude() < -180 || resource.getLocation().getLongitude() > 180) {
             throw new InvalidArgument("Cannot assign wrong value of longitude: " + resource.getLocation().getLongitude()
-                    + "or latitude: " + resource.getLocation().getLatitude());
-        }else if(resource.getName().isEmpty()){
+                    + " or latitude: " + resource.getLocation().getLatitude());
+        }else if(resource.getName() == null || resource.getName().isEmpty()){
             throw new InvalidArgument("Cannot assign with empty name");
-        }else if(LocalDate.now().isAfter(resource.getExpDate())) {
+        }else if(resource.getExpDate() == null || LocalDate.now().isAfter(resource.getExpDate())) {
             throw new InvalidArgument("Cannot add resource with expiration date before current date," +
                     " tried to add resource with expiration date: " +  resource.getExpDate()
-                    + "while current date is: " + LocalDate.now());
+                    + " while current date is: " + LocalDate.now());
+        }else if(resource.getUnit() == null) {
+            throw new InvalidArgument("Cannot add resource with null unit.");
+        }else if(resource.getOrganisationId() == null) {
+            throw new InvalidArgument("Cannot add resource with null organisationId");
         }
     }
 
-    public void addResource(Resource resource) {
+    public Resource addResource(Resource resource) {
         validateResource(resource);
-        resourceRepository.save(resource);
+        return resourceRepository.save(resource);
     }
 
     public void addDonation(Donation donation) {
@@ -79,7 +85,7 @@ public class ResourceService implements IResourceService {
         }
 
         if (!exists) {
-            throw new ResourceNotFound("Resource with id " + resourceId + " does not exists" );
+            throw new ResourceNotFound("Resource with id " + resourceId + " does not exists." );
         }
         resourceRepository.deleteById(resourceId);
     }
@@ -91,7 +97,7 @@ public class ResourceService implements IResourceService {
 
     @Transactional
     @Override
-    public void modifyResource(Long resourceId, String description, Location location, Double quantity, ResourceStatus status) {
+    public void modifyResource(Long resourceId, String description, Location location, Double quantity, String status) {
         Resource resource = resourceRepository.findById(resourceId).orElseThrow(
                 () -> new ResourceNotFound("resource with " + resourceId + " does not exist"));
 
@@ -110,9 +116,16 @@ public class ResourceService implements IResourceService {
             resource.setQuantity(quantity);
         }
 
+        ResourceStatus resourceStatus;
+        try {
+            resourceStatus = ResourceStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidArgument("No resource status with name: " + status);
+        }
+
         if (status != null &&
-                !Objects.equals(resource.getStatus(), status)) {
-            resource.setStatus(status);
+                !Objects.equals(resource.getStatus(), resourceStatus)) {
+            resource.setStatus(resourceStatus);
         }
         validateResource(resource);
     }
@@ -134,7 +147,13 @@ public class ResourceService implements IResourceService {
     }
 
     @Override
-    public List<Donation> getByDonationType(ResourceType resourceType) {
+    public List<Donation> getByDonationType(String type) {
+        ResourceType resourceType;
+        try {
+            resourceType = ResourceType.valueOf(type.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidArgument("No donation with type: " + type);
+        }
         return resourceRepository.getByDonationType(resourceType);
     }
 
@@ -199,7 +218,6 @@ public class ResourceService implements IResourceService {
     public List<Resource> getFilteredResources(List<String> resourceTypeValues, Double organisationId, List<String> resourceStatusValues) {
         return resourceRepository.findAll((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-
             if (resourceTypeValues != null && !resourceTypeValues.isEmpty()) {
                 List<ResourceType> resourceTypes = resourceTypeValues.stream()
                         .map(value -> {

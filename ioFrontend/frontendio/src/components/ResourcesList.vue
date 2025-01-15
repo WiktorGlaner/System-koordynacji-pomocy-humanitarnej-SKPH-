@@ -2,31 +2,31 @@
   <div class="container mt-3">
     <div class="mb-100">
       <BCard>
-        <BRow class="mb-3">
+        <BRow class="mb-3 align-items-start">
           <BCol md="6">
-            <BFormGroup label="Filter by Type">
-              <BFormCheckboxGroup v-model="statusFilter" stacked>
-                <BFormCheckbox value="EXPIRED">Expired</BFormCheckbox>
-                <BFormCheckbox value="AVAILABLE">Available</BFormCheckbox>
-                <BFormCheckbox value="FULLY_ASSIGNED">Fully Assigned</BFormCheckbox>
-                <BFormCheckbox value="DAMAGED">Damaged</BFormCheckbox>
-              </BFormCheckboxGroup>
-            </BFormGroup>
+              <BFormGroup :label="$t('resources-status-label')" class="mb-4">
+                <BFormCheckboxGroup v-model="statusFilter" stacked>
+                  <BFormCheckbox value="EXPIRED" class="mb-2">{{ $t('resources-expired') }}</BFormCheckbox>
+                  <BFormCheckbox value="AVAILABLE" class="mb-2">{{ $t('resources-available') }}</BFormCheckbox>
+                  <BFormCheckbox value="FULLY_ASSIGNED" class="mb-2">{{ $t('resources-fullyassigned') }}</BFormCheckbox>
+                  <BFormCheckbox value="DAMAGED" class="mb-2">{{ $t('resources-damaged') }}</BFormCheckbox>
+                </BFormCheckboxGroup>
+              </BFormGroup>
           </BCol>
 
           <BCol md="6">
-            <BFormGroup label="Filter by Status">
-              <BFormCheckboxGroup v-model="typeFilter" stacked>
-                <BFormCheckbox value="FOOD">Food</BFormCheckbox>
-                <BFormCheckbox value="TRANSPORT">Transport</BFormCheckbox>
-                <BFormCheckbox value="CLOTHING">Clothing</BFormCheckbox>
-                <BFormCheckbox value="MEDICAL">Medical</BFormCheckbox>
-                <BFormCheckbox value="FINANCIAL">Financial</BFormCheckbox>
-                <BFormCheckbox value="EQUIPMENT">Equipment</BFormCheckbox>
-                <BFormCheckbox value="HOUSING">Housing</BFormCheckbox>
-                <BFormCheckbox value="OTHER">Other</BFormCheckbox>
-              </BFormCheckboxGroup>
-            </BFormGroup>
+              <BFormGroup :label="$t('resources-type-label')">
+                <BFormCheckboxGroup v-model="typeFilter" stacked>
+                  <BFormCheckbox value="FOOD" class="mb-2">{{$t('map-form-food')}}</BFormCheckbox>
+                  <BFormCheckbox value="TRANSPORT" class="mb-2">{{$t('map-form-transport')}}</BFormCheckbox>
+                  <BFormCheckbox value="CLOTHING" class="mb-2">{{$t('map-form-clothing')}}</BFormCheckbox>
+                  <BFormCheckbox value="MEDICAL" class="mb-2">{{$t('map-form-medical')}}</BFormCheckbox>
+                  <BFormCheckbox value="FINANCIAL" class="mb-2">{{$t('map-form-financial')}}</BFormCheckbox>
+                  <BFormCheckbox value="EQUIPMENT" class="mb-2">{{$t('map-form-eq')}}</BFormCheckbox>
+                  <BFormCheckbox value="HOUSING" class="mb-2">{{$t('map-form-housing')}}</BFormCheckbox>
+                  <BFormCheckbox value="OTHER" class="mb-2">{{$t('map-form-other')}}</BFormCheckbox>
+                </BFormCheckboxGroup>
+              </BFormGroup>
           </BCol>
         </BRow>
 
@@ -38,13 +38,15 @@
 
         <BTable
             v-else
-            :items="paginatedResources"
+            :items="filteredResources"
             :fields="fields"
+            :per-page="perPage"
+            :current-page="currentPage"
             striped
             hover
             responsive
-            :sort-by.sync="[{key: 'addedDate', order: 'desc'}]"
-            :sort-desc.sync="sortDesc"
+            :sort-by.sync="sortBy"
+            @page-change="onPageChange"
         >
           <template #cell(name)="data">
           <span class="d-flex align-items-center">
@@ -62,7 +64,7 @@
           <template #cell(status)="data">
           <span  class="badge"
                  :class="getStatusClass(data.item.status)">
-            {{ data.item.status }}
+            {{ translateStatus(data.item.status) }}
           </span>
           </template>
 
@@ -101,21 +103,19 @@ export default {
   },
   data() {
     return {
-      resources: [],
       isLoading: true,
       typeFilter: [],
+      resources: [],
       statusFilter: [],
-      fields: [
-        { key: "name", label: "Name", sortable: true },
-        { key: "description", label: "Description" },
-        { key: "quantity", label: "Quantity", sortable: true},
-        { key: "status", label: "Status"},
-        { key: "addedDate", label: "Added Date", sortable: true },
-        { key: "expDate", label: "Expiration Date", sortable: true },
-      ],
-      sortDesc: false,
-      perPage: 5,
+      sortBy: [{ key: 'name', order: 'desc' }],
+      perPage: 10,
       currentPage: 1,
+      translations: {
+        AVAILABLE: 'resources-available',
+        FULLY_ASSIGNED: 'resources-fullyassigned',
+        EXPIRED: 'resources-expired',
+        DAMAGED: 'resources-damaged'
+      },
     };
   },
   computed: {
@@ -128,10 +128,15 @@ export default {
         return matchesType && matchesStatus;
       });
     },
-    paginatedResources() {
-      const start = (this.currentPage - 1) * this.perPage;
-      const end = start + this.perPage;
-      return this.filteredResources.slice(start, end);
+    fields() {
+      return [
+        { key: "name", label: this.$t('resources-table-name'), sortable: true },
+        { key: "description", label: this.$t('resources-table-description') },
+        { key: "quantity", label: this.$t('resources-table-quantity'), sortable: true },
+        { key: "status", label: this.$t('resources-table-status')},
+        { key: "addedDate", label: this.$t('resources-table-addedDate'), sortable: true },
+        { key: "expDate", label: this.$t('resources-table-expDate'), sortable: true },
+      ]
     },
   },
   mounted() {
@@ -146,6 +151,12 @@ export default {
     },
   },
   methods: {
+    onPageChange(page) {
+      this.currentPage = page;
+    },
+    translateStatus(status) {
+      return this.$t(this.translations[status] || status);
+    },
     resetPagination() {
       this.currentPage = 1;
     },
@@ -185,7 +196,10 @@ export default {
     truncateText(text, length) {
       if (!text) return '';
       return text.length > length ? text.substring(0, length) + '...' : text;
-    }
+    },
+    updateResources(newResource) {
+      this.resources.push({...newResource});
+    },
   },
 };
 </script>
