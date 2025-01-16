@@ -257,6 +257,7 @@ public class ResourceService implements IResourceService {
         return Arrays.stream(ResourceType.values())
                 .map(Enum::name)
                 .collect(Collectors.toList());
+    }
     @Transactional
     public void updateExpiredStatus() {
         LocalDate today = LocalDate.now();
