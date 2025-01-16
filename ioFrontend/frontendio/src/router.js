@@ -5,7 +5,8 @@ import Register from "./components/Register.vue";
 import Resource from "@/components/Resource.vue";
 import Request from "@/components/Request.vue";
 import Tasks from "@/components/Tasks.vue";
-import Task from "@/components/Task.vue";
+import TaskInfo from "@/components/TaskInfo.vue";
+import TaskEdit from "./components/TaskEdit.vue";
 // lazy-loaded
 const Profile = () => import("./components/Profile.vue")
 const BoardAdmin = () => import("./components/BoardAdmin.vue")
@@ -16,6 +17,8 @@ const Map = () => import("./components/Map.vue")
 const Organization = () => import("./components/Organization.vue")
 const Volunteer = () => import("./components/Volunteer.vue")
 const Application = () => import("./components/Application.vue")
+const VolunteerInfo = () => import("./components/VolunteerInfo.vue")
+const ApplicationInfo = () => import("./components/ApplicationInfo.vue")
 
 const routes = [
   {
@@ -48,8 +51,18 @@ const routes = [
     component: Tasks,
   },
   {
-    path: "/task/:id",
-    component: Task,
+  path: "/tasks/info/:id",
+  component: TaskInfo,
+  props: true,
+  },
+  {
+  path: "/tasks/edit/:id",
+  component: TaskEdit,
+  props: true,
+  },
+  {
+    path: "/tasks/rate/:id",
+    component: TaskEdit,
     props: true,
   },
   {
@@ -97,8 +110,18 @@ const routes = [
     component: Volunteer,
   },
   {
+    path: "/volunteer/info/:id",
+    component: VolunteerInfo,
+    props: true,
+  },
+  {
     path: '/application',
     component: Application,
+  },
+  {
+    path: "/application/info/:id",
+    component: ApplicationInfo,
+    props: true,
   },
 ];
 

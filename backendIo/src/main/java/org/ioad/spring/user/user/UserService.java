@@ -102,6 +102,22 @@ public class UserService implements IUserService {
         return volunteerDataResponses;
     }
 
+    public VolunteerDataResponse getVolunteersInfoByOrganizationId(Long id) {
+        UserInfo volunteer = userInfoRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        VolunteerDataResponse response = new VolunteerDataResponse(
+                volunteer.getUser().getUsername(),
+                volunteer.getPesel(),
+                volunteer.getUser().getEmail(),
+                volunteer.getId(),
+                volunteer.isActivity(),
+                volunteer.getSurname(),
+                volunteer.getName()
+        );
+
+        return response;
+    }
+
     @Override
     public Optional<UserInfo> getUser(String username) {
         User user = userRepository.findByUsername(username)
@@ -263,7 +279,8 @@ public class UserService implements IUserService {
                     application.getUserInfo().getPesel(),
                     application.getUserInfo().getSurname(),
                     application.getUserInfo().getName(),
-                    application.getId()
+                    application.getId(),
+                    application.getUserInfo().getId()
             );
             if (application.getApproval() == null) {
                 response.setNullExists(true);

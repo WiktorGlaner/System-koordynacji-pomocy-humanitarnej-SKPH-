@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ioad.spring.request.models.Request;
-import org.ioad.spring.resource.models.Resource;
 import org.ioad.spring.user.models.UserInfo;
 
 import java.util.List;

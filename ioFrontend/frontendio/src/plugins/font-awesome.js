@@ -6,12 +6,17 @@ import {
   faUserPlus,
   faSignInAlt,
   faSignOutAlt,
+  faUserMinus,
+  faCheck,
+  faCircleXmark,
+  faEnvelope,
   faCheck,
   faEdit,
   faRemove,
-  faMap, faCancel,
+  faMap,
+  faCancel,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt, faCheck, faEdit, faRemove, faMap, faCancel);
+library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt, faUserMinus, faCheck, faCircleXmark, faEnvelope, faCheck, faEdit, faRemove, faMap, faCancel);
 
 export { FontAwesomeIcon };

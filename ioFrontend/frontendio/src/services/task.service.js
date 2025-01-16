@@ -13,6 +13,21 @@ class TaskService {
         params: { id: id },
         headers: authHeader() });
     }
+    endTask(id) {
+      return axios.put(API_URL + 'endTask', null, { 
+        params: { id: id },
+        headers: authHeader() });
+    }
+    editTask(id, updatedTask) {
+      return axios.put(API_URL + 'editTask', updatedTask, { 
+        params: { id: id },
+        headers: authHeader() });
+    }
+    gradeTask(id, grade) {
+      return axios.put(API_URL + 'gradeTask', null, { 
+        params: { id: id, grade: grade },
+        headers: authHeader() });
+    }
   }
   
   export default new TaskService();

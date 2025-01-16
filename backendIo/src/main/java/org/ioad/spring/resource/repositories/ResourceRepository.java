@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -32,4 +33,6 @@ public interface ResourceRepository extends JpaRepository<Resource, Long>, JpaSp
 
         @Query("SELECT d FROM Donation d WHERE d.donorId = :donorId")
         List<Donation> getByDonationDonorId(@Param("donorId")Long donorId);
+
+        List<Resource> findByExpDateBeforeAndStatus(LocalDate date, ResourceStatus status);
 }

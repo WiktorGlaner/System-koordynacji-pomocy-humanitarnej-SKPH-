@@ -47,6 +47,12 @@ public class UserController {
         return ResponseEntity.ok(volunteers);
     }
 
+    @GetMapping("/volunteersByOrganizationId")
+    public ResponseEntity<VolunteerDataResponse> getVolunteers(@RequestParam("id") long id) {
+        VolunteerDataResponse volunteers = userService.getVolunteersInfoByOrganizationId(id);
+        return ResponseEntity.ok(volunteers);
+    }
+
     @PreAuthorize("hasRole('ROLE_VOLUNTEER') || hasRole('ROLE_VICTIM') || hasRole('ROLE_AUTHORITY') || hasRole('ROLE_DONOR')")
     @GetMapping("/getUserInfo")
     public ResponseEntity<UserInfoDataResponse> getUserInfo() {
@@ -100,18 +106,18 @@ public class UserController {
     }
 
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<MessageResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        String errorMessage = ex.getBindingResult()
-                .getAllErrors()
-                .stream()
-                .map(error -> error.getDefaultMessage())
-                .findFirst()
-                .orElse("Validation error");
-
-        MessageResponse messageResponse = new MessageResponse(errorMessage);
-        return ResponseEntity.badRequest().body(messageResponse);
-    }
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ResponseEntity<MessageResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+//        String errorMessage = ex.getBindingResult()
+//                .getAllErrors()
+//                .stream()
+//                .map(error -> error.getDefaultMessage())
+//                .findFirst()
+//                .orElse("Validation error");
+//
+//        MessageResponse messageResponse = new MessageResponse(errorMessage);
+//        return ResponseEntity.badRequest().body(messageResponse);
+//    }
 
     @PostMapping("/checkApplicationExists")
     public ResponseEntity<ApplicationDataResponse> checkApplicationExists(@RequestBody ApplicationRequest request) {
