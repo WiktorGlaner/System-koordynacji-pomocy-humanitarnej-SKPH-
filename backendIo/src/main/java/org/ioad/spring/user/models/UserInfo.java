@@ -1,5 +1,6 @@
 package org.ioad.spring.user.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -40,6 +41,7 @@ public class UserInfo {
 
     @ManyToOne
     @JoinColumn(name = "OrganizationId", nullable = true)
+    @JsonBackReference
     private Organization organization;
 
     public UserInfo() {

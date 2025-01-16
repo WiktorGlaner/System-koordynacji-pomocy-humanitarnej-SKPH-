@@ -1,6 +1,7 @@
 package org.ioad.spring.user.models;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.ioad.spring.security.postgresql.models.User;
@@ -29,6 +30,7 @@ public class Organization {
     //cascade oznacza ze jesli w jednej tabeli cos usuniemy to i w drugiej tez
     //lazy polaczenie utworzy sie dopiero jesli wywolamy je w kodzie
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<UserInfo> volunteers;
 
     public Long getId() {
