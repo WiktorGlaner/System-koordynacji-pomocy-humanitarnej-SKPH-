@@ -13,4 +13,5 @@ public interface IAuthService {
     Boolean userExistsByEmail(String email);
     List<User> getAllUsersByRole(String role);
     Optional<Role> getRoleByName(ERole name);
+    User getUserById(Long id);
 }

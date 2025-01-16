@@ -44,5 +44,10 @@ public class AuthService implements IAuthService {
         return roleRepository.findByName(name);
     }
 
+    @Override
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
 
 }
