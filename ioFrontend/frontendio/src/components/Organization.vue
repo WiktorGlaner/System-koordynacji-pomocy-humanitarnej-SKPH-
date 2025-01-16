@@ -6,6 +6,8 @@
       <tr>
         <th>ID</th>
         <th>{{ $t('profile-organization-name') }}</th>
+        <th>{{ $t('application-status') }}</th>
+        <th>{{ $t('application-action') }}</th>
       </tr>
       </thead>
       <tbody>
@@ -13,25 +15,29 @@
         <td>{{ organization.id }}</td>
         <td>{{ organization.name }}</td>
         <td>
+        <div v-if="applicationExists[organization.id] && currentUser.roles.includes('ROLE_VOLUNTEER')">
+          <span v-if="!nullExists[organization.id]" class="badge text-center w-40" :class="approvalStatus[organization.id] ? 'badge-success' : 'badge-danger'">
+                {{ approvalStatus[organization.id] ? $t('organization-approved') : $t('organization-rejected') }}
+          </span>
+        </div>
+        </td>
+        <td>
           <div v-if="applicationExists[organization.id] && currentUser.roles.includes('ROLE_VOLUNTEER')">
             <button
                 @click="removeApplication(organization.id, organization.name)"
-                class="btn btn-danger"
+                class="btn btn-danger btn-sm text-center w-40"
             >
-            {{ $t('organization-delete') }}
+              <font-awesome-icon icon="circle-xmark" /> {{ $t('organization-delete') }}
             </button>
             <!-- Wyświetlanie statusu dla złożonych aplikacji -->
-            <span v-if="!nullExists[organization.id]" class="badge" :class="approvalStatus[organization.id] ? 'badge-success' : 'badge-danger'">
-                {{ approvalStatus[organization.id] ? $t('organization-approved') : $t('organization-rejected') }}
-            </span>
           </div>
           <div v-else-if="currentUser.roles.includes('ROLE_VOLUNTEER')">
             <!-- Przycisk składania aplikacji -->
             <button
                 @click="addApplication(organization.id, organization.name)"
-                class="btn btn-primary"
+                class="btn btn-primary btn-sm text-center w-40"
             >
-            {{ $t('organization-send') }}
+              <font-awesome-icon icon="envelope" /> {{ $t('organization-send') }}
             </button>
           </div>
         </td>
@@ -220,33 +226,17 @@ export default {
   text-align: center;
 }
 
-.badge {
-  color: black; /* Kolor tekstu na czarny */
-  font-size: 1em; /* Powiększenie tekstu */
-  padding: 0.3em 0.8em;
-  margin-left: 15px;
-  border-radius: 0.2em;
+.btn {
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .badge-success {
-  background-color: #28a745; /* Kolor zielony dla zatwierdzonej aplikacji */
+  background-color: #28a745;
 }
 
 .badge-danger {
-  background-color: #dc3545; /* Kolor czerwony dla odrzuconej aplikacji */
-}
-
-.button-container {
-  display: inline-block; /* Wyrównanie przycisków w jednej linii */
-  white-space: nowrap; /* Zapewnia, że elementy nie będą się zawijały */
-}
-
-.btn-danger {
-  margin-left: 250px;
-}
-
-.btn-primary{
-  margin-left: 250px;
+  background-color: #dc3545;
 }
 </style>
 
