@@ -15,3 +15,7 @@ INSERT INTO roles(name) VALUES('ROLE_VOLUNTEER');
 INSERT INTO roles(name) VALUES('ROLE_ORGANIZATION');
 INSERT INTO roles(name) VALUES('ROLE_AUTHORITY');
 ```
+
+```
+npm install vue-toastification@next
+```
