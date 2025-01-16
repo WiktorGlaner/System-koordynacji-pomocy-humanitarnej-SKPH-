@@ -1,5 +1,6 @@
 package org.ioad.spring.user.user;
 
+import org.ioad.spring.security.postgresql.IAuthService;
 import org.ioad.spring.user.models.Application;
 import org.ioad.spring.user.models.Organization;
 import org.ioad.spring.user.models.UserInfo;
@@ -27,8 +28,11 @@ public class UserService implements IUserService {
     private UserInfoRepository userInfoRepository;
     @Autowired
     private OrganizationRepository organizationRepository;
+    //@Autowired
+    //private UserRepository userRepository;
+    // JAKBY COS NIE DZIALALO TO MOZE DLATEGO ZE OWINALEM TO USERREPOSITORY W IAUTHSERVICE
     @Autowired
-    private UserRepository userRepository;
+    private IAuthService iAuthService;
     @Autowired
     private ApplicationRepository applicationRepository;
 
@@ -50,7 +54,8 @@ public class UserService implements IUserService {
 
     @Override
     public List<UserInfo> getAllVolunteers() {
-        List<User> users = userRepository.getAllUsersByRole("ROLE_VOLUNTEER");
+        //List<User> users = userRepository.getAllUsersByRole("ROLE_VOLUNTEER");
+        List<User> users = iAuthService.getAllUsersByRole("ROLE_VOLUNTEER");
         List<UserInfo> volunteers = new ArrayList<>();
         for (User user : users) {
             Optional<UserInfo> userInfo = userInfoRepository.findByUser(user);
@@ -78,7 +83,8 @@ public class UserService implements IUserService {
     }
 
     public List<VolunteerDataResponse> getAllVolunteersInfoByOrganizationId(String username) {
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Organization organization = organizationRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -120,7 +126,8 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<UserInfo> getUser(String username) {
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
        return (userInfoRepository.findByUser(user));
@@ -128,7 +135,8 @@ public class UserService implements IUserService {
 
     @Override
     public void addOrganizationInfo(String username) {
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Organization not found"));
 
         Organization organization = new Organization();
@@ -138,7 +146,8 @@ public class UserService implements IUserService {
 
     @Override
     public void addUserInfo(String username) {
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         UserInfo userInfo = new UserInfo();
@@ -147,7 +156,8 @@ public class UserService implements IUserService {
     }
 
     public void makeApplication(String username, Long id){
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         UserInfo userInfo = userInfoRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
         Organization organization = organizationRepository.findById(id).orElseThrow(() -> new RuntimeException("Organization not found"));
@@ -159,7 +169,9 @@ public class UserService implements IUserService {
     }
 
     public void fillOrganizationInformation(String username, OrganizationDataRequest request) {
-        User user = userRepository.findByUsername(username).orElseThrow(()
+        //User user = userRepository.findByUsername(username).orElseThrow(()
+        //        -> new RuntimeException("Organization not found"));
+        User user = iAuthService.getUserByUsername(username).orElseThrow(()
                 -> new RuntimeException("Organization not found"));
 
         Optional<Organization> organization = organizationRepository.findByUser(user);
@@ -170,7 +182,9 @@ public class UserService implements IUserService {
     }
 
     public UserInfoDataResponse getUserInfo(String username) {
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        //        .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Optional<UserInfo> userInfo = userInfoRepository.findByUser(user);
@@ -181,7 +195,9 @@ public class UserService implements IUserService {
     }
 
     public OrganizationInfoDataResponse getOrganizationInfo(String username) {
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        //        .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Optional<Organization> organization = organizationRepository.findByUser(user);
@@ -194,7 +210,9 @@ public class UserService implements IUserService {
     // Przykład metody w serwisie
     public ApplicationDataResponse isApplicationExist(Long organizationId, String username) {
         // Sprawdzamy, czy w bazie danych istnieje aplikacja o danym id organizacji i użytkownika
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        //        .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         UserInfo userInfo = userInfoRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
         Long userId = userInfo.getId();
@@ -204,7 +222,9 @@ public class UserService implements IUserService {
     }
 
     public void fillUserInformation(String username, FillDataRequest request) {
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        //        .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Optional<UserInfo> userInfo = userInfoRepository.findByUser(user);
@@ -217,7 +237,9 @@ public class UserService implements IUserService {
     }
 
     public void changeActivity(Boolean activity, String username) {
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        //        .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Optional<UserInfo> userInfo = userInfoRepository.findByUser(user);
@@ -229,7 +251,9 @@ public class UserService implements IUserService {
 
     @Transactional
     public void deleteApplication(String username, Long id) {
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        //        .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         UserInfo userInfo = userInfoRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
         Long userId = userInfo.getId();
@@ -237,7 +261,9 @@ public class UserService implements IUserService {
     }
 
     public ApplicationDataResponse getApprovalStatus(String username, Long id) {
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        //        .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         UserInfo userInfo = userInfoRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
         Long userId = userInfo.getId();
@@ -265,8 +291,9 @@ public class UserService implements IUserService {
     public List<ApplicationDataResponse> getApplicationByOrganizationId(String username) {
 
         List<ApplicationDataResponse> applicationDataResponses = new ArrayList<>();
-
-        User user = userRepository.findByUsername(username)
+        //User user = userRepository.findByUsername(username)
+        //        .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = iAuthService.getUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Organization organization = organizationRepository.findByUser(user).orElseThrow(() -> new RuntimeException("User not found"));
 
