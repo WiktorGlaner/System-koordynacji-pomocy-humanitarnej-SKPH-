@@ -3,6 +3,7 @@ import Home from "./components/Home.vue";
 import Login from "./components/Login.vue";
 import Register from "./components/Register.vue";
 import Resource from "@/components/Resource.vue";
+import Request from "@/components/Request.vue";
 import Tasks from "@/components/Tasks.vue";
 import TaskInfo from "@/components/TaskInfo.vue";
 import TaskEdit from "./components/TaskEdit.vue";
@@ -42,8 +43,12 @@ const routes = [
     component: Resource,
   },
   {
-  path: "/tasks",
-  component: Tasks,
+    path: '/request',
+    component: Request,
+  },
+  {
+    path: "/tasks",
+    component: Tasks,
   },
   {
   path: "/tasks/info/:id",
