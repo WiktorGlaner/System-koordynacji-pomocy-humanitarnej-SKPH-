@@ -1,5 +1,6 @@
 package org.ioad.spring.resource.controllers;
 
+import org.apache.coyote.Response;
 import org.ioad.spring.resource.models.*;
 import org.ioad.spring.resource.services.ResourceService;
 import org.ioad.spring.resource.models.Location;
@@ -32,6 +33,14 @@ public class ResourceController {
         }
 
         return ResponseEntity.ok(resources);
+    }
+
+    @GetMapping(path = "/resourceTypes")
+    public ResponseEntity<List<String>> getResourceTypes() {
+        if (resourceService.getResourceTypes().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(resourceService.getResourceTypes());
     }
 
 //    @GetMapping(path = "/resource/available")

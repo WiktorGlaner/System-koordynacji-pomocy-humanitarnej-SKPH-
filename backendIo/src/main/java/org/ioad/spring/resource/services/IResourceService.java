@@ -18,4 +18,5 @@ public interface IResourceService {
     List<ResourceAssignment> getResourceAssignments(Long resourceId);
     Resource getResourceById(Long resourceId);
     List<ResourceAssignment> getAssignmentsByRequestId(Long requestId);
+    List<String> getResourceTypes();
 }
