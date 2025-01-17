@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ResourceService implements IResourceService {
@@ -249,6 +251,12 @@ public class ResourceService implements IResourceService {
         });
     }
 
+    @Override
+    public List<String> getResourceTypes() {
+        return Arrays.stream(ResourceType.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
+    }
     @Transactional
     public void updateExpiredStatus() {
         LocalDate today = LocalDate.now();
