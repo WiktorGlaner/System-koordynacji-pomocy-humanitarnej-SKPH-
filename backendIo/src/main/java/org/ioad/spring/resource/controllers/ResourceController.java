@@ -79,7 +79,12 @@ public class ResourceController {
     @PreAuthorize("hasRole('ROLE_AUTHORITY') || hasRole('ROLE_DONOR')")
     @GetMapping(path = "/donation")
     public ResponseEntity<List<Donation>> getDonationByType(@RequestParam(required = false) String type) {
-        List<Donation> donations = resourceService.getByDonationType(type);
+        List<Donation> donations;
+        if (type != null) {
+            donations = resourceService.getByDonationType(type);
+        } else {
+            donations = resourceService.getAllDonations();
+        }
 
         return ResponseEntity.ok(donations);
     }
