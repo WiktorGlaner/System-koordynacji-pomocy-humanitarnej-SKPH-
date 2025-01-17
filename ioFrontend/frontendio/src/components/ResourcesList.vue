@@ -72,6 +72,10 @@
             <template #cell(quantity)="data">
               {{ data.item.assignedQuantity ? data.item.quantity + "/" + (data.item.assignedQuantity + data.item.quantity) : data.item.quantity  }} {{ data.item.unit }}
             </template>
+
+            <template #cell(dynamicId)="data">
+              {{ currentUser.roles.includes('ROLE_AUTHORITY') ? data.item.organisationId : data.item.donorId }}
+            </template>
           </BTable>
           <div v-if="errorMessage" class="alert alert-danger">
             {{ errorMessage }}
@@ -102,6 +106,7 @@ import {
   BTable
 } from 'bootstrap-vue-next';
 import ResourceService from "@/services/resource.service.js";
+import UserService from "@/services/user.service.js";
 
 export default {
   components: {
@@ -142,15 +147,27 @@ export default {
         return matchesType && matchesStatus;
       });
     },
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
     fields() {
-      return [
+      const baseFields = [
+        { key: "id", label: "id", sortable: true },
         { key: "name", label: this.$t('resources-table-name'), sortable: true },
         { key: "description", label: this.$t('resources-table-description') },
         { key: "quantity", label: this.$t('resources-table-quantity'), sortable: true },
         { key: "status", label: this.$t('resources-table-status')},
         { key: "addedDate", label: this.$t('resources-table-addedDate'), sortable: true },
         { key: "expDate", label: this.$t('resources-table-expDate'), sortable: true },
-      ]
+      ];
+
+      if (this.currentUser.roles.includes("ROLE_AUTHORITY")) {
+        baseFields.push({ key: "dynamicId", label: this.$t('resources-table-organisationId') });
+      } else if (this.currentUser.roles.includes("ROLE_ORGANIZATION")) {
+        baseFields.push({ key: "dynamicId", label: this.$t('resources-table-donorId') });
+      }
+
+      return baseFields;
     },
   },
   mounted() {
@@ -179,11 +196,20 @@ export default {
       this.currentPage = 1;
     },
     async fetchResourcesAndAssignments() {
-      this.isLoading = true;
       try {
-        const responseResources = await ResourceService.getAllResources();
-        //const responseResources = await ResourceService.getOrganisationResources(6); @TODO: take OrganisationId from USER
-        this.resources = responseResources.data;
+        this.errorMessage = '';
+        let response;
+
+        if (this.currentUser.roles.includes("ROLE_ORGANIZATION")) {
+          const res = await UserService.getOrganizationInfo();
+          response = await ResourceService.getOrganisationResources(res.data.id);
+        } else if (this.currentUser.roles.includes("ROLE_AUTHORITY")) {
+          response = await ResourceService.getAllResources();
+        } else if (this.currentUser.roles.includes("ROLE_DONOR")) {
+          response = await ResourceService.getDonorResources(this.$store.state.auth.user.id);
+        }
+
+        this.resources = response.data;
         const responseAssignments = await ResourceService.getTotalAssignedQuantity();
         this.resources = this.resources.map(resource => {
           resource.assignedQuantity = responseAssignments[resource.id] || 0;
@@ -191,6 +217,7 @@ export default {
         });
       } catch (error) {
         console.error(error);
+        this.resources = []
         this.errorMessage = this.$t('resources-fetch-error');
       } finally {
         this.isLoading = false;

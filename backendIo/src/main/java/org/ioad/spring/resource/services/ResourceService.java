@@ -73,9 +73,9 @@ public class ResourceService implements IResourceService {
         return resourceRepository.save(resource);
     }
 
-    public void addDonation(Donation donation) {
+    public Donation addDonation(Donation donation) {
         validateResource(donation);
-        resourceRepository.save(donation);
+        return resourceRepository.save(donation);
     }
 
     public void removeResource(Long resourceId) {

@@ -43,6 +43,12 @@ class UserService {
       headers: authHeader()
     });
   }
+
+  getAllOrganizations() {
+    return axios.get('http://localhost:8080/api/user/allOrganizations', {
+      headers: authHeader()
+    })
+  }
 }
 
 export default new UserService();
