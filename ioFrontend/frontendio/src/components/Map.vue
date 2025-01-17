@@ -64,6 +64,8 @@
 <script>
 import isEqual from "lodash/isEqual";
 import {toRaw} from "vue";
+import axios from "axios";
+import authHeader from "@/services/auth-header.js";
 
 export default {
   name: "Map",
@@ -127,7 +129,12 @@ export default {
   methods: {
     async loadOrganisationResources() {
       try {
-        const response = await fetch("http://localhost:8080/resource?status=unavailable&status=available&organisationId=1");
+        //console.log(this.currentUser)
+        const info = await axios.get("http://localhost:8080/api/user/getOrganizationInfo", {
+          headers: authHeader(),
+        });
+        //console.log(info.data.id)
+        const response = await fetch(`http://localhost:8080/resource?organisationId=${info.data.id}`);
         if (!response.ok) {
           throw new Error("Błąd podczas ładowania zasobów");
         }
@@ -177,7 +184,7 @@ export default {
     },
     async loadAllResources() {
       try {
-        const response = await fetch("http://localhost:8080/resource?&status=available");
+        const response = await fetch("http://localhost:8080/resource?status=AVAILABLE");
         if (!response.ok) {
           throw new Error("Błąd podczas ładowania zasobów");
         }
@@ -293,7 +300,7 @@ export default {
 
       if(!isEqual(this.newRequestPoints, this.requestPoints)){
         this.requestPoints = this.newRequestPoints
-        console.log(this.requestPoints)
+        //console.log(this.requestPoints)
         this.requestPoints.forEach((request) => {
           L.circle([request.latitude, request.longitude],
               {
@@ -309,7 +316,7 @@ export default {
 
       if(!isEqual(this.newResourcePoints, this.resourcePoints)){
         this.resourcePoints = this.newResourcePoints
-        console.log(this.resourcePoints)
+        //console.log(this.resourcePoints)
 
         this.resourcePoints.forEach((resource) => {
           L.marker([resource.location.latitude, resource.location.longitude])
