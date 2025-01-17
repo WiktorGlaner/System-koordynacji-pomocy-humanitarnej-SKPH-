@@ -19,4 +19,5 @@ public interface IResourceService {
     Resource getResourceById(Long resourceId);
     List<ResourceAssignment> getAssignmentsByRequestId(Long requestId);
     List<String> getResourceTypes();
+    List<Resource> getSumOfQuantityByTypeAndDonorId(ResourceType type, Double donorId);
 }

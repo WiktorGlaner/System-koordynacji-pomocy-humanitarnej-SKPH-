@@ -257,6 +257,12 @@ public class ResourceService implements IResourceService {
                 .map(Enum::name)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Resource> getSumOfQuantityByTypeAndDonorId(ResourceType type, Double donorId) {
+        return resourceRepository.getSumOfQuantityByResourceTypeAndDonorId(type, donorId);
+    }
+
     @Transactional
     public void updateExpiredStatus() {
         LocalDate today = LocalDate.now();

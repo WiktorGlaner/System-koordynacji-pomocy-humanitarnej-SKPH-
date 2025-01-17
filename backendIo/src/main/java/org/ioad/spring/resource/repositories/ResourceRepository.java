@@ -35,4 +35,6 @@ public interface ResourceRepository extends JpaRepository<Resource, Long>, JpaSp
         List<Donation> getByDonationDonorId(@Param("donorId")Long donorId);
 
         List<Resource> findByExpDateBeforeAndStatus(LocalDate date, ResourceStatus status);
+        @Query("SELECT COALESCE(SUM(d.quantity), 0) FROM Donation d WHERE d.resourceType = :type AND d.donorId = :donorId")
+        List<Resource> getSumOfQuantityByResourceTypeAndDonorId(ResourceType type, Double donorId);
 }
