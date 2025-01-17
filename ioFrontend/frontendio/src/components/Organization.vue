@@ -6,8 +6,8 @@
       <tr>
         <th>ID</th>
         <th>{{ $t('profile-organization-name') }}</th>
-        <th>{{ $t('application-status') }}</th>
-        <th>{{ $t('application-action') }}</th>
+        <th v-if="currentUser.roles.includes('ROLE_VOLUNTEER')">{{ $t('application-status') }}</th>
+        <th v-if="currentUser.roles.includes('ROLE_VOLUNTEER')">{{ $t('application-action') }}</th>
       </tr>
       </thead>
       <tbody>
