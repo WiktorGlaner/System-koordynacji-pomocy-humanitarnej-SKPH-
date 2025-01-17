@@ -67,7 +67,7 @@ watch(locale, () => {
     { id: 1, title: t('home-raports'), description: t('home-raports-description'), icon: "fas fa-file-alt", link: "/page1", roles: ["ROLE_AUTHORITY"] },
     { id: 2, title: t('home-profile'), description: t('home-profile-description'), icon: "fas fa-user", link: "/profile", roles: ["ROLE_USER","ROLE_VICTIM"] },
     { id: 3, title: t('home-resource'), description: t('home-resource-description'), icon: "fas fa-cogs", link: "/page3", roles: ["ROLE_ADMIN"] },
-    { id: 4, title: t('home-map'), description: t('home-map-description'), icon: "fas fa-map", link: "/page4", roles: ["ROLE_USER", "ROLE_MODERATOR", "ROLE_VICTIM"] },
+    { id: 4, title: t('home-map'), description: t('home-map-description'), icon: "fas fa-map", link: "/map", roles: ["ROLE_USER", "ROLE_MODERATOR", "ROLE_VICTIM"] },
     { id: 5, title: t('home-chat'), description: t('home-chat-description'), icon: "fas fa-comments", link: "/chat", roles: ["ROLE_USER","ROLE_VICTIM"] },
   ];
 });
