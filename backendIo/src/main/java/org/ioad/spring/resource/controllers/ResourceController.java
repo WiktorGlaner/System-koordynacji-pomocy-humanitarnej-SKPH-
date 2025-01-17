@@ -110,9 +110,8 @@ public class ResourceController {
     }
 
     @GetMapping(path = "/assignments")
-    public ResponseEntity<List<ResourceAssignment>> getAssignmentsByRequestId(
-            @RequestParam(required = false) Long requestId) {
-        List<ResourceAssignment> assignments = resourceService.getAssignmentsByRequestId(requestId);
+    public ResponseEntity<List<ResourceAssignment>> getAssignments() {
+        List<ResourceAssignment> assignments = resourceService.getAssignments();
 
         return ResponseEntity.ok(assignments);
     }

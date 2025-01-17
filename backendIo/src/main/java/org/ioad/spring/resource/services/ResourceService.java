@@ -123,8 +123,7 @@ public class ResourceService implements IResourceService {
             throw new InvalidArgument("No resource status with name: " + status);
         }
 
-        if (status != null &&
-                !Objects.equals(resource.getStatus(), resourceStatus)) {
+        if (!Objects.equals(resource.getStatus(), resourceStatus)) {
             resource.setStatus(resourceStatus);
         }
         validateResource(resource);
@@ -267,5 +266,9 @@ public class ResourceService implements IResourceService {
             case FOOD, MEDICAL -> true;
             case TRANSPORT, FINANCIAL, HOUSING, CLOTHING, EQUIPMENT, OTHER -> false;
         };
+    }
+
+    public List<ResourceAssignment> getAssignments() {
+        return resourceAssignmentRepository.findAll();
     }
 }

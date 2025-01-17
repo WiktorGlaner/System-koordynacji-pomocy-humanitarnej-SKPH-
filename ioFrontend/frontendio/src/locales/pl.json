@@ -26,7 +26,6 @@
   "map-2table-type": "Nazwa",
   "map-2table-coordinates": "Lokalizacja",
   "map-center": "Pokaż na mapie",
-  "resources": "Zasoby",
   "profile-details": "Informacja o wolontariuszu",
   "profile-info": "Informacja",
   "profile-back": "Powrót",
@@ -114,5 +113,6 @@
   "resources-unit-zl": "zł",
   "resources-toast-add-success": "Udało się dodać zasób!",
   "resources-toast-add-error": "Nie udało się dodać zasobu!",
-  "resources-not-allowed": "Zasoby nie są dostępne dla twojej roli."
+  "resources-not-allowed": "Zasoby nie są dostępne dla twojej roli.",
+  "resources-fetch-error": "Nie udało się pobrać zasobów. Spróbuj ponownie później."
 }

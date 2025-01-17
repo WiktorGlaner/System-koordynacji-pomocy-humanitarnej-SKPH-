@@ -36,50 +36,54 @@
           </div>
         </div>
 
-        <BTable
-            v-else
-            :items="filteredResources"
-            :fields="fields"
-            :per-page="perPage"
-            :current-page="currentPage"
-            striped
-            hover
-            responsive
-            :sort-by.sync="sortBy"
-            @page-change="onPageChange"
-        >
-          <template #cell(name)="data">
+        <div v-else>
+          <BTable
+              :items="filteredResources"
+              :fields="fields"
+              :per-page="perPage"
+              :current-page="currentPage"
+              striped
+              hover
+              responsive
+              :sort-by.sync="sortBy"
+              @page-change="onPageChange"
+          >
+            <template #cell(name)="data">
           <span class="d-flex align-items-center">
-            <i :class="getTypeIcon(data.item.resourceType)" class="me-2"></i>
+            <font-awesome-icon :icon="getTypeIcon(data.item.resourceType)" class="me-2" />
+
             {{data.item.name}}
           </span>
-          </template>
+            </template>
 
-          <template #cell(description)="data">
+            <template #cell(description)="data">
           <span :title="data.item.description">
             {{ truncateText(data.item.description, 50) }}
           </span>
-          </template>
+            </template>
 
-          <template #cell(status)="data">
+            <template #cell(status)="data">
           <span  class="badge"
                  :class="getStatusClass(data.item.status)">
             {{ translateStatus(data.item.status) }}
           </span>
-          </template>
+            </template>
 
-          <template #cell(quantity)="data">
-            {{ data.item.quantity }} {{ data.item.unit }}
-          </template>
-        </BTable>
-
-        <BPagination
-            v-model="currentPage"
-            :total-rows="filteredResources.length"
-            :per-page="perPage"
-            align="center"
-            class="mt-3"
-        />
+            <template #cell(quantity)="data">
+              {{ data.item.assignedQuantity ? data.item.quantity + "/" + (data.item.assignedQuantity + data.item.quantity) : data.item.quantity  }} {{ data.item.unit }}
+            </template>
+          </BTable>
+          <div v-if="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+          <BPagination
+              v-model="currentPage"
+              :total-rows="filteredResources.length"
+              :per-page="perPage"
+              align="center"
+              class="mt-3"
+          />
+        </div>
       </BCard>
 
     </div>
@@ -87,7 +91,16 @@
 </template>
 
 <script>
-import { BCard, BRow, BCol, BFormGroup, BFormCheckboxGroup, BFormCheckbox, BTable, BPagination} from 'bootstrap-vue-next';
+import {
+  BCard,
+  BCol,
+  BFormCheckbox,
+  BFormCheckboxGroup,
+  BFormGroup,
+  BPagination,
+  BRow,
+  BTable
+} from 'bootstrap-vue-next';
 import ResourceService from "@/services/resource.service.js";
 
 export default {
@@ -116,6 +129,7 @@ export default {
         EXPIRED: 'resources-expired',
         DAMAGED: 'resources-damaged'
       },
+      errorMessage: '',
     };
   },
   computed: {
@@ -140,7 +154,11 @@ export default {
     },
   },
   mounted() {
-    this.fetchResources();
+    this.fetchResourcesAndAssignments();
+    this.startAutoUpdate();
+  },
+  beforeDestroy() {
+    this.stopAutoUpdate();
   },
   watch: {
     typeFilter() {
@@ -160,29 +178,46 @@ export default {
     resetPagination() {
       this.currentPage = 1;
     },
-    async fetchResources() {
+    async fetchResourcesAndAssignments() {
       this.isLoading = true;
       try {
-        const response = await ResourceService.getAllResources();
-        this.resources = response.data;
+        const responseResources = await ResourceService.getAllResources();
+        //const responseResources = await ResourceService.getOrganisationResources(6); @TODO: take OrganisationId from USER
+        this.resources = responseResources.data;
+        const responseAssignments = await ResourceService.getTotalAssignedQuantity();
+        this.resources = this.resources.map(resource => {
+          resource.assignedQuantity = responseAssignments[resource.id] || 0;
+          return resource;
+        });
       } catch (error) {
         console.error(error);
+        this.errorMessage = this.$t('resources-fetch-error');
       } finally {
         this.isLoading = false;
       }
     },
+    startAutoUpdate() {
+      this.autoUpdateInterval = setInterval(() => {
+        this.fetchResourcesAndAssignments();
+      }, 60000);
+    },
+    stopAutoUpdate() {
+      if (this.autoUpdateInterval) {
+        clearInterval(this.autoUpdateInterval);
+      }
+    },
     getTypeIcon(type) {
       const icons = {
-        FOOD: "fas fa-utensils",
-        TRANSPORT: "fas fa-car",
-        CLOTHING: "fas fa-tshirt",
-        MEDICAL: "fas fa-briefcase-medical",
-        FINANCIAL: "fas fa-dollar-sign",
-        EQUIPMENT: "fas fa-tools",
-        HOUSING: "fas fa-home",
-        OTHER: "fas fa-ellipsis-h",
+        FOOD: "utensils",
+        TRANSPORT: "car",
+        CLOTHING: "tshirt",
+        MEDICAL: "briefcase-medical",
+        FINANCIAL: "dollar-sign",
+        EQUIPMENT: "tools",
+        HOUSING: "home",
+        OTHER: "ellipsis-h",
       };
-      return icons[type] || "fas fa-question";
+      return icons[type] || "question";
     },
     getStatusClass(type) {
       const classes = {
@@ -205,5 +240,5 @@ export default {
 </script>
 
 <style scoped>
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css";
+
 </style>
