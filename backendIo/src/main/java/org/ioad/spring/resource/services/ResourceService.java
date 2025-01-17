@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ResourceService implements IResourceService {
@@ -123,8 +125,7 @@ public class ResourceService implements IResourceService {
             throw new InvalidArgument("No resource status with name: " + status);
         }
 
-        if (status != null &&
-                !Objects.equals(resource.getStatus(), resourceStatus)) {
+        if (!Objects.equals(resource.getStatus(), resourceStatus)) {
             resource.setStatus(resourceStatus);
         }
         validateResource(resource);
@@ -250,6 +251,12 @@ public class ResourceService implements IResourceService {
         });
     }
 
+    @Override
+    public List<String> getResourceTypes() {
+        return Arrays.stream(ResourceType.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
+    }
     @Transactional
     public void updateExpiredStatus() {
         LocalDate today = LocalDate.now();
@@ -267,5 +274,9 @@ public class ResourceService implements IResourceService {
             case FOOD, MEDICAL -> true;
             case TRANSPORT, FINANCIAL, HOUSING, CLOTHING, EQUIPMENT, OTHER -> false;
         };
+    }
+
+    public List<ResourceAssignment> getAssignments() {
+        return resourceAssignmentRepository.findAll();
     }
 }

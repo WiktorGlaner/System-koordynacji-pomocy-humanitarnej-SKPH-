@@ -1,5 +1,6 @@
 package org.ioad.spring.resource.controllers;
 
+import org.apache.coyote.Response;
 import org.ioad.spring.resource.models.*;
 import org.ioad.spring.resource.services.ResourceService;
 import org.ioad.spring.resource.models.Location;
@@ -29,6 +30,14 @@ public class ResourceController {
         List<Resource> resources = resourceService.getFilteredResources(ResourceTypeValues, organisationId, ResourceStatusValues);
 
         return ResponseEntity.ok(resources);
+    }
+
+    @GetMapping(path = "/resourceTypes")
+    public ResponseEntity<List<String>> getResourceTypes() {
+        if (resourceService.getResourceTypes().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(resourceService.getResourceTypes());
     }
 
 //    @GetMapping(path = "/resource/available")
@@ -110,9 +119,8 @@ public class ResourceController {
     }
 
     @GetMapping(path = "/assignments")
-    public ResponseEntity<List<ResourceAssignment>> getAssignmentsByRequestId(
-            @RequestParam(required = false) Long requestId) {
-        List<ResourceAssignment> assignments = resourceService.getAssignmentsByRequestId(requestId);
+    public ResponseEntity<List<ResourceAssignment>> getAssignments() {
+        List<ResourceAssignment> assignments = resourceService.getAssignments();
 
         return ResponseEntity.ok(assignments);
     }

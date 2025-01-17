@@ -26,7 +26,6 @@
   "map-2table-type": "Nazwa",
   "map-2table-coordinates": "Lokalizacja",
   "map-center": "Pokaż na mapie",
-  "resources": "Zasoby",
   "profile-details": "Informacja o wolontariuszu",
   "profile-info": "Informacja",
   "profile-back": "Powrót",
@@ -114,5 +113,41 @@
   "resources-unit-zl": "zł",
   "resources-toast-add-success": "Udało się dodać zasób!",
   "resources-toast-add-error": "Nie udało się dodać zasobu!",
-  "resources-not-allowed": "Zasoby nie są dostępne dla twojej roli."
+  "resources-not-allowed": "Zasoby nie są dostępne dla twojej roli.",
+
+  "resources-fetch-error": "Nie udało się pobrać zasobów. Spróbuj ponownie później.",
+
+  "home-raports": "Raporty",
+  "home-raports-description": "Sprawdź raporty",
+  "home-profile": "Profil",
+  "home-profile-description": "Edytuj swój profil",
+  "home-resource": "Zasób",
+  "home-resource-description": "Dodaj zasoby",
+  "home-map": "Mapa",
+  "home-map-description": "Sprawdź lub dodaj raporty",
+  "home-chat": "Czat",
+  "home-chat-description": "Wyślij wiadomość do kogoś",
+  "home-settings": "Ustawienia",
+  "home-settings-description": "Zmień ustawienia konta",
+  "home-logout": "Wyloguj",
+  "home-logout-description": "Wyloguj się z konta",
+  "nav-home": "Strona główna",
+  "nav-admin-board": "Panel administratora",
+  "nav-moderator-board": "Panel moderatora",
+  "nav-chat": "Czat",
+  "nav-map": "Mapa",
+  "nav-tasks": "Zadania",
+  "nav-resource": "Zasób",
+  "nav-reports": "Raporty",
+  "nav-login": "Zaloguj się",
+  "nav-sign-up": "Zarejestruj się",
+  "nav-logout": "Wyloguj się",
+  "validation-username-required": "Nazwa użytkownika jest wymagana",
+  "validation-password-required": "Hasło jest wymagane",
+  "login-username": "Nazwa użytkownika",
+  "login-password": "Hasło",
+  "login-button": "Zaloguj się"
+
+
 }
+

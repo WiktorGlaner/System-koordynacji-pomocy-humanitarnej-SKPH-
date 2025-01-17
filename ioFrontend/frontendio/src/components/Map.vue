@@ -1,55 +1,61 @@
 <template>
-  <div class="container">
+   <div class="container">
     <div v-if="!allowedRole">
       <p style="color: red; text-align: center;">{{ $t('map-Info') }}</p>
     </div>
     <div class="content" v-else>
       <div class="table-container">
         <h3>{{ $t('map-resources') }}</h3>
-        <table>
-          <thead>
-          <tr>
-            <th>{{ $t('map-1table-name') }}</th>
-            <th>{{ $t('map-1table-type') }}</th>
-            <th>{{ $t('map-1table-coordinates') }}</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="(resource, index) in resourcePoints" :key="index">
-            <td>{{ resource.name }}</td>
-            <td>{{ resource.quantity }}</td>
-            <td><button @click="centerMap(resource.location.latitude, resource.location.longitude)">
-              {{ $t('map-center') }}
-            </button></td>
-          </tr>
-          </tbody>
-        </table>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>{{ $t('map-1table-name') }}</th>
+                <th>{{ $t('map-1table-type') }}</th>
+                <th>{{ $t('map-1table-coordinates') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(resource, index) in resourcePoints" :key="index">
+                <td>{{ resource.name }}</td>
+                <td>{{ resource.quantity }}</td>
+                <td>
+                  <button @click="centerMap(resource.location.latitude, resource.location.longitude)">
+                    {{ $t('map-center') }}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <h3>{{ $t('map-requests') }}</h3>
-        <table>
-          <thead>
-          <tr>
-            <th>{{ $t('map-2table-name') }}</th>
-            <th>{{ $t('map-2table-type') }}</th>
-            <th>{{ $t('map-2table-coordinates') }}</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="(request, index) in requestPoints" :key="index">
-            <td>{{ request.reporter.user.username }}</td>
-            <td>{{ request.resourceName }}</td>
-            <td><button @click="centerMap(request.latitude, request.longitude)">
-              {{ $t('map-center') }}
-            </button></td>
-          </tr>
-          </tbody>
-        </table>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>{{ $t('map-2table-name') }}</th>
+                <th>{{ $t('map-2table-type') }}</th>
+                <th>{{ $t('map-2table-coordinates') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(request, index) in requestPoints" :key="index">
+                <td>{{request.reporter.user.username }}</td>
+                <td>{{ request.resourceName }}</td>
+                <td>
+                  <button @click="centerMap(request.latitude, request.longitude)">
+                    {{ $t('map-center') }}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div id="map"></div>
-    </div>
-
-    <div v-if="message" class="alert centered-alert" :class="successful ? 'alert-success' : 'alert-danger'" role="alert">
-      {{ message }}
+      <div class="map-container">
+        <div id="map"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -339,53 +345,81 @@ export default {
 <style scoped>
 #map {
   height: 80vh;
-  width: 50vw;
-  margin: 5vh auto;
+  width: 100%;
 }
+
 .container {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
+
 .content {
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
+  width: 100%;
+  height: 80vh; /* Ensure the content height matches the map height */
 }
+
 .table-container {
-  width: 40%;
-  margin: 5vh auto;;
+  flex: 1;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
 }
+
+.table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.map-container {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 2rem;
 }
-table, th, td {
-  border: 1px solid #ddd;
-  width: 100%;
-}
+
 th, td {
-  padding: 8px;
+  border: 1px solid #ddd;
+  padding: 4px; /* Reduced padding for smaller row height */
+}
+
+th {
+  background-color: #f2f2f2;
   text-align: left;
-  display:table-cell;
-  width:100px;
 }
-h3 {
-  margin: 0 0 1rem 0;
+
+tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
 }
-.centered-alert {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 15px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 5px;
+
+tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
   text-align: center;
-  z-index: 9999;
-  width: 200px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #45a049;
 }
 </style>
 

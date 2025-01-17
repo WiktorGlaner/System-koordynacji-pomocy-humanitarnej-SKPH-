@@ -5,140 +5,140 @@
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
           <router-link to="/home" class="nav-link">
-            <font-awesome-icon icon="home" /> Home
+            <font-awesome-icon icon="home" /> {{ t('nav-home') }}
           </router-link>
         </li>
         <li v-if="showAdminBoard" class="nav-item">
-          <router-link to="/admin" class="nav-link">Admin Board</router-link>
+          <router-link to="/admin" class="nav-link">{{ t('nav-admin-board') }}</router-link>
         </li>
         <li v-if="showModeratorBoard" class="nav-item">
-          <router-link to="/mod" class="nav-link">Moderator Board</router-link>
+          <router-link to="/mod" class="nav-link">{{ t('nav-moderator-board') }}</router-link>
         </li>
         <li class="nav-item">
-          <router-link v-if="currentUser" to="/user" class="nav-link">User</router-link>
+          <router-link to="/communication" class="nav-link">{{ t('nav-chat') }}</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/communication" class="nav-link">Chat</router-link>
+          <router-link to="/map" class="nav-link">{{ t('nav-map') }}</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/map" class="nav-link">Map</router-link>
+          <router-link to="/tasks" class="nav-link">{{ t('nav-tasks') }}</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/tasks" class="nav-link">
-             Tasks
-          </router-link>
+          <router-link to="/resource" class="nav-link">{{ t('nav-resource') }}</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/resource" class="nav-link">Resource</router-link>
+          <router-link to="/request" class="nav-link">Request</router-link>
         </li>
         <li class="nav-item" v-if="currentUser && (currentUser.roles.includes('ROLE_AUTHORITY') || currentUser.roles.includes('ROLE_VOLUNTEER'))">
-          <router-link to="/organization" class="nav-link">Organization</router-link>
-        </li>
-        <li class="nav-item" v-if="currentUser && currentUser.roles.includes('ROLE_ORGANIZATION')">
-          <router-link to="/volunteer" class="nav-link">Volunteer</router-link>
-        </li>
-        <li class="nav-item" v-if="currentUser && currentUser.roles.includes('ROLE_ORGANIZATION')">
-          <router-link to="/application" class="nav-link">Application</router-link>
+          <router-link to="/reports" class="nav-link">{{ t('nav-reports') }}</router-link>
         </li>
       </div>
-      <div class="right_panel navbar-nav ms-auto">
-        <div v-if="!currentUser" class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <router-link to="/register" class="nav-link">
-              <font-awesome-icon icon="user-plus" /> Sign Up
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/login" class="nav-link">
-              <font-awesome-icon icon="sign-in-alt" /> Login
-            </router-link>
-          </li>
-        </div>
-
-        <div v-if="currentUser" class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <router-link to="/profile" class="nav-link">
-              <font-awesome-icon icon="user" />
-              {{ currentUser.username }}
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" @click.prevent="logOut">
-              <font-awesome-icon icon="sign-out-alt" /> LogOut
-            </a>
-          </li>
-        </div>
-        <div class="language-switcher">
-          <button type="button" class="btn btn btn-link" @click="changeLanguage('en')">
+      <div class="navbar-nav ml-auto">
+        <li class="nav-item" v-if="!currentUser">
+          <router-link to="/login" class="nav-link">{{ t('nav-login') }}</router-link>
+        </li>
+        <li class="nav-item" v-if="!currentUser">
+          <router-link to="/register" class="nav-link">{{ t('nav-sign-up') }}</router-link>
+        </li>
+        <li class="nav-item" v-if="currentUser">
+          <router-link to="/profile" class="nav-link">
+            <font-awesome-icon icon="user" /> {{ currentUser.username }}
+          </router-link>
+        </li>
+        <li class="nav-item" v-if="currentUser">
+          <a href="#" class="nav-link" @click="logout">
+            <font-awesome-icon icon="sign-out-alt" /> {{ t('nav-logout') }}
+          </a>
+        </li>
+        <li class="nav-item">
+          <button type="button" class="btn btn-link" @click="changeLanguage('en')">
             <img src="./assets/en_flag.svg" alt="English" class="flag-icon" />
           </button>
-          <button type="button" class="btn btn btn-link" @click="changeLanguage('pl')">
+        </li>
+        <li class="nav-item">
+          <button type="button" class="btn btn-link" @click="changeLanguage('pl')">
             <img src="./assets/pl_flag.svg" alt="Polish" class="flag-icon" />
           </button>
-        </div>
+        </li>
       </div>
-      
     </nav>
 
-    <div class="container">
-      <router-view />
+    <div class="container mt-3">
+      <router-view v-if="$route.path === '/login'" :method="setLangAfterLogin" />
+      <router-view v-else />
+
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import axios from 'axios';
-export default {
-  computed: {
-    currentUser() {
-      return this.$store.state.auth.user;
-    },
-    showAdminBoard() {
-      if (this.currentUser && this.currentUser['roles']) {
-        return this.currentUser['roles'].includes('ROLE_ADMIN');
-      }
+import { ref, computed, onMounted, watch } from 'vue';
+import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
-      return false;
-    },
-    showModeratorBoard() {
-      if (this.currentUser && this.currentUser['roles']) {
-        return this.currentUser['roles'].includes('ROLE_MODERATOR');
-      }
+const store = useStore();
+const { t, locale } = useI18n();
+const router = useRouter();
+const currentUser = computed(() => store.state.auth.user);
 
-      return false;
+
+
+const changeLanguage = async (lang) => {
+  try {
+    if (currentUser.value && currentUser.value.id) {
+      const response = await axios.get(`http://localhost:8080/lang/${currentUser.value.id}/${lang}`);
+      console.log('Language changed successfully:', response.data);
     }
-  },
-  methods: {
-    logOut() {
-      this.$store.dispatch('auth/logout');
-      this.$router.push('/login');
-    },
-    async changeLanguage(lang) {
-      this.$i18n.locale = lang;
-      try {
-        if (!this.currentUser || !this.currentUser.id) {
-          console.error('User is not logged in or ID is missing.');
-          return;
-        }
-        const response = await axios.get(`http://localhost:8080/lang/${this.currentUser.id}/${lang}`)
-        console.log('Language changed successfully:', response.data);
-      } catch (err){
-        console.error('Error while changing language:', err.response?.data || err.message);
-      }
-    },
-    async setLangAfterLogin(){
-      try {
-        if (!this.currentUser || !this.currentUser.id) {
-          console.error('User is not logged in or ID is missing.');
-          return;
-        }
-        const response = await axios.get(`http://localhost:8080/lang/getlang/${this.currentUser.id}`)
-        this.$i18n.locale = response.data
-        console.log('Language changed successfully:', response.data);
-      } catch (err){
-        console.error('Error while changing language:', err.response?.data || err.message);
-      }
-    }
+    locale.value = lang;
+    localStorage.setItem('language', lang); // Save language to localStorage
+  } catch (err) {
+    console.error('Error while changing language:', err.response?.data || err.message);
   }
 };
+
+const setLangAfterLogin = async () => {
+  try {
+    if (!currentUser.value || !currentUser.value.id) {
+      console.error('User is not logged in or ID is missing.');
+      return;
+    }
+    const response = await axios.get(`http://localhost:8080/lang/getlang/${currentUser.value.id}`);
+    locale.value = response.data;
+    console.log('Language set successfully:', response.data);
+  } catch (err) {
+    console.error('Error while setting language:', err.response?.data || err.message);
+  }
+};
+
+onMounted(async () => {
+  console.log('App mounted');
+  await setLangAfterLogin();
+});
+
+watch(locale, () => {
+  // This will trigger when the locale changes
+  console.log('Locale changed to:', locale.value);
+});
+
+const showAdminBoard = computed(() => currentUser.value && currentUser.value.roles.includes('ROLE_ADMIN'));
+const showModeratorBoard = computed(() => currentUser.value && currentUser.value.roles.includes('ROLE_MODERATOR'));
+
+const logout = () => {
+  store.dispatch('auth/logout');
+  router.push('/login');
+};
 </script>
+<style scoped>
+
+.navbar-nav.ml-auto {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.nav-item {
+  margin-left: 10px;
+}
+</style>
