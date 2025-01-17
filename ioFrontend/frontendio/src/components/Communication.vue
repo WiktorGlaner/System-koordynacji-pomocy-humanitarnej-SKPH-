@@ -59,7 +59,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 90vh;
   flex-direction: column;
 }
 
@@ -69,7 +69,6 @@
   min-width: 800px;
   min-height: 600px;
   max-height: 600px;
-  margin: 20px;
   border: 1px solid #ccc;
   background-color: #fff;
   overflow: hidden;
