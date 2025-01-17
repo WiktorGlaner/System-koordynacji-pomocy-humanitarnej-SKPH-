@@ -8,6 +8,11 @@ class TaskService {
       return axios.get(API_URL + 'getAllTasks', { 
         headers: authHeader() });
     }
+    getVolunteersTasks(username) {
+      return axios.get(API_URL + 'tasks/volunteer', { 
+        params: { username: username },
+        headers: authHeader() });
+    }
     getTask(id) {
       return axios.get(API_URL + 'getTask', { 
         params: { id: id },
