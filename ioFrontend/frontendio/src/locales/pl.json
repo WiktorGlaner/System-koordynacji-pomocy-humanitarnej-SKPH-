@@ -139,7 +139,12 @@
   "nav-reports": "Raporty",
   "nav-login": "Zaloguj się",
   "nav-sign-up": "Zarejestruj się",
-  "nav-logout": "Wyloguj się"
+  "nav-logout": "Wyloguj się",
+  "validation-username-required": "Nazwa użytkownika jest wymagana",
+  "validation-password-required": "Hasło jest wymagane",
+  "login-username": "Nazwa użytkownika",
+  "login-password": "Hasło",
+  "login-button": "Zaloguj się"
 
 
 }

@@ -135,6 +135,11 @@
   "nav-reports": "Reports",
   "nav-login": "Login",
   "nav-sign-up": "Sign Up",
-  "nav-logout": "Logout"
+  "nav-logout": "Logout",
+  "validation-username-required": "Username is required",
+  "validation-password-required": "Password is required",
+  "login-username": "Username",
+  "login-password": "Password",
+  "login-button": "Login"
 
 }

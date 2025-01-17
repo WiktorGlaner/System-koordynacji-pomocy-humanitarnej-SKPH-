@@ -9,12 +9,12 @@
       <Form @submit="handleLogin" :validation-schema="schema">
         <div class="form-group">
           <label for="username">Username</label>
-          <Field name="username" type="text" class="form-control" />
+          <Field name="username" type="text" class="form-control"  v-model="user.username" required/>
           <ErrorMessage name="username" class="error-feedback" />
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <Field name="password" type="password" class="form-control" />
+          <Field name="password" type="password" class="form-control" v-model="user.password" required />
           <ErrorMessage name="password" class="error-feedback" />
         </div>
 
@@ -38,60 +38,53 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import { useStore } from "vuex";
+import { useRouter,useRoute } from "vue-router";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 
-export default {
-  name: "Login",
-  components: {
-    Form,
-    Field,
-    ErrorMessage,
-  },
-  data() {
-    const schema = yup.object().shape({
-      username: yup.string().required("Username is required!"),
-      password: yup.string().required("Password is required!"),
-    });
+const store = useStore();
+const router = useRouter();
+const route = useRoute();
 
-    return {
-      loading: false,
-      message: "",
-      schema,
-    };
-  },
-  computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    },
-  },
-  created() {
-    if (this.loggedIn) {
-      this.$router.push("/profile");
-    }
-  },
-  methods: {
-    handleLogin(user) {
-      this.loading = true;
+const schema = yup.object().shape({
+  username: yup.string().required("Username is required!"),
+  password: yup.string().required("Password is required!"),
+});
 
-      this.$store.dispatch("auth/login", user).then(
-        () => {
-          this.$root.setLangAfterLogin();
-          this.$router.push("/");
-        },
-        (error) => {
-          this.loading = false;
-          this.message =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-        }
-      );
-    },
-  },
+const loading = ref(false);
+const message = ref("");
+const user = ref({ username: '', password: '' });
+const loggedIn = computed(() => store.state.auth.status.loggedIn);
+
+const props = defineProps({
+  method: {
+    type: Function,
+  }
+});
+
+onMounted(() => {
+  if (loggedIn.value) {
+    router.push("/");
+  }
+});
+
+const handleLogin = async () => {
+  loading.value = true;
+
+  try {
+    await store.dispatch('auth/login', user.value);
+    await props.method(); // Call the function passed as prop
+    router.push('/');
+  } catch (error) {
+    loading.value = false;
+    message.value =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+  }
 };
 </script>
 

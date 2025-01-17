@@ -61,7 +61,9 @@
     </nav>
 
     <div class="container mt-3">
-      <router-view />
+      <router-view v-if="$route.path === '/login'" :method="setLangAfterLogin" />
+      <router-view v-else />
+
     </div>
   </div>
 </template>
@@ -77,6 +79,8 @@ const store = useStore();
 const { t, locale } = useI18n();
 const router = useRouter();
 const currentUser = computed(() => store.state.auth.user);
+
+
 
 const changeLanguage = async (lang) => {
   try {
@@ -106,12 +110,8 @@ const setLangAfterLogin = async () => {
 };
 
 onMounted(async () => {
-  const savedLanguage = localStorage.getItem('language');
-  if (savedLanguage) {
-    locale.value = savedLanguage;
-  } else {
-    await setLangAfterLogin();
-  }
+  console.log('App mounted');
+  await setLangAfterLogin();
 });
 
 watch(locale, () => {

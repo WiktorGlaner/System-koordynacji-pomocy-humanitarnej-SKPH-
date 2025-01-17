@@ -15,6 +15,7 @@
     "bootstrap-vue-next": "^0.26.19",
     "eventbus": "^0.0.3",
     "lodash": "^4.17.21",
+    "route": "^0.2.5",
     "vue": "^3.5.12",
     "vue-i18n": "^11.0.1",
     "vue-router": "^4.4.5",
