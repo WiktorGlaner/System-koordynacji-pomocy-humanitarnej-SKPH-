@@ -259,7 +259,7 @@ public class ResourceService implements IResourceService {
     }
 
     @Override
-    public List<Resource> getSumOfQuantityByTypeAndDonorId(ResourceType type, Double donorId) {
+    public Double getSumOfQuantityByTypeAndDonorId(ResourceType type, Long donorId) {
         return resourceRepository.getSumOfQuantityByResourceTypeAndDonorId(type, donorId);
     }
 
