@@ -203,7 +203,7 @@ public class UserService implements IUserService {
         Optional<Organization> organization = organizationRepository.findByUser(user);
 
         return organization.map(value ->
-                new OrganizationInfoDataResponse(value.getName())
+                new OrganizationInfoDataResponse(value.getId(), value.getName(), value.getUser().getUsername())
         ).orElseThrow(() -> new RuntimeException("UserInfo not found for user: " + username));
     }
 
