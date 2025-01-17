@@ -8,12 +8,12 @@
       />
       <Form @submit="handleLogin" :validation-schema="schema">
         <div class="form-group">
-          <label for="username">Username</label>
+          <label for="username">{{ $t('login-username') }}</label>
           <Field name="username" type="text" class="form-control"  v-model="user.username" required/>
           <ErrorMessage name="username" class="error-feedback" />
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">{{ $t('login-password') }}</label>
           <Field name="password" type="password" class="form-control" v-model="user.password" required />
           <ErrorMessage name="password" class="error-feedback" />
         </div>
@@ -24,7 +24,7 @@
               v-show="loading"
               class="spinner-border spinner-border-sm"
             ></span>
-            <span>Login</span>
+            <span>{{ $t('login-button') }}</span>
           </button>
         </div>
 
@@ -39,19 +39,31 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter,useRoute } from "vue-router";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
+import { useI18n } from 'vue-i18n';
 
+const { t, locale } = useI18n();
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
 
-const schema = yup.object().shape({
-  username: yup.string().required("Username is required!"),
-  password: yup.string().required("Password is required!"),
+let usernameRequiredMessage = computed(() => t('validation-username-required'));
+let passwordRequiredMessage = computed(() => t('validation-password-required'));
+
+const schema = computed(() => yup.object().shape({
+  username: yup.string().required(usernameRequiredMessage.value),
+  password: yup.string().required(passwordRequiredMessage.value),
+}));
+
+watch(locale, () => {
+  schema.value = yup.object().shape({
+    username: yup.string().required(usernameRequiredMessage.value),
+    password: yup.string().required(passwordRequiredMessage.value),
+  });
 });
 
 const loading = ref(false);

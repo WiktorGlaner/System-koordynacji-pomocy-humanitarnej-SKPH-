@@ -152,9 +152,29 @@
   "nav-login": "Login",
   "nav-sign-up": "Sign Up",
   "nav-logout": "Logout",
+
   "validation-username-required": "Username is required",
   "validation-password-required": "Password is required",
   "login-username": "Username",
   "login-password": "Password",
-  "login-button": "Login"
+  "login-button": "Login",
+  
+  "signup-role": "Role",
+  "signup-select-role": "Select a role",
+  "signup-victim": "Victim",
+  "signup-donor": "Donor",
+  "signup-volunteer": "Volunteer",
+  "signup-organization": "Organization",
+  "signup-authority": "Authority",
+  "signup-button" : "Sign up",
+  "signup-emailreq" : "Email is required!",
+  "signup-emailinv" : "Email is invalid!",
+  "signup-emailmax" : "Must be maximum 50 characters!",
+  "signup-usernamereq" : "Username is required!",
+  "signup-usernamemin" : "Must be at least 3 characters!",
+  "signup-usernamemax" : "Must be maximum 20 characters!",
+  "signup-passreq" : "Password is required!",
+  "signup-passmin" : "Must be at least 6 characters!",
+  "signup-passmax" : "Must be maximum 40 characters!",
+  "signup-rolereq" : "Role is requiired!"
 }
