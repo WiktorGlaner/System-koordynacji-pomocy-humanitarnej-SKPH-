@@ -153,7 +153,7 @@ public class UserController {
     @PostMapping("/getApprovalStatusById")
     public ResponseEntity<ApplicationDataResponse> getApprovalStatusById(@RequestBody ApplicationRequest request) {
         Long id = request.getId();
-        ApplicationDataResponse applicationDataResponse =  userService.getApprovalStatus(id);
+        ApplicationDataResponse applicationDataResponse =  userService.getApprovalStatusById(id);
         return ResponseEntity.ok(applicationDataResponse);
     }
 

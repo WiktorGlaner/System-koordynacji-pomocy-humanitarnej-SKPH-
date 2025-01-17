@@ -277,7 +277,7 @@ public class UserService implements IUserService {
         return applicationDataResponse;
     }
 
-    public ApplicationDataResponse getApprovalStatus(Long id) {
+    public ApplicationDataResponse getApprovalStatusById(Long id) {
         Application approval = applicationRepository.findById(id).orElseThrow(() -> new RuntimeException("Application not found"));
         if (approval.getApproval() == null) {
             ApplicationDataResponse applicationDataResponse = new ApplicationDataResponse(false);

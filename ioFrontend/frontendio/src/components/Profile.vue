@@ -242,7 +242,7 @@ export default {
     },
     submitOrganizationForm() {
       if (this.validateOrganizationForm()) {
-      UserService.fillOrganizationInformation(this.organizationData)
+      UserService.fillOrganizationInformation(this.changeDataOrg)
           .then(response => {
             this.organizationData = { ...this.changeDataOrg };
             this.successful = true;
