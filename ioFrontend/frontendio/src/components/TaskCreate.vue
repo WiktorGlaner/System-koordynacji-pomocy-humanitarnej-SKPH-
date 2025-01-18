@@ -2,171 +2,171 @@
     <div class="container-fluid d-flex justify-content-center align-items-center mt-4">
       <div class="card h-100" style="width: 100%; padding: 20px;">
         <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center">
-            <h1 class="card-title mx-auto">{{ task.task.title || 'Title' }}</h1>
-            <button class="btn btn-secondary" @click="goBack" aria-label="Back">Powrót</button>
-          </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="card-title mx-auto">{{ task.task.title || $t('taskCreate-title') }}</h1>
+                <button class="btn btn-secondary" @click="goBack" aria-label="Back">{{ $t('taskCreate-goBack') }}</button>
+            </div>
   
           <form @submit.prevent="submitForm">
             <div class="container mt-5">
                 <div class="mb-3">
-                    <label class="form-label">Title</label>
+                    <label class="form-label">{{ $t('taskCreate-title') }}</label>
                     <input 
                         type="text" 
                         class="form-control" 
                         v-model="task.task.title" 
-                        placeholder="Enter the title of the task" 
+                        :placeholder="$t('taskCreate-title')"
                     />
                     <div v-if="errors.title" class="text-danger small mt-2">{{ errors.title }}</div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Description</label>
+                    <label class="form-label">{{ $t('taskCreate-description') }}</label>
                     <input 
                         type="text" 
                         class="form-control" 
                         v-model="task.task.description" 
-                        placeholder="Enter a description of the task" 
+                        :placeholder="$t('taskCreate-description')"
                     />
                     <div v-if="errors.description" class="text-danger small mt-2">{{ errors.description }}</div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Location</label>
+                    <label class="form-label">{{ $t('taskCreate-location') }}</label>
                     <input 
                         type="text" 
                         class="form-control" 
                         v-model="task.task.location" 
-                        placeholder="Enter the location of the task" 
+                        :placeholder="$t('taskCreate-location')"
                     />
                     <div v-if="errors.location" class="text-danger small mt-2">{{ errors.location }}</div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Priority</label>
+                    <label class="form-label">{{ $t('taskCreate-priority') }}</label>
                     <select class="form-select" v-model="task.task.priority">
-                        <option value="" disabled selected>Select priority</option>
-                        <option value="CRITICAL">CRITICAL</option>
-                        <option value="HIGH">HIGH</option>
-                        <option value="MEDIUM">MEDIUM</option>
-                        <option value="LOW">LOW</option>
+                        <option value="" disabled selected>{{ $t('taskCreate-priority') }}</option>
+                        <option value="CRITICAL">{{ $t('taskCreate-critical') }}</option>
+                        <option value="HIGH">{{ $t('taskCreate-high') }}</option>
+                        <option value="MEDIUM">{{ $t('taskCreate-medium') }}</option>
+                        <option value="LOW">{{ $t('taskCreate-low') }}</option>
                     </select>
                     <div v-if="errors.priority" class="text-danger small mt-2">{{ errors.priority }}</div>
                 </div>
-  
-              <div class="mb-3">
-                <label class="form-label">Status</label>
-                <select class="form-select" readonly disabled>
-                  <option value="IN_PROGRESS">In Progress</option>
-                </select>
-              </div>
 
-              <div class="mb-3 mt-10">
-                <h1 class="card-title mx-auto text-center">Choose request</h1>
-
-                <!-- Dodane pola do wyszukiwania -->
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <input
-                            type="text"
-                            v-model="searchRequestQuery"
-                            class="form-control"
-                            placeholder="Search by resource name"
-                        />
-                    </div>
-                    <div class="col-md-4">
-                        <select v-model="selectedRequestType" class="form-control">
-                            <option value="">Filter by type</option>
-                            <option v-for="type in uniqueRequestTypes" :key="type" :value="type">{{ type }}</option>
-                        </select>
-                    </div>
+                <div class="mb-3">
+                    <label class="form-label">{{ $t('taskCreate-status') }}</label>
+                    <select class="form-select" readonly disabled>
+                        <option value="IN_PROGRESS">{{ $t('taskCreate-inProgress') }}</option>
+                    </select>
                 </div>
 
-                <div v-if="allRequests.length > 0">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>id</th>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Location</th>
-                                <th>Reporter</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="request in filteredRequests" :key="request.requestId">
-                                <td>{{ request.requestId }}</td>
-                                <td>{{ request.resourceName }}</td>
-                                <td>{{ request.description }}</td>
-                                <td>{{ request.resourceType }}</td>
-                                <td>{{ request.amount }}</td>  
-                                <td>{{ request.latitude + ', ' + request.longitude }}</td>
-                                <td>
-                                    {{ request.reporter.name && request.reporter.surname 
-                                        ? 'Name: ' + request.reporter.name + ' ' + request.reporter.surname 
-                                        : 'Name: Not provided' }}
-                                </td>
-                                <td>
-                                    <button
-                                        v-if="task.requestID !== request.requestId"
-                                        class="btn btn-primary btn-sm"
-                                        @click.prevent="selectRequest(request)"
-                                    >
-                                        Select
-                                    </button>
-                                    <button
-                                        v-else
-                                        class="btn btn-danger btn-sm"
-                                        @click.prevent="removeRequest"
-                                    >
-                                        Remove
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="mb-3 mt-10">
+                    <h1 class="card-title mx-auto text-center">{{ $t('taskCreate-request') }}</h1>
 
-                    <!-- Przyciski do nawigacji między stronami -->
-                    <div class="d-flex justify-content-between mt-3">
-                        <button
-                            class="btn btn-secondary"
-                            @click="prevPageRequest"
-                            :disabled="currentPageRequest === 0"
-                        >
-                            Previous
-                        </button>
-                        <button
-                            class="btn btn-secondary"
-                            @click="nextPageRequest"
-                            :disabled="currentPageRequest === totalPagesRequest - 1"
-                        >
-                            Next
-                        </button>
+                    <!-- Dodane pola do wyszukiwania -->
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <input
+                                type="text"
+                                v-model="searchRequestQuery"
+                                class="form-control"
+                                :placeholder="$t('taskCreate-searchByResourceName')"
+                            />
+                        </div>
+                        <div class="col-md-4">
+                            <select v-model="selectedRequestType" class="form-control">
+                                <option value="">{{ $t('taskCreate-filterByType') }}</option>
+                                <option v-for="type in uniqueRequestTypes" :key="type" :value="type">{{ translatedResourceTypes[type] }}</option>
+                            </select>
+                        </div>
                     </div>
+
+                    <div v-if="allRequests.length > 0">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>{{ $t('taskCreate-id') }}</th>
+                                    <th>{{ $t('taskCreate-name') }}</th>
+                                    <th>{{ $t('taskCreate-description') }}</th>
+                                    <th>{{ $t('taskCreate-type') }}</th>
+                                    <th>{{ $t('taskCreate-amount') }}</th>
+                                    <th>{{ $t('taskCreate-location') }}</th>
+                                    <th>{{ $t('taskCreate-reporter') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="request in filteredRequests" :key="request.requestId">
+                                    <td>{{ request.requestId }}</td>
+                                    <td>{{ request.resourceName }}</td>
+                                    <td>{{ request.description }}</td>
+                                    <td>{{ translatedResourceTypes[request.resourceType] }}</td>
+                                    <td>{{ request.amount }}</td>
+                                    <td>{{ request.latitude + ', ' + request.longitude }}</td>
+                                    <td>
+                                        {{ request.reporter.name && request.reporter.surname 
+                                            ? $t('taskCreate-name') + ': ' + request.reporter.name + ' ' + request.reporter.surname 
+                                            : $t('taskCreate-nameNotProvided') }}
+                                    </td>
+                                    <td>
+                                        <button
+                                            v-if="task.requestID !== request.requestId"
+                                            class="btn btn-primary btn-sm"
+                                            @click.prevent="selectRequest(request)"
+                                        >
+                                            {{ $t('taskCreate-select') }}
+                                        </button>
+                                        <button
+                                            v-else
+                                            class="btn btn-danger btn-sm"
+                                            @click.prevent="removeRequest"
+                                        >
+                                            {{ $t('taskCreate-remove') }}
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Przyciski do nawigacji między stronami -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <button
+                                class="btn btn-secondary"
+                                @click="prevPageRequest"
+                                :disabled="currentPageRequest === 0"
+                            >
+                                {{ $t('taskCreate-previous') }}
+                            </button>
+                            <button
+                                class="btn btn-secondary"
+                                @click="nextPageRequest"
+                                :disabled="currentPageRequest === totalPagesRequest - 1"
+                            >
+                                {{ $t('taskCreate-next') }}
+                            </button>
+                        </div>
+                    </div>
+                    <div v-if="errors.request" class="text-danger small mt-2">{{ errors.request }}</div>
                 </div>
-                <div v-if="errors.request" class="text-danger small mt-2">{{ errors.request }}</div>
-            </div>
 
 
 
-              <div class="mb-3 mt-10">
-                <h1 class="card-title mx-auto text-center">Choose volunteers</h1>
+
+            <div class="mb-3 mt-10">
+                <h1 class="card-title mx-auto text-center">{{ $t('taskCreate-volunteers') }}</h1>
                 <div v-if="allVolunteers.length > 0">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Login</th>
-                                <th>Email</th>
-                                <th>Action</th>
+                                <th>{{ $t('taskCreate-nameAndSurname') }}</th>
+                                <th>{{ $t('taskCreate-username') }}</th>
+                                <th>{{ $t('taskCreate-email') }}</th>
+                                <th>{{ $t('taskCreate-action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            
                             <tr v-for="volunteer in paginatedVolunteers" :key="volunteer.username">
-                                <td>{{ volunteer.name && volunteer.surname ? volunteer.name + ' ' + volunteer.surname : 'No data given' }}</td>
+                                <td>{{ volunteer.name && volunteer.surname ? volunteer.name + ' ' + volunteer.surname : $t('taskCreate-noData') }}</td>
                                 <td>{{ volunteer.username }}</td>
                                 <td>{{ volunteer.email }}</td>
                                 <td>
@@ -175,14 +175,14 @@
                                         class="btn btn-primary btn-sm"
                                         @click.prevent="selectVolunteer(volunteer)"
                                     >
-                                        Select
+                                        {{ $t('taskCreate-select') }}
                                     </button>
                                     <button
                                         v-else
                                         class="btn btn-danger btn-sm"
                                         @click.prevent="removeVolunteer(volunteer)"
                                     >
-                                        Remove
+                                        {{ $t('taskCreate-remove') }}
                                     </button>
                                 </td>
                             </tr>
@@ -196,22 +196,23 @@
                             @click.prevent="prevPageVolunteer"
                             :disabled="currentPageVolunteer === 0"
                         >
-                            Previous
+                            {{ $t('taskCreate-previous') }}
                         </button>
                         <button 
                             class="btn btn-secondary" 
                             @click.prevent="nextPageVolunteer"
                             :disabled="currentPageVolunteer === totalPagesVolunteer - 1"
                         >
-                            Next
+                            {{ $t('taskCreate-next') }}
                         </button>
                     </div>
                 </div>
                 <div v-if="errors.volunteers" class="text-danger small mt-2">{{ errors.volunteers }}</div>
             </div>
 
+
             <div class="mb-3 mt-10">
-                <h1 class="card-title mx-auto text-center">Choose resources</h1>
+                <h1 class="card-title mx-auto text-center">{{ $t('taskCreate-resources') }}</h1>
 
                 <!-- Dodane pola do wyszukiwania -->
                 <div class="row mb-3">
@@ -220,13 +221,13 @@
                             type="text"
                             v-model="searchResourceQuery"
                             class="form-control"
-                            placeholder="Search by resource name"
+                            :placeholder="$t('taskCreate-searchByResourceName')"
                         />
                     </div>
                     <div class="col-md-4">
                         <select v-model="selectedResourceType" class="form-control">
-                            <option value="">Filter by type</option>
-                            <option v-for="type in uniqueResourceTypes" :key="type" :value="type">{{ type }}</option>
+                            <option value="">{{ $t('taskCreate-filterByType') }}</option>
+                            <option v-for="type in uniqueResourceTypes" :key="type" :value="type">{{ translatedResourceTypes[type] }}</option>
                         </select>
                     </div>
                 </div>
@@ -235,21 +236,21 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Resource Name</th>
-                                <th>Description</th>
-                                <th>Type</th>
-                                <th>Location</th>
-                                <th>Available quantity</th>
-                                <th>Quantity to Assign</th>
-                                <th>Action</th>
+                                <th>{{ $t('taskCreate-resourceName') }}</th>
+                                <th>{{ $t('taskCreate-description') }}</th>
+                                <th>{{ $t('taskCreate-type') }}</th>
+                                <th>{{ $t('taskCreate-location') }}</th>
+                                <th>{{ $t('taskCreate-availableQuantity') }}</th>
+                                <th>{{ $t('taskCreate-quantityToAssign') }}</th>
+                                <th>{{ $t('taskCreate-action') }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="resource in filteredResources" :key="resource.id">
-                                <td>{{ resource.name || 'No name provided' }}</td>
+                                <td>{{ resource.name || $t('taskCreate-noNameProvided') }}</td>
                                 <td>{{ resource.description }}</td>
-                                <td>{{ resource.resourceType }}</td>
-                                <td>{{ resource.latitude + ' ' + resource.longitude }}</td>
+                                <td>{{ translatedResourceTypes[resource.resourceType] }}</td>
+                                <td>{{ resource.location.latitude + ' ' + resource.location.longitude }}</td>
                                 <td>{{ resource.quantity + ' ' + resource.unit }}</td>
                                 <td>
                                     <input 
@@ -259,7 +260,7 @@
                                         min="1" 
                                         :max="resource.quantity" 
                                         class="form-control form-control-sm" 
-                                        placeholder="Enter quantity"/>
+                                        :placeholder="$t('taskCreate-enterQuantity')"/>
                                     <span v-else>{{ getResourceQuantity(resource.id) }}</span>
                                 </td>
                                 <td>
@@ -269,14 +270,14 @@
                                         @click.prevent="selectResource(resource)"
                                         :disabled="!resource.selectedQuantity || resource.selectedQuantity <= 0"
                                     >
-                                        Select
+                                        {{ $t('taskCreate-select') }}
                                     </button>
                                     <button
                                         v-else
                                         class="btn btn-danger btn-sm"
                                         @click.prevent="removeResource(resource)"
                                     >
-                                        Remove
+                                        {{ $t('taskCreate-remove') }}
                                     </button>
                                 </td>
                             </tr>
@@ -289,26 +290,22 @@
                             @click.prevent="prevPageResource"
                             :disabled="currentPageResource === 0"
                         >
-                            Previous
+                            {{ $t('taskCreate-previous') }}
                         </button>
                         <button 
                             class="btn btn-secondary" 
                             @click.prevent="nextPageResource"
                             :disabled="currentPageResource === totalPagesResource - 1"
                         >
-                            Next
+                            {{ $t('taskCreate-next') }}
                         </button>
                     </div>
                 </div>
                 <div v-if="errors.resources" class="text-danger small mt-2">{{ errors.resources }}</div>
             </div>
 
-
-
-
-  
               <div class="d-flex justify-content-center mt-4">
-                <button type="submit" class="btn btn-primary w-100">{{$t('task-submit')}}</button>
+                <button type="submit" class="btn btn-primary w-100">{{$t('taskCreate-submit')}}</button>
               </div>
             </div>
           </form>
@@ -365,6 +362,18 @@ import { all } from 'axios';
       this.fetchResources();
     },
     computed: {
+        translatedResourceTypes() {
+            return {
+                FOOD: this.$t('taskCreate-resourceTypes.FOOD'),
+                TRANSPORT: this.$t('taskCreate-resourceTypes.TRANSPORT'),
+                CLOTHING: this.$t('taskCreate-resourceTypes.CLOTHING'),
+                MEDICAL: this.$t('taskCreate-resourceTypes.MEDICAL'),
+                FINANCIAL: this.$t('taskCreate-resourceTypes.FINANCIAL'),
+                EQUIPMENT: this.$t('taskCreate-resourceTypes.EQUIPMENT'),
+                HOUSING: this.$t('taskCreate-resourceTypes.HOUSING'),
+                OTHER: this.$t('taskCreate-resourceTypes.OTHER')
+            };
+        },
         paginatedVolunteers() {
             const start = this.currentPageVolunteer * this.pageSizeVolunteer;
             const end = start + this.pageSizeVolunteer;

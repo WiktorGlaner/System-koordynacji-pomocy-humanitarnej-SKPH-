@@ -28,6 +28,14 @@ class ResourceService {
         return axios.post(API_URL + 'donation', donation, { headers: authHeader() });
     }
 
+    editResource(resourceParams, resourceId) {
+        return axios.patch(API_URL + `resource/${resourceId}`, resourceParams, { headers: authHeader() });
+    }
+
+    getResource(resourceId) {
+        return axios.get(API_URL + `resource/${resourceId}`, { headers: authHeader() });
+    }
+
     async getTotalAssignedQuantity() {
         const response = await axios.get(API_URL + 'assignments', {headers: authHeader()});
         const assignments = response.data;
