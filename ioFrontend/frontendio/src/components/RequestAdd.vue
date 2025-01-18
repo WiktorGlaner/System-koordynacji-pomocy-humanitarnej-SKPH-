@@ -120,6 +120,11 @@ export default {
         this.map.removeLayer(this.blueCircle);
         this.map.setView([51.75, 19.45], 14);
 
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        
         toast.success(this.$t('req-add-succ'));
       } catch (error) {
         toast.error(this.$t('req-add-fail'));
