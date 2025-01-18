@@ -23,7 +23,7 @@
 
     <div class="mb-3">
       <label for="description" class="form-label">{{ $t('req-desc') }}:</label>
-      <textarea v-model="newRequest.description" id="description" class="form-control" rows="4" required></textarea>
+      <textarea v-model="newRequest.description" id="description" class="form-control" rows="4"></textarea>
     </div>
 
     <div class="mb-3">
