@@ -10,14 +10,15 @@
                   :disabled="req.status !== 'REGISTERED'"
                   type="button"
                   @click="deleteUserRequest(req.reporter.user.username, req.requestId)">
-                <font-awesome-icon icon="remove"/>
+                <font-awesome-icon  icon="remove"/>
+
               </button>
               <button
                   class="btn btn-outline-dark"
                   type="button"
                   :disabled="req.status !== 'REGISTERED'"
                   @click="enableEditMode(req.requestId)">
-                <font-awesome-icon icon="edit"/>
+                <font-awesome-icon :icon="this.editMode.edit && this.editMode.requestId === req.requestId ? 'eraser' : 'edit'" />
               </button>
               <button
                   v-if="editMode.edit && editMode.requestId === req.requestId"
@@ -196,6 +197,9 @@ export default {
       req.resourceName = temp.resourceName;
       req.latitude = temp.latitude;
       req.longitude = temp.longitude;
+      if(req.blueCircle) {
+        req.blueCircle = null;
+      }
     },
     async cancel(req) {
       this.disableEditMode(req);
@@ -245,6 +249,7 @@ export default {
     },
     enableEditMode(id) {
       if(this.editMode.edit) {
+        this.userRequests.request.forEach(r => this.revertRequestData(r));
         this.userRequests.request.forEach(r => this.disableEditMode(r));
       }
       this.editMode.edit = true;
