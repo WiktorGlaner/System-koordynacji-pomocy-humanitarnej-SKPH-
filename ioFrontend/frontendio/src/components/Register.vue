@@ -9,7 +9,7 @@
       <Form @submit="handleRegister" :validation-schema="schema">
         <div v-if="!successful">
           <div class="form-group">
-            <label for="username">Username</label>
+            <label for="username">{{ $t('login-username') }}</label>
             <Field name="username" type="text" class="form-control" />
             <ErrorMessage name="username" class="error-feedback" />
           </div>
@@ -19,19 +19,19 @@
             <ErrorMessage name="email" class="error-feedback" />
           </div>
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">{{ $t('login-password') }}</label>
             <Field name="password" type="password" class="form-control" />
             <ErrorMessage name="password" class="error-feedback" />
           </div>
           <div class="form-group">
-            <label for="role">Role</label>
+            <label for="role">{{ $t('signup-role') }}</label>
             <Field name="role" as="select" class="form-control">
-              <option value="" disabled>Select a role</option>
-              <option value="victim">Victim</option>
-              <option value="donor">Donor</option>
-              <option value="volunteer">Volunteer</option>
-              <option value="organization">Organization</option>
-              <option value="authority">Authority</option>
+              <option value="" disabled>{{ $t('signup-select-role') }}</option>
+              <option value="victim">{{ $t('signup-victim') }}</option>
+              <option value="donor">{{ $t('signup-donor') }}</option>
+              <option value="volunteer">{{ $t('signup-volunteer') }}</option>
+              <option value="organization">{{ $t('signup-organization') }}</option>
+              <option value="authority">{{ $t('signup-authority') }}</option>
             </Field>
             <ErrorMessage name="role" class="error-feedback" />
           </div>
@@ -41,7 +41,7 @@
                 v-show="loading"
                 class="spinner-border spinner-border-sm"
               ></span>
-              Sign Up
+              {{ $t('signup-button') }}
             </button>
           </div>
         </div>
@@ -62,6 +62,7 @@
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 
+
 export default {
   name: "Register",
   components: {
@@ -73,20 +74,20 @@ export default {
     const schema = yup.object().shape({
       username: yup
         .string()
-        .required("Username is required!")
-        .min(3, "Must be at least 3 characters!")
-        .max(20, "Must be maximum 20 characters!"),
+        .required(this.$t('signup-usernamereq'))
+        .min(3, this.$t('signup-usernamemin'))
+        .max(20, this.$t('signup-usernamemax')),
       email: yup
         .string()
-        .required("Email is required!")
-        .email("Email is invalid!")
-        .max(50, "Must be maximum 50 characters!"),
+        .required(this.$t('signup-emailreq'))
+        .email(this.$t('signup-emailinv'))
+        .max(50, this.$t('signup-emailmax')),
       password: yup
         .string()
-        .required("Password is required!")
-        .min(6, "Must be at least 6 characters!")
-        .max(40, "Must be maximum 40 characters!"),
-      role: yup.string().required('Role is required')
+        .required(this.$t('signup-passreq'))
+        .min(6, this.$t('signup-passmin'))
+        .max(40, this.$t('signup-passmax')),
+      role: yup.string().required(this.$t('signup-rolereq'))
     });
 
     return {
@@ -95,6 +96,28 @@ export default {
       message: "",
       schema,
     };
+  },
+    watch: {
+    '$i18n.locale': function(newLang) {
+      this.schema = yup.object().shape({
+      username: yup
+        .string()
+        .required(this.$t('signup-usernamereq'))
+        .min(3, this.$t('signup-usernamemin'))
+        .max(20, this.$t('signup-usernamemax')),
+      email: yup
+        .string()
+        .required(this.$t('signup-emailreq'))
+        .email(this.$t('signup-emailinv'))
+        .max(50, this.$t('signup-emailmax')),
+      password: yup
+        .string()
+        .required(this.$t('signup-passreq'))
+        .min(6, this.$t('signup-passmin'))
+        .max(40, this.$t('signup-passmax')),
+      role: yup.string().required(this.$t('signup-rolereq'))
+    });
+    }
   },
   computed: {
     loggedIn() {

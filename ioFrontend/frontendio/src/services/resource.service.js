@@ -12,6 +12,10 @@ class ResourceService {
         return axios.get(API_URL + `resource?organisationId=${organisationId}`, { headers: authHeader() });
     }
 
+    getOrganisationAvailableResources(organisationId) {
+        return axios.get(API_URL + `resource?organisationId=${organisationId}&status=AVAILABLE`, { headers: authHeader() });
+    }
+    
     getDonorResources(donorId) {
         return axios.get(API_URL + `donation/${donorId}`, { headers: authHeader() });
     }

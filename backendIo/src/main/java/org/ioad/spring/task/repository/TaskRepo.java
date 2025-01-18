@@ -20,8 +20,5 @@ public interface TaskRepo extends JpaRepository<Task, Long> {
 
     List<Task> findByVolunteers_User_UsernameAndStatus(String username, TaskStatus status);
 
-
-//    Resource findByTaskId(@Param("id") Long id);
-
-
+    List<Task> findByVolunteers_User_Username(String username);
 }
