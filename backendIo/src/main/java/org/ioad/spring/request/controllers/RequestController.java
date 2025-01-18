@@ -10,6 +10,7 @@ import org.ioad.spring.user.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,17 +23,17 @@ public class RequestController {
     @Autowired
     private IRequestService requestService;
     @Autowired
-    private IUserService userService; //ZAMIENIC POZNIEJ NA INT4ERFEJS
-    @Autowired
-    private RequestRepository requestRepository; //SORRY MORDECZKI ALE BYŁA FUSZERKA MUSIAŁEM ZROBIC ZA WAS BUZIACZKI
+    private IUserService userService;
 
+
+    @PreAuthorize("hasRole('ROLE_ORGANIZATION') || hasRole('ROLE_AUTHORITY')" )
     @GetMapping("/requests")
     public ResponseEntity<List<Request>> getAllRequests() {
-        List<Request> requests = requestRepository.findAll();
+        List<Request> requests = requestService.getAllRequests();
         return ResponseEntity.ok(requests);
     }
 
-    //TO TEZ POTRZEBNE :*
+    @PreAuthorize("hasRole('ROLE_VICTIM')")
     @GetMapping("/{username}/requests")
     public ResponseEntity<List<Request>> getAllRequestsForUser(@PathVariable String username) {
         if (userService.getUser(username).isPresent()) {
@@ -44,6 +45,7 @@ public class RequestController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_VICTIM')")
     @PostMapping( "/{username}/requests/addrequest")
     public ResponseEntity<String> addRequest(@PathVariable String username, @RequestBody newRequestData requestData) {
         if (userService.getUser(username).isPresent()) {
@@ -62,6 +64,7 @@ public class RequestController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_VICTIM')")
     @PutMapping("/{username}/requests/changerequest/{id}")
     public ResponseEntity<String> changeRequest(@PathVariable Long id, @RequestBody UpdateRequestData requestData) {
         if (requestService.getRequestById(id) != null) {
@@ -78,6 +81,7 @@ public class RequestController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Request not found");
     }
 
+    @PreAuthorize("hasRole('ROLE_VICTIM') || hasRole('ROLE_AUTHORITY')" )
     @DeleteMapping("/{username}/requests/deleterequest/{id}")
     public ResponseEntity<String> deleteRequest(@PathVariable Long id) {
         try {
