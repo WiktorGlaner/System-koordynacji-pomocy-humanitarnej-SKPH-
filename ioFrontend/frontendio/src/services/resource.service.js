@@ -12,6 +12,10 @@ class ResourceService {
         return axios.get(API_URL + `resource?organisationId=${organisationId}`, { headers: authHeader() });
     }
 
+    getOrganisationAvailableResources(organisationId) {
+        return axios.get(API_URL + `resource?organisationId=${organisationId}&status=AVAILABLE`, { headers: authHeader() });
+    }
+    
     getDonorResources(donorId) {
         return axios.get(API_URL + `donation/${donorId}`, { headers: authHeader() });
     }
@@ -22,6 +26,14 @@ class ResourceService {
 
     async addDonation(donation) {
         return axios.post(API_URL + 'donation', donation, { headers: authHeader() });
+    }
+
+    editResource(resourceParams, resourceId) {
+        return axios.patch(API_URL + `resource/${resourceId}`, resourceParams, { headers: authHeader() });
+    }
+
+    getResource(resourceId) {
+        return axios.get(API_URL + `resource/${resourceId}`, { headers: authHeader() });
     }
 
     async getTotalAssignedQuantity() {

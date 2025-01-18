@@ -29,7 +29,7 @@
         <li class="nav-item" v-if="currentUser && (currentUser.roles.includes('ROLE_AUTHORITY') || currentUser.roles.includes('ROLE_VICTIM'))">
           <router-link to="/request" class="nav-link">{{t('nav-request')}}</router-link>
         </li>
-        <li class="nav-item" v-if="currentUser && (currentUser.roles.includes('ROLE_AUTHORITY') || currentUser.roles.includes('ROLE_VOLUNTEER'))">
+        <li class="nav-item" >
           <router-link to="/reports" class="nav-link">{{ t('nav-reports') }}</router-link>
         </li>
       </div>

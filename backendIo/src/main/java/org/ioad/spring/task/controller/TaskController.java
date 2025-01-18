@@ -52,6 +52,12 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
+    @GetMapping("/tasks/volunteer")
+    public List<ResponseTaskDTO> getTasksByVolunteerUsername(@RequestParam String username) {
+
+        return taskService.getTasksByVolunteerUsername(username);
+    }
+
     @PutMapping("/editTask")
     public ResponseEntity<ResponseTaskDTO> editTask(@RequestParam("id") long id, @RequestBody Task updatedTask) {
         ResponseTaskDTO editedTask = taskService.editTask(id, updatedTask);

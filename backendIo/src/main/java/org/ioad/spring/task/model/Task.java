@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ioad.spring.request.models.Request;
+import org.ioad.spring.user.models.Organization;
 import org.ioad.spring.user.models.UserInfo;
 
 import java.util.List;
@@ -36,11 +37,12 @@ public class Task {
 
     private String description;
 
-    @Column(nullable = false)
-    private String organization;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "organization_id", nullable = false)
+    private Organization organization;
 
     @ManyToOne
-    @JoinColumn(name = "request_id", nullable = false) // Klucz obcy w tabeli Task
+    @JoinColumn(name = "request_id", nullable = false)
     private Request request;
 
     @Column(nullable = false)
@@ -105,11 +107,11 @@ public class Task {
         this.location = location;
     }
 
-    public String getOrganization() {
+    public Organization getOrganization() {
         return organization;
     }
 
-    public void setOrganization(String organization) {
+    public void setOrganization(Organization organization) {
         this.organization = organization;
     }
 

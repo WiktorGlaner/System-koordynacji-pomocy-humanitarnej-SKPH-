@@ -16,6 +16,21 @@
         <form>
           <div class="container mt-5">
             <div class="mb-3" v-if="task.task">
+              <label class="form-label">Title</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                v-model="task.task.title" 
+                :readonly="task.task.status === 'COMPLETED'"
+                :disabled="task.task.status === 'COMPLETED'"
+                :required="task.task.status === 'IN_PROGRESS'"
+              >
+              <div v-if="errors.title" class="text-danger small mt-2">
+                {{ errors.title }}
+              </div>
+            </div>
+
+            <div class="mb-3" v-if="task.task">
               <label class="form-label">Description</label>
               <input 
                 type="text" 
@@ -90,20 +105,37 @@
               </select>
             </div>
 
-            <!-- Task Request Section -->
+            <h2 class="text-center mt-4">Organization</h2>
+            <ul class="list-group mt-3">
+              <li 
+                class="list-group-item"
+                v-if="task.task && task.task.organization"
+              >
+                <p><strong>Organization name:</strong> {{ task.task.organization.name }}</p>
+                <p><strong>Head of organization:</strong> {{ task.task.organization.user.username }}</p>
+
+              </li>
+            </ul>
+
             <h2 class="text-center mt-4">Request</h2>
             <ul class="list-group mt-3">
               <li 
                 class="list-group-item"
                 v-if="task.task && task.task.request"
               >
-                <p><strong>Description:</strong> {{ task.task.request.description }}</p>
-                <p><strong>Location:</strong> {{ task.task.request.latitude }}, {{ task.task.request.longitude }}</p>
-                <p><strong>Reporter:</strong> {{ task.task.request.reporter.name }} {{ task.task.request.reporter.surname }}</p>
+              <p><strong>Description:</strong> {{ task.task.request.description || 'Not provided' }}</p>
+              <p><strong>Type:</strong> {{ task.task.request.resource_type || 'Not provided' }}</p>
+              <p><strong>Amount:</strong> {{ task.task.request.amount || 'Not provided' }}</p>
+              <p><strong>Location:</strong> 
+                {{ task.task.request.latitude && task.task.request.longitude ? task.task.request.latitude + ', ' + task.task.request.longitude : 'Location not provided' }}
+              </p>
+              <p><strong>Status:</strong> {{ task.task.request.status || 'Not provided' }}</p>
+              <p><strong>Reporter:</strong> 
+                {{ task.task.request.reporter && task.task.request.reporter.name && task.task.request.reporter.surname ? task.task.request.reporter.name + ' ' + task.task.request.reporter.surname : 'No provided' }}
+              </p>
               </li>
             </ul>
 
-            <!-- Resources Section -->
             <h2 class="text-center mt-4">Resources</h2>
             <ul class="list-group mt-3" v-if="task.resources">
               <li 
@@ -112,13 +144,13 @@
                 :key="resource.id"
               >
                 <p><strong>Name:</strong> {{ resource.name }}</p>
+                <p><strong>Type:</strong> {{ resource.resourceType }}</p>
                 <p><strong>Description:</strong> {{ resource.description || 'No description' }}</p>
-                <p><strong>Location:</strong> {{ resource.location.latitude }}, {{ resource.location.longitude }}</p>
+                <p><strong>Amount:</strong> {{ resource.quantity + ' ' + resource.unit }}</p>
                 <p><strong>Expiration Date:</strong> {{ resource.expDate }}</p>
               </li>
             </ul>
 
-            <!-- Volunteers Section -->
             <h2 class="text-center mt-4">Volunteers</h2>
             <ul class="list-group mt-3" v-if="task.task && task.task.volunteers">
               <li 
@@ -128,14 +160,12 @@
               >
                 <p><strong>Name and surname:</strong> {{ volunteer.name }} {{ volunteer.surname }}</p>
                 <p><strong>Username:</strong> {{ volunteer.user.username }}</p>
-                <p><strong>PESEL:</strong> {{ volunteer.pesel }}</p>
                 <p><strong>Email:</strong> {{ volunteer.user.email}}</p>
                 <p><strong>Active:</strong> {{ volunteer.activity ? 'Yes' : 'No' }}</p>
               </li>
             </ul>
           </div>
 
-          <!-- Submit Button -->
           <div class="d-flex justify-content-center mt-4">
             <button 
               type="submit" 
@@ -170,8 +200,8 @@ import TaskService from '../services/task.service';
       async fetchTaskDetails() {
         try {
           const response = await TaskService.getTask(this.id);
-          console.log(response.data);
           this.task = response.data;
+          console.log(this.task);
         } catch (error) {
           console.error("Error fetching task details:", error);
         }
@@ -185,7 +215,6 @@ import TaskService from '../services/task.service';
       },
       async gradeTask() {
         this.errors = {};
-        this.successMessage = '';
         const grade = Number(this.task.task.grade);
         if (isNaN(grade) || grade < 1 || grade > 5) {
           this.errors.grade = 'Grade must be a number between 1 and 5.';
@@ -205,7 +234,10 @@ import TaskService from '../services/task.service';
       },
       async submitForm() {
         this.errors = {};
-        this.successMessage = '';
+
+        if (!this.task.task.title || this.task.task.title.trim() === '') {
+            this.errors.title = 'Title cannot be empty.'; 
+        }
 
         if (!this.task.task.description || this.task.task.description.trim() === '') {
             this.errors.description = 'Description cannot be empty.'; 

@@ -118,6 +118,18 @@ public class TaskService implements TaskServiceCommunication {
         return responseTaskDTOS;
     }
 
+    public List<ResponseTaskDTO> getTasksByVolunteerUsername(String username) {
+
+        List<Task> taskList = taskRepo.findByVolunteers_User_Username(username);
+        List<ResponseTaskDTO> responseTaskDTOS = new ArrayList<>();
+
+        for(Task task : taskList) {
+            ResponseTaskDTO responseTaskDTO = buildResponseTaskDTO(task);
+            responseTaskDTOS.add(responseTaskDTO);
+        }
+
+        return responseTaskDTOS;
+    }
 
     public ResponseTaskDTO editTask(Long id, Task updatedTask) {
         return taskRepo.findById(id).map(existingTask -> {
@@ -145,17 +157,25 @@ public class TaskService implements TaskServiceCommunication {
             throw new IllegalArgumentException("Grade must be between 1 and 5.");
         }
 
-        Task task = taskRepo.findById(id).map(existingTask -> {
-            if (!existingTask.getStatus().equals(TaskStatus.COMPLETED)) {
-                throw new IllegalStateException("Task must be completed before grading.");
-            }
+        Task task = taskRepo.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException("Task not found with id " + id));
+    
+        if (task.getStatus() == TaskStatus.IN_PROGRESS) {
+            throw new IllegalStateException("Task must be completed before grading.");
+        }
 
-            existingTask.setGrade(grade);
-            return taskRepo.save(existingTask);
-        }).orElseThrow(() -> new TaskNotFoundException("Task not found with id " + id));
-
+        if (task.getStatus() == TaskStatus.GRADED) {
+            throw new IllegalStateException("Task is already graded and cannot be graded again.");
+        }
+    
+        task.setGrade(grade);
+        task.setStatus(TaskStatus.GRADED);
+    
+        task = taskRepo.save(task);
+    
         return buildResponseTaskDTO(task);
     }
+    
 
     
     public Double calculateAverageGradeForUser(String username) {

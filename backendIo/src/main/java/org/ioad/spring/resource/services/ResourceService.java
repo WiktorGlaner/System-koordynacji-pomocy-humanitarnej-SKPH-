@@ -103,32 +103,45 @@ public class ResourceService implements IResourceService {
         Resource resource = resourceRepository.findById(resourceId).orElseThrow(
                 () -> new ResourceNotFound("resource with " + resourceId + " does not exist"));
 
+        boolean isUpdated = false;
+
         if (description != null &&
                 !Objects.equals(resource.getDescription(), description)) {
             resource.setDescription(description);
+            isUpdated = true;
         }
 
         if (location != null &&
                 !Objects.equals(resource.getLocation(), location)) {
             resource.setLocation(location);
+            isUpdated = true;
         }
 
         if (quantity != null &&
                 !Objects.equals(resource.getQuantity(), quantity)) {
             resource.setQuantity(quantity);
+            isUpdated = true;
         }
 
-        ResourceStatus resourceStatus;
-        try {
-            resourceStatus = ResourceStatus.valueOf(status.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new InvalidArgument("No resource status with name: " + status);
+        if (status != null) {
+            ResourceStatus resourceStatus;
+            try {
+                resourceStatus = ResourceStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new InvalidArgument("No resource status with name: " + status);
+            }
+
+            if (!Objects.equals(resource.getStatus(), resourceStatus)) {
+                resource.setStatus(resourceStatus);
+                isUpdated = true;
+            }
         }
 
-        if (!Objects.equals(resource.getStatus(), resourceStatus)) {
-            resource.setStatus(resourceStatus);
-        }
         validateResource(resource);
+
+        if (isUpdated) {
+            resourceRepository.save(resource);
+        }
     }
 
     @Override
@@ -257,6 +270,12 @@ public class ResourceService implements IResourceService {
                 .map(Enum::name)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Double getSumOfQuantityByTypeAndDonorId(ResourceType type, Long donorId) {
+        return resourceRepository.getSumOfQuantityByResourceTypeAndDonorId(type, donorId);
+    }
+
     @Transactional
     public void updateExpiredStatus() {
         LocalDate today = LocalDate.now();

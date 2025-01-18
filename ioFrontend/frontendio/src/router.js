@@ -7,6 +7,7 @@ import Request from "@/components/Request.vue";
 import Tasks from "@/components/Tasks.vue";
 import TaskInfo from "@/components/TaskInfo.vue";
 import TaskEdit from "./components/TaskEdit.vue";
+import TaskCreate from "./components/TaskCreate.vue";
 // lazy-loaded
 const Profile = () => import("./components/Profile.vue")
 const BoardAdmin = () => import("./components/BoardAdmin.vue")
@@ -19,6 +20,7 @@ const Volunteer = () => import("./components/Volunteer.vue")
 const Application = () => import("./components/Application.vue")
 const VolunteerInfo = () => import("./components/VolunteerInfo.vue")
 const ApplicationInfo = () => import("./components/ApplicationInfo.vue")
+const Report = () => import("./components/Report.vue")
 
 const routes = [
   {
@@ -50,6 +52,10 @@ const routes = [
     path: "/tasks",
     component: Tasks,
   },
+  {
+    path: "/tasks/create",
+    component: TaskCreate,
+    },
   {
   path: "/tasks/info/:id",
   component: TaskInfo,
@@ -122,6 +128,11 @@ const routes = [
     path: "/application/info/:id",
     component: ApplicationInfo,
     props: true,
+  },
+  {
+    path: "/reports",
+    name: "report",
+    component: Report,
   },
 ];
 

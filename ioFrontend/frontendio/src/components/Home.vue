@@ -29,7 +29,7 @@ const content = ref("");
 const router = useRouter();
 
 const tiles = ref([
-  { id: 1, title: t('home-raports'), description: t('home-raports-description'), icon: "fas fa-file-alt", link: "/page1", roles: ["ROLE_AUTHORITY"] },
+  { id: 1, title: t('home-raports'), description: t('home-raports-description'), icon: "fas fa-file-alt", link: "/reports", roles: ["ROLE_AUTHORITY", "ROLE_DONOR"] },
   { id: 2, title: t('home-profile'), description: t('home-profile-description'), icon: "fas fa-user", link: "/profile", roles: ["ROLE_USER","ROLE_VICTIM", "ROLE_VOLUNTEER", "ROLE_AUTHORITY", "ROLE_ORGANIZATION","ROLE_DONOR"] },
   { id: 3, title: t('home-resource'), description: t('home-resource-description'), icon: "fas fa-cogs", link: "/resource", roles: ["ROLE_ORGANIZATION", "ROLE_AUTHORITY", "ROLE_DONOR"] },
   { id: 4, title: t('home-map'), description: t('home-map-description'), icon: "fas fa-map", link: "/map", roles: ["ROLE_AUTHORITY","ROLE_VICTIM","ROLE_ORGANIZATION"] },
@@ -68,7 +68,7 @@ onMounted(() => {
 // Watch for changes in locale and update tiles accordingly
 watch(locale, () => {
   tiles.value = [
-  { id: 1, title: t('home-raports'), description: t('home-raports-description'), icon: "fas fa-file-alt", link: "/page1", roles: ["ROLE_AUTHORITY"] },
+  { id: 1, title: t('home-raports'), description: t('home-raports-description'), icon: "fas fa-file-alt", link: "/reports", roles: ["ROLE_AUTHORITY", "ROLE_DONOR"] },
   { id: 2, title: t('home-profile'), description: t('home-profile-description'), icon: "fas fa-user", link: "/profile", roles: ["ROLE_USER","ROLE_VICTIM", "ROLE_VOLUNTEER", "ROLE_AUTHORITY", "ROLE_ORGANIZATION","ROLE_DONOR"] },
   { id: 3, title: t('home-resource'), description: t('home-resource-description'), icon: "fas fa-cogs", link: "/resource", roles: ["ROLE_ORGANIZATION", "ROLE_AUTHORITY", "ROLE_DONOR"] },
   { id: 4, title: t('home-map'), description: t('home-map-description'), icon: "fas fa-map", link: "/map", roles: ["ROLE_AUTHORITY","ROLE_VICTIM","ROLE_ORGANIZATION"] },

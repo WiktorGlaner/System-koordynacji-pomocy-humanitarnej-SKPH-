@@ -1,5 +1,6 @@
 package org.ioad.spring.language.services;
 
+import org.ioad.spring.language.ILangService;
 import org.ioad.spring.language.models.Language;
 import org.ioad.spring.language.repository.LangRepository;
 import org.ioad.spring.security.postgresql.models.User;
@@ -9,12 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LangService {
+public class LangService implements ILangService {
     @Autowired
     private LangRepository langRepository;
     @Autowired
     private UserRepository userRepository;
 
+    @Override
     public void addLangRecord(String lang, User user) {
         Language language = new Language();
         language.setLanguage(lang);
