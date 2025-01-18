@@ -42,7 +42,7 @@
         <p class="label">PESEL</p>
         <p class="value">{{ userData && userData.pesel ? userData.pesel : $t('profile-null') }}</p>
       </div>
-      <div class="priofile-item"> 
+      <div class="profile-item"> 
         <button @click="toogleForm()" class="btn btn-primary">
           {{showForm ?  $t('profile-edit2') : $t('profile-edit1')}}
         </button>
@@ -71,13 +71,9 @@
           <button type="submit" class="btn btn-success">{{ $t('profile-save') }}</button>
         </div>
       </form>
-      <div
-        v-if="message"
-        class="alert"
-        :class="successful ? 'alert-success' : 'alert-danger'"
-      >
-        {{ message }}
-      </div>
+      <div v-if="message" class="alert" :class="successful ? 'alert-success' : 'alert-danger'">
+      {{ message }}
+    </div>
     </div>
   </div>
 
@@ -90,7 +86,7 @@
         <p class="label">{{ $t('profile-organization-name') }}</p>
         <p class="value">{{ organizationData && organizationData.name ? organizationData.name : $t('profile-null') }}</p>
       </div>
-      <div class="priofile-item"> 
+      <div class="profile-item"> 
         <button @click="toogleForm()" class="btn btn-primary">
           {{showForm ? $t('profile-edit2') : $t('profile-edit1')}}
         </button>
@@ -227,6 +223,10 @@ export default {
         this.successful = true;
         this.userData = { ...this.changeData };
         this.message = this.$t('profile-success');
+
+        setTimeout(() => {
+              this.message = "";
+            }, 5000);
       })
       .catch(error => {
         this.successful = false;
@@ -242,12 +242,15 @@ export default {
     },
     submitOrganizationForm() {
       if (this.validateOrganizationForm()) {
-      UserService.fillOrganizationInformation(this.organizationData)
+      UserService.fillOrganizationInformation(this.changeDataOrg)
           .then(response => {
-            console.log(response.data.message)
             this.organizationData = { ...this.changeDataOrg };
             this.successful = true;
             this.message = this.$t('profile-success');
+
+            setTimeout(() => {
+              this.message = "";
+            }, 5000);
           })
           .catch(error => {
           this.successful = false;

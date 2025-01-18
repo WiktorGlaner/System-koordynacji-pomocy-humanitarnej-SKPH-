@@ -18,6 +18,10 @@ class TaskService {
         params: { id: id },
         headers: authHeader() });
     }
+    createTask(createTaskDTO) {
+      return axios.post(API_URL + 'createTask', createTaskDTO, { 
+        headers: authHeader() });
+    }
     endTask(id) {
       return axios.put(API_URL + 'endTask', null, { 
         params: { id: id },

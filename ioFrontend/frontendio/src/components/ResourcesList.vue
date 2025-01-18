@@ -2,31 +2,31 @@
   <div class="container mt-3">
     <div class="mb-100">
       <BCard>
-        <BRow class="mb-3">
+        <BRow class="mb-3 align-items-start">
           <BCol md="6">
-            <BFormGroup label="Filter by Type">
-              <BFormCheckboxGroup v-model="statusFilter" stacked>
-                <BFormCheckbox value="EXPIRED">Expired</BFormCheckbox>
-                <BFormCheckbox value="AVAILABLE">Available</BFormCheckbox>
-                <BFormCheckbox value="FULLY_ASSIGNED">Fully Assigned</BFormCheckbox>
-                <BFormCheckbox value="DAMAGED">Damaged</BFormCheckbox>
-              </BFormCheckboxGroup>
-            </BFormGroup>
+              <BFormGroup :label="$t('resources-status-label')" class="mb-4">
+                <BFormCheckboxGroup v-model="statusFilter" stacked>
+                  <BFormCheckbox value="EXPIRED" class="mb-2">{{ $t('resources-expired') }}</BFormCheckbox>
+                  <BFormCheckbox value="AVAILABLE" class="mb-2">{{ $t('resources-available') }}</BFormCheckbox>
+                  <BFormCheckbox value="FULLY_ASSIGNED" class="mb-2">{{ $t('resources-fullyassigned') }}</BFormCheckbox>
+                  <BFormCheckbox value="DAMAGED" class="mb-2">{{ $t('resources-damaged') }}</BFormCheckbox>
+                </BFormCheckboxGroup>
+              </BFormGroup>
           </BCol>
 
           <BCol md="6">
-            <BFormGroup label="Filter by Status">
-              <BFormCheckboxGroup v-model="typeFilter" stacked>
-                <BFormCheckbox value="FOOD">Food</BFormCheckbox>
-                <BFormCheckbox value="TRANSPORT">Transport</BFormCheckbox>
-                <BFormCheckbox value="CLOTHING">Clothing</BFormCheckbox>
-                <BFormCheckbox value="MEDICAL">Medical</BFormCheckbox>
-                <BFormCheckbox value="FINANCIAL">Financial</BFormCheckbox>
-                <BFormCheckbox value="EQUIPMENT">Equipment</BFormCheckbox>
-                <BFormCheckbox value="HOUSING">Housing</BFormCheckbox>
-                <BFormCheckbox value="OTHER">Other</BFormCheckbox>
-              </BFormCheckboxGroup>
-            </BFormGroup>
+              <BFormGroup :label="$t('resources-type-label')">
+                <BFormCheckboxGroup v-model="typeFilter" stacked>
+                  <BFormCheckbox value="FOOD" class="mb-2">{{$t('map-form-food')}}</BFormCheckbox>
+                  <BFormCheckbox value="TRANSPORT" class="mb-2">{{$t('map-form-transport')}}</BFormCheckbox>
+                  <BFormCheckbox value="CLOTHING" class="mb-2">{{$t('map-form-clothing')}}</BFormCheckbox>
+                  <BFormCheckbox value="MEDICAL" class="mb-2">{{$t('map-form-medical')}}</BFormCheckbox>
+                  <BFormCheckbox value="FINANCIAL" class="mb-2">{{$t('map-form-financial')}}</BFormCheckbox>
+                  <BFormCheckbox value="EQUIPMENT" class="mb-2">{{$t('map-form-eq')}}</BFormCheckbox>
+                  <BFormCheckbox value="HOUSING" class="mb-2">{{$t('map-form-housing')}}</BFormCheckbox>
+                  <BFormCheckbox value="OTHER" class="mb-2">{{$t('map-form-other')}}</BFormCheckbox>
+                </BFormCheckboxGroup>
+              </BFormGroup>
           </BCol>
         </BRow>
 
@@ -36,48 +36,54 @@
           </div>
         </div>
 
-        <BTable
-            v-else
-            :items="paginatedResources"
-            :fields="fields"
-            striped
-            hover
-            responsive
-            :sort-by.sync="[{key: 'addedDate', order: 'desc'}]"
-            :sort-desc.sync="sortDesc"
-        >
-          <template #cell(name)="data">
+        <div v-else>
+          <BTable
+              :items="filteredResources"
+              :fields="fields"
+              :per-page="perPage"
+              :current-page="currentPage"
+              striped
+              hover
+              responsive
+              :sort-by.sync="sortBy"
+              @page-change="onPageChange"
+          >
+            <template #cell(name)="data">
           <span class="d-flex align-items-center">
-            <i :class="getTypeIcon(data.item.resourceType)" class="me-2"></i>
+            <font-awesome-icon :icon="getTypeIcon(data.item.resourceType)" class="me-2" />
+
             {{data.item.name}}
           </span>
-          </template>
+            </template>
 
-          <template #cell(description)="data">
+            <template #cell(description)="data">
           <span :title="data.item.description">
             {{ truncateText(data.item.description, 50) }}
           </span>
-          </template>
+            </template>
 
-          <template #cell(status)="data">
+            <template #cell(status)="data">
           <span  class="badge"
                  :class="getStatusClass(data.item.status)">
-            {{ data.item.status }}
+            {{ translateStatus(data.item.status) }}
           </span>
-          </template>
+            </template>
 
-          <template #cell(quantity)="data">
-            {{ data.item.quantity }} {{ data.item.unit }}
-          </template>
-        </BTable>
-
-        <BPagination
-            v-model="currentPage"
-            :total-rows="filteredResources.length"
-            :per-page="perPage"
-            align="center"
-            class="mt-3"
-        />
+            <template #cell(quantity)="data">
+              {{ data.item.assignedQuantity ? data.item.quantity + "/" + (data.item.assignedQuantity + data.item.quantity) : data.item.quantity  }} {{ data.item.unit }}
+            </template>
+          </BTable>
+          <div v-if="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+          <BPagination
+              v-model="currentPage"
+              :total-rows="filteredResources.length"
+              :per-page="perPage"
+              align="center"
+              class="mt-3"
+          />
+        </div>
       </BCard>
 
     </div>
@@ -85,7 +91,16 @@
 </template>
 
 <script>
-import { BCard, BRow, BCol, BFormGroup, BFormCheckboxGroup, BFormCheckbox, BTable, BPagination} from 'bootstrap-vue-next';
+import {
+  BCard,
+  BCol,
+  BFormCheckbox,
+  BFormCheckboxGroup,
+  BFormGroup,
+  BPagination,
+  BRow,
+  BTable
+} from 'bootstrap-vue-next';
 import ResourceService from "@/services/resource.service.js";
 
 export default {
@@ -101,21 +116,20 @@ export default {
   },
   data() {
     return {
-      resources: [],
       isLoading: true,
       typeFilter: [],
+      resources: [],
       statusFilter: [],
-      fields: [
-        { key: "name", label: "Name", sortable: true },
-        { key: "description", label: "Description" },
-        { key: "quantity", label: "Quantity", sortable: true},
-        { key: "status", label: "Status"},
-        { key: "addedDate", label: "Added Date", sortable: true },
-        { key: "expDate", label: "Expiration Date", sortable: true },
-      ],
-      sortDesc: false,
-      perPage: 5,
+      sortBy: [{ key: 'name', order: 'desc' }],
+      perPage: 10,
       currentPage: 1,
+      translations: {
+        AVAILABLE: 'resources-available',
+        FULLY_ASSIGNED: 'resources-fullyassigned',
+        EXPIRED: 'resources-expired',
+        DAMAGED: 'resources-damaged'
+      },
+      errorMessage: '',
     };
   },
   computed: {
@@ -128,14 +142,23 @@ export default {
         return matchesType && matchesStatus;
       });
     },
-    paginatedResources() {
-      const start = (this.currentPage - 1) * this.perPage;
-      const end = start + this.perPage;
-      return this.filteredResources.slice(start, end);
+    fields() {
+      return [
+        { key: "name", label: this.$t('resources-table-name'), sortable: true },
+        { key: "description", label: this.$t('resources-table-description') },
+        { key: "quantity", label: this.$t('resources-table-quantity'), sortable: true },
+        { key: "status", label: this.$t('resources-table-status')},
+        { key: "addedDate", label: this.$t('resources-table-addedDate'), sortable: true },
+        { key: "expDate", label: this.$t('resources-table-expDate'), sortable: true },
+      ]
     },
   },
   mounted() {
-    this.fetchResources();
+    this.fetchResourcesAndAssignments();
+    this.startAutoUpdate();
+  },
+  beforeDestroy() {
+    this.stopAutoUpdate();
   },
   watch: {
     typeFilter() {
@@ -146,32 +169,55 @@ export default {
     },
   },
   methods: {
+    onPageChange(page) {
+      this.currentPage = page;
+    },
+    translateStatus(status) {
+      return this.$t(this.translations[status] || status);
+    },
     resetPagination() {
       this.currentPage = 1;
     },
-    async fetchResources() {
+    async fetchResourcesAndAssignments() {
       this.isLoading = true;
       try {
-        const response = await ResourceService.getAllResources();
-        this.resources = response.data;
+        const responseResources = await ResourceService.getAllResources();
+        //const responseResources = await ResourceService.getOrganisationResources(6); @TODO: take OrganisationId from USER
+        this.resources = responseResources.data;
+        const responseAssignments = await ResourceService.getTotalAssignedQuantity();
+        this.resources = this.resources.map(resource => {
+          resource.assignedQuantity = responseAssignments[resource.id] || 0;
+          return resource;
+        });
       } catch (error) {
         console.error(error);
+        this.errorMessage = this.$t('resources-fetch-error');
       } finally {
         this.isLoading = false;
       }
     },
+    startAutoUpdate() {
+      this.autoUpdateInterval = setInterval(() => {
+        this.fetchResourcesAndAssignments();
+      }, 60000);
+    },
+    stopAutoUpdate() {
+      if (this.autoUpdateInterval) {
+        clearInterval(this.autoUpdateInterval);
+      }
+    },
     getTypeIcon(type) {
       const icons = {
-        FOOD: "fas fa-utensils",
-        TRANSPORT: "fas fa-car",
-        CLOTHING: "fas fa-tshirt",
-        MEDICAL: "fas fa-briefcase-medical",
-        FINANCIAL: "fas fa-dollar-sign",
-        EQUIPMENT: "fas fa-tools",
-        HOUSING: "fas fa-home",
-        OTHER: "fas fa-ellipsis-h",
+        FOOD: "utensils",
+        TRANSPORT: "car",
+        CLOTHING: "tshirt",
+        MEDICAL: "briefcase-medical",
+        FINANCIAL: "dollar-sign",
+        EQUIPMENT: "tools",
+        HOUSING: "home",
+        OTHER: "ellipsis-h",
       };
-      return icons[type] || "fas fa-question";
+      return icons[type] || "question";
     },
     getStatusClass(type) {
       const classes = {
@@ -185,11 +231,14 @@ export default {
     truncateText(text, length) {
       if (!text) return '';
       return text.length > length ? text.substring(0, length) + '...' : text;
-    }
+    },
+    updateResources(newResource) {
+      this.resources.push({...newResource});
+    },
   },
 };
 </script>
 
 <style scoped>
-@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css";
+
 </style>

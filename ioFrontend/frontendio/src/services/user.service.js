@@ -43,6 +43,12 @@ class UserService {
       headers: authHeader()
     });
   }
+
+  getVolunteersInOrganization() {
+    return axios.get(`http://localhost:8080/api/user/allVolunteersByOrganizationId`, {
+      headers: authHeader()
+    });
+  }
 }
 
 export default new UserService();

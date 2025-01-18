@@ -47,6 +47,12 @@ public class UserController {
         return ResponseEntity.ok(volunteers);
     }
 
+    @GetMapping("/volunteersByOrganizationId")
+    public ResponseEntity<VolunteerDataResponse> getVolunteers(@RequestParam("id") long id) {
+        VolunteerDataResponse volunteers = userService.getVolunteersInfoByOrganizationId(id);
+        return ResponseEntity.ok(volunteers);
+    }
+
     @PreAuthorize("hasRole('ROLE_VOLUNTEER') || hasRole('ROLE_VICTIM') || hasRole('ROLE_AUTHORITY') || hasRole('ROLE_DONOR')")
     @GetMapping("/getUserInfo")
     public ResponseEntity<UserInfoDataResponse> getUserInfo() {
@@ -147,7 +153,7 @@ public class UserController {
     @PostMapping("/getApprovalStatusById")
     public ResponseEntity<ApplicationDataResponse> getApprovalStatusById(@RequestBody ApplicationRequest request) {
         Long id = request.getId();
-        ApplicationDataResponse applicationDataResponse =  userService.getApprovalStatus(id);
+        ApplicationDataResponse applicationDataResponse =  userService.getApprovalStatusById(id);
         return ResponseEntity.ok(applicationDataResponse);
     }
 

@@ -38,7 +38,7 @@ public class Resource {
     @Embedded
     private Location location;
     @Getter
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
     private LocalDate expDate;
     @Setter
     @Getter

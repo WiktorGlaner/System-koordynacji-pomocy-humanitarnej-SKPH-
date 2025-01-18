@@ -10,12 +10,13 @@ public interface IResourceService {
     List<Resource> getAllResources();
     Resource getResourceById(long id);
     List<ResourceAssignment> getAllResourceAssignment();
-    void modifyResource(Long resourceId, String description, Location location, Double quantity, ResourceStatus status);
+    void modifyResource(Long resourceId, String description, Location location, Double quantity, String status);
     List<Resource> getResourceByType(ResourceType type);
-    List<Donation> getByDonationType(ResourceType type);
+    List<Donation> getByDonationType(String type);
     List<Donation> getByDonationDonorId(Long donorId);
     List<Resource> getAvailableResources();
     List<ResourceAssignment> getResourceAssignments(Long resourceId);
     Resource getResourceById(Long resourceId);
     List<ResourceAssignment> getAssignmentsByRequestId(Long requestId);
+    List<String> getResourceTypes();
 }

@@ -1,5 +1,6 @@
 package org.ioad.spring.resource.controllers;
 
+import org.apache.coyote.Response;
 import org.ioad.spring.resource.models.*;
 import org.ioad.spring.resource.services.ResourceService;
 import org.ioad.spring.resource.models.Location;
@@ -27,11 +28,16 @@ public class ResourceController {
             @RequestParam(required = false) Double organisationId,
             @RequestParam(required = false, name = "status") List<String> ResourceStatusValues) {
         List<Resource> resources = resourceService.getFilteredResources(ResourceTypeValues, organisationId, ResourceStatusValues);
-        if (resources.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
 
         return ResponseEntity.ok(resources);
+    }
+
+    @GetMapping(path = "/resourceTypes")
+    public ResponseEntity<List<String>> getResourceTypes() {
+        if (resourceService.getResourceTypes().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(resourceService.getResourceTypes());
     }
 
 //    @GetMapping(path = "/resource/available")
@@ -40,15 +46,14 @@ public class ResourceController {
 //    }
 
     @PostMapping(path = "/resource")
-    public ResponseEntity<String> addResource(@RequestBody Resource resource) {
-        resourceService.addResource(resource);
-        return ResponseEntity.ok("Resource added succesfully.");
+    public ResponseEntity<Resource> addResource(@RequestBody Resource resource) {
+        return ResponseEntity.ok(resourceService.addResource(resource));
     }
 
     @DeleteMapping(path = "/resource/{resourceId}")
     public ResponseEntity<String> removeResource(@PathVariable("resourceId") Long resourceId) {
         resourceService.removeResource(resourceId);
-        return ResponseEntity.ok("Resource removed succesfully.");
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping(path = "/resource/{resourceId}")
@@ -57,29 +62,25 @@ public class ResourceController {
                                @RequestParam(required = false) Double latitude,
                                @RequestParam(required = false) Double longitude,
                                @RequestParam(required = false) Double quantity,
-                               @RequestParam(required = false) ResourceStatus status) {
+                               @RequestParam(required = false) String status) {
         Location location = null;
         if (latitude != null && longitude != null) {
             location = new Location(latitude, longitude);
         }
         resourceService.modifyResource(resourceId, description, location, quantity, status);
-        return ResponseEntity.ok("Resource modified successfully");
+        return ResponseEntity.ok("Resource modified successfully.");
     }
 
     @PostMapping(path = "/donation")
     public ResponseEntity<String> addDonation(@RequestBody Donation donation) {
         resourceService.addDonation(donation);
-        return ResponseEntity.ok("Donation removed succesfully.");
+        return ResponseEntity.ok("Donation added succesfully.");
     }
 
     @GetMapping(path = "/donation")
     public ResponseEntity<List<Donation>> getDonationByType(@RequestParam(required = false) String type) {
-        ResourceType resourceType = ResourceType.valueOf(type.toUpperCase());
-        List<Donation> donations = resourceService.getByDonationType(resourceType);
+        List<Donation> donations = resourceService.getByDonationType(type);
 
-        if (donations.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok(donations);
     }
 
@@ -87,9 +88,6 @@ public class ResourceController {
     public ResponseEntity<List<Donation>> getByDonationDonorId(@PathVariable Long donorId) {
         List<Donation> donations = resourceService.getByDonationDonorId(donorId);
 
-        if (donations.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok(donations);
     }
 
@@ -111,9 +109,6 @@ public class ResourceController {
     public ResponseEntity<List<ResourceAssignment>> getResourceAssignments(@PathVariable("resourceId") Long resourceId) {
         List<ResourceAssignment> assignments = resourceService.getResourceAssignments(resourceId);
 
-        if (assignments.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok(assignments);
     }
 
@@ -124,13 +119,9 @@ public class ResourceController {
     }
 
     @GetMapping(path = "/assignments")
-    public ResponseEntity<List<ResourceAssignment>> getAssignmentsByRequestId(
-            @RequestParam(required = false) Long requestId) {
-        List<ResourceAssignment> assignments = resourceService.getAssignmentsByRequestId(requestId);
+    public ResponseEntity<List<ResourceAssignment>> getAssignments() {
+        List<ResourceAssignment> assignments = resourceService.getAssignments();
 
-        if (assignments.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok(assignments);
     }
 }

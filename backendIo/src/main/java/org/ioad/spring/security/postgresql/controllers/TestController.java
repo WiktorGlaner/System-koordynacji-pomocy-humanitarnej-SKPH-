@@ -1,8 +1,11 @@
 package org.ioad.spring.security.postgresql.controllers;//package org.ioad.spring.security.postgresql.controllers;
 
+import org.ioad.spring.security.postgresql.IAuthService;
 import org.ioad.spring.security.postgresql.models.Role;
 import org.ioad.spring.security.postgresql.models.User;
 import org.ioad.spring.security.postgresql.repository.UserRepository;
+import org.ioad.spring.user.models.UserInfo;
+import org.ioad.spring.user.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +17,9 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/test")
 public class TestController {
-  @GetMapping("/all")
+    private final UserService userService;
+
+    @GetMapping("/all")
   public String allAccess() {
     return "Public Content.";
   }
@@ -57,15 +62,34 @@ public class TestController {
     }
 
     private final UserRepository userRepository;
-
-    public TestController(UserRepository userRepository) {
+    private final IAuthService authService;
+    public TestController(UserRepository userRepository, UserService userService, IAuthService authService) {
         this.userRepository = userRepository;
+        this.userService = userService;
+        this.authService = authService;
     }
 
 
     @GetMapping("/allUsers")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userRepository.findAll();
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/testiauth")
+    public ResponseEntity<List<UserInfo>> testIAuth() {
+        List<UserInfo> users = userService.getAllVolunteers();
+        return ResponseEntity.ok(users);
+    }
+    @GetMapping("/testiauth2")
+    public ResponseEntity<List<User>> testIAuth2() {
+        List<User> users = authService.getAllUsersByRole("ROLE_VICTIM");
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/testiauth3")
+    public ResponseEntity<List<User>> testIAuth3() {
+        List<User> users = userRepository.getAllUsersByRole("ROLE_VICTIM");
         return ResponseEntity.ok(users);
     }
 }

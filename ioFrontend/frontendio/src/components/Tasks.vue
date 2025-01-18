@@ -7,7 +7,12 @@
 
     <!-- Tasks table and search filters, visible only if allowedRole() is true -->
     <div v-if="allowedRole">
-      <h1 class="mb-4">Tasks</h1>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Tasks</h1>
+        <button v-if="hasRole('ROLE_ORGANIZATION')" class="btn btn-primary" @click="createTask()">
+          <font-awesome-icon icon="plus" /> Create Task
+        </button>
+      </div>
       <div class="mb-3">
         <div class="row">
           <div class="col-md-3">
@@ -77,7 +82,7 @@
           <tr v-for="task in filteredTasks" :key="task.task.id">
             <td>{{ task.task.id }}</td>
             <td>{{ task.task.title }}</td>
-            <td>{{ task.task.organization }}</td>
+            <td>{{ task.task.organization.name }}</td>
             <td>{{ task.task.location }}</td>
             <td>{{ task.task.priority }}</td>
             <td>{{ task.task.status }}</td>
@@ -90,11 +95,14 @@
                 <font-awesome-icon icon="info-circle" /> Info
               </button>
             </td>
+
             <td v-if="hasRole('ROLE_ORGANIZATION')">
               <button 
                 class="btn btn-success btn-sm text-center w-100" 
                 @click="editTask(task.task.id)"
                 v-if="task.task.status === 'IN_PROGRESS'"
+                :disabled="task.task.organization.id !== organizationInfo.id"
+                :class="{ 'disabled-gray': task.task.organization.id !== organizationInfo.id }"
               >
                 <font-awesome-icon icon="edit" /> Edit
               </button>
@@ -102,16 +110,19 @@
                 class="btn btn-warning btn-sm text-center w-100" 
                 @click="rateTask(task.task.id)"
                 v-else-if="task.task.status === 'COMPLETED' || task.task.status === 'GRADED'"
-                :disabled="task.task.status === 'GRADED'"
+                :disabled="task.task.status === 'GRADED' || task.task.organization.id !== organizationInfo.id"
+                :class="{ 'disabled-gray': task.task.organization.id !== organizationInfo.id }"
               >
                 <font-awesome-icon icon="star" /> Grade
               </button>
             </td>
+
             <td v-if="hasRole('ROLE_ORGANIZATION')">
               <button 
                 class="btn btn-danger btn-sm text-center w-100" 
                 @click="endTask(task.task.id)"
-                :disabled="task.task.status === 'COMPLETED' || task.task.status === 'GRADED'"
+                :disabled="task.task.status === 'COMPLETED' || task.task.status === 'GRADED' || task.task.organization.id !== organizationInfo.id"
+                :class="{ 'disabled-gray': task.task.organization.id !== organizationInfo.id }"
               >
                 <font-awesome-icon icon="trash-alt" /> End
               </button>
@@ -125,10 +136,11 @@
 
 <script>
 import TaskService from '../services/task.service';
+import UserService from '@/services/user.service';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faInfoCircle, faEdit, faTrashAlt, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faEdit, faTrashAlt, faStar, faPlus} from '@fortawesome/free-solid-svg-icons';
 
-library.add(faInfoCircle, faEdit, faTrashAlt, faStar);
+library.add(faInfoCircle, faEdit, faTrashAlt, faStar, faPlus);
 
 export default {
   name: 'Task',
@@ -137,6 +149,7 @@ export default {
       allowedRoles: ["ROLE_ORGANIZATION", "ROLE_VOLUNTEER", "ROLE_AUTHORITY"],
       tableHeaders: ["#", "Title", "Organization", "Location", "Priority", "Status", "Grade"],
       tasks: [],
+      organizationInfo: {},
       filters: {
         by: "",
         value: "",
@@ -152,12 +165,13 @@ export default {
     };
   },
   created() {
-    console.log("Role is ROLE_ORGANIZATION");
+    if (this.hasRole('ROLE_ORGANIZATION')) {
+      this.fetchOrganizationInfo();
+    }
     this.fetchTasks();
   },
   mounted() {
     if (!this.currentUser) {
-      console.log(this.currentUser);
       this.$router.push("/login");
     }
   },
@@ -198,6 +212,15 @@ export default {
     },
   },
   methods: {
+    async fetchOrganizationInfo() {
+      try {
+        const response = await UserService.getOrganizationInfo();
+        console.log('Organization info:', response.data);
+        this.organizationInfo = response.data;
+      } catch (error) {
+        console.error('Error fetching organization info:', error);
+      }
+    },
     fetchTasks() {
       if (this.hasRole('ROLE_ORGANIZATION') || this.hasRole('ROLE_AUTHORITY')) {
         this.getAllTasks();
@@ -229,6 +252,9 @@ export default {
         }
       );
     },
+    createTask() {
+      this.$router.push('/tasks/create');
+    },
     goToTaskDetails(taskId) {
       this.$router.push(`/tasks/info/${taskId}`);
     },
@@ -252,3 +278,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.disabled-gray {
+  background-color: #d3d3d3 !important;  /* Szary kolor tła */
+  color: #6c757d !important;  /* Szary kolor tekstu */
+  border-color: #d3d3d3 !important;  /* Dopasowanie koloru obramowania */
+  cursor: not-allowed;
+}
+</style>

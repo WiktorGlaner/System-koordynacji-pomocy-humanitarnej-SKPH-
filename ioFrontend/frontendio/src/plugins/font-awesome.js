@@ -6,8 +6,22 @@ import {
   faUserPlus,
   faSignInAlt,
   faSignOutAlt,
+  faUserMinus,
+  faCheck,
+  faCircleXmark,
+  faEnvelope,
+  faEdit,
+  faRemove,
+  faMap,
+  faCancel,
+  faUtensils,
+  faTshirt,
+  faBriefcaseMedical,
+  faDollarSign,
+  faTools,
+  faEllipsisH, faCar, faQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
+library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt, faUserMinus, faCheck, faCircleXmark, faEnvelope, faEdit, faRemove, faMap, faCancel, faUtensils, faTshirt, faBriefcaseMedical, faDollarSign, faTools, faHome, faEllipsisH, faCar, faQuestion);
 
 export { FontAwesomeIcon };

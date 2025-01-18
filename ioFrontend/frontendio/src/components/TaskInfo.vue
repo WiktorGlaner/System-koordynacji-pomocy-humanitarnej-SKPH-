@@ -58,16 +58,36 @@
               readonly
             >
           </div>
+
+          <h2 class="text-center mt-4">Organization</h2>
+            <ul class="list-group mt-3">
+              <li 
+                class="list-group-item"
+                v-if="task.task && task.task.organization"
+              >
+                <p><strong>Organization name:</strong> {{ task.task.organization.name }}</p>
+                <p><strong>Head of organization:</strong> {{ task.task.organization.user.username }}</p>
+
+              </li>
+            </ul>
+
           <h2 class="text-center mt-4">Request</h2>
           <ul class="list-group mt-3">
             <li 
-              class="list-group-item"
-              v-if="task.task && task.task.request"
-            >
-              <p><strong>Description:</strong> {{ task.task.request.description }}</p>
-              <p><strong>Location:</strong> {{ task.task.request.latitude }}, {{ task.task.request.longitude }}</p>
-              <p><strong>Reporter:</strong> {{ task.task.request.reporter.name }} {{ task.task.request.reporter.surname }}</p>
-            </li>
+                class="list-group-item"
+                v-if="task.task && task.task.request"
+              >
+              <p><strong>Description:</strong> {{ task.task.request.description || 'Not provided' }}</p>
+              <p><strong>Type:</strong> {{ task.task.request.resource_type || 'Not provided' }}</p>
+              <p><strong>Amount:</strong> {{ task.task.request.amount || 'Not provided' }}</p>
+              <p><strong>Location:</strong> 
+                {{ task.task.request.latitude && task.task.request.longitude ? task.task.request.latitude + ', ' + task.task.request.longitude : 'Location not provided' }}
+              </p>
+              <p><strong>Status:</strong> {{ task.task.request.status || 'Not provided' }}</p>
+              <p><strong>Reporter:</strong> 
+                {{ task.task.request.reporter && task.task.request.reporter.name && task.task.request.reporter.surname ? task.task.request.reporter.name + ' ' + task.task.request.reporter.surname : 'No provided' }}
+              </p>
+              </li>
           </ul>
           <h2 class="text-center mt-4">Resources</h2>
           <ul class="list-group mt-3" v-if="task.resources">

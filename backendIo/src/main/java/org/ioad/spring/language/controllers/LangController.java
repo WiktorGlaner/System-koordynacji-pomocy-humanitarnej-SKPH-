@@ -2,6 +2,8 @@ package org.ioad.spring.language.controllers;
 
 import org.ioad.spring.language.models.Language;
 import org.ioad.spring.language.repository.LangRepository;
+import org.ioad.spring.language.services.LangService;
+import org.ioad.spring.security.postgresql.IAuthService;
 import org.ioad.spring.security.postgresql.models.User;
 import org.ioad.spring.security.postgresql.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +16,15 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 public class LangController {
     @Autowired
-    private LangRepository langRepository;
+    private LangService langService;
+    //@Autowired
+    //private UserRepository userRepository;
     @Autowired
-    private UserRepository userRepository;
+    private IAuthService iAuthService;
 
-    public LangController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    //public LangController(UserRepository userRepository) {
+    //    this.userRepository = userRepository;
+    //}
 
     @RequestMapping("/{id}/{lang}")
     public ResponseEntity<String> changeUserLang(
@@ -33,26 +37,19 @@ public class LangController {
             return ResponseEntity.badRequest().body("Language must be either 'en' or 'pl'");
 
         }
-        User user = userRepository.findById(id).orElse(null);
-        if (user == null) {
-            return ResponseEntity.badRequest().body("User not found");
-        }
-        Language language = langRepository.findFirstByUser_Id(user.getId());
-        language.setLanguage(lang);
-        langRepository.save(language);
-        return ResponseEntity.ok("Language changed to " + lang);
+        return langService.changeUserLang(id, lang);
     }
 
     @RequestMapping("/getlang/{id}")
     public ResponseEntity<String> getUserLang(
             @PathVariable Long id
     ) {
-        User user = userRepository.findById(id).orElse(null);
+        User user = iAuthService.getUserById(id);
         if (user == null) {
             return ResponseEntity.badRequest().body("User not found");
         }
-        Language language = langRepository.findFirstByUser_Id(user.getId());
-        return ResponseEntity.ok(language.getLanguage());
+        String language = langService.getUserLang(user.getId());
+        return ResponseEntity.ok(language);
     }
 }
 
