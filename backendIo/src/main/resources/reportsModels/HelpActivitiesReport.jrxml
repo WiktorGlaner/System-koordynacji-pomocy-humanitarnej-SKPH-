@@ -33,7 +33,6 @@
         <field name="title" class="java.lang.String"/>
         <field name="description" class="java.lang.String"/>
         <field name="location" class="java.lang.String"/>
-        <field name="organization" class="java.lang.String"/>
         <field name="priority" class="org.ioad.spring.task.model.TaskPriority"/>
         <field name="grade" class="java.lang.Integer"/>
         <field name="status" class="org.ioad.spring.task.model.TaskStatus"/>
@@ -55,7 +54,7 @@
     </title>
     <detail>
         <band height="260" splitType="Stretch">
-            <element kind="component" uuid="87593a57-7166-4922-91b3-0505dda207b3" x="9" y="20" width="540" height="200">
+            <element kind="component" uuid="87593a57-7166-4922-91b3-0505dda207b3" x="2" y="20" width="550" height="200">
                 <component kind="table">
                     <datasetRun uuid="6000df0e-2a2e-4a8d-b7f0-7609282b2baa" subDataset="resourcesDataset">
                         <dataSourceExpression><![CDATA[$P{resourcesDataSet}]]></dataSourceExpression>
@@ -86,44 +85,31 @@
                         </detailCell>
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
                     </column>
-                    <column kind="single" uuid="2b22437f-93e2-420a-b60d-8ba11941eea9" width="80">
+                    <column kind="single" uuid="2b22437f-93e2-420a-b60d-8ba11941eea9" width="90">
                         <columnHeader height="30" rowSpan="1" style="Table_CH">
-                            <element kind="staticText" uuid="8df5b278-e827-448f-8601-70b1d05d3c58" x="0" y="0" width="80" height="30" hTextAlign="Center" vTextAlign="Middle">
+                            <element kind="staticText" uuid="8df5b278-e827-448f-8601-70b1d05d3c58" x="0" y="0" width="90" height="30" hTextAlign="Center" vTextAlign="Middle">
                                 <text><![CDATA[Description]]></text>
                             </element>
                         </columnHeader>
                         <detailCell height="30" style="Table_TD">
-                            <element kind="textField" uuid="61e12631-6f32-4cda-913c-5d4e6ff55346" x="0" y="0" width="80" height="30" hTextAlign="Center" vTextAlign="Middle">
+                            <element kind="textField" uuid="61e12631-6f32-4cda-913c-5d4e6ff55346" x="0" y="0" width="90" height="30" hTextAlign="Center" vTextAlign="Middle">
                                 <expression><![CDATA[$F{description}]]></expression>
                             </element>
                         </detailCell>
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
                     </column>
-                    <column kind="single" uuid="b28ba61b-5dec-466f-9331-135ec0e3eeb7" width="60">
+                    <column kind="single" uuid="b28ba61b-5dec-466f-9331-135ec0e3eeb7" width="110">
                         <columnHeader height="30" rowSpan="1" style="Table_CH">
-                            <element kind="staticText" uuid="83aa1b77-e2f5-45cd-be7f-0725e53251ad" x="0" y="0" width="60" height="30" hTextAlign="Center" vTextAlign="Middle">
+                            <element kind="staticText" uuid="83aa1b77-e2f5-45cd-be7f-0725e53251ad" x="0" y="0" width="110" height="30" hTextAlign="Center" vTextAlign="Middle">
                                 <text><![CDATA[Location]]></text>
                             </element>
                         </columnHeader>
                         <detailCell height="30" style="Table_TD">
-                            <element kind="textField" uuid="d51489f5-3909-4ad4-8e72-ecd5ecea4a74" x="0" y="0" width="60" height="30" hTextAlign="Center" vTextAlign="Middle">
+                            <element kind="textField" uuid="d51489f5-3909-4ad4-8e72-ecd5ecea4a74" x="0" y="0" width="110" height="30" hTextAlign="Center" vTextAlign="Middle">
                                 <expression><![CDATA[$F{location}]]></expression>
                             </element>
                         </detailCell>
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
-                    </column>
-                    <column kind="single" uuid="7dc536b4-663d-478b-86e5-9c5d48275e72" width="90">
-                        <columnHeader height="30" rowSpan="1" style="Table_CH">
-                            <element kind="staticText" uuid="df3f535f-6d63-4cfa-889c-fefa430b16e7" x="0" y="0" width="90" height="30" hTextAlign="Center" vTextAlign="Middle">
-                                <text><![CDATA[Organization]]></text>
-                            </element>
-                        </columnHeader>
-                        <detailCell height="30" style="Table_TD">
-                            <element kind="textField" uuid="94dd0ba3-0bd1-4dfd-8c00-e6f44bb00c7c" x="0" y="0" width="90" height="30" hTextAlign="Center" vTextAlign="Middle">
-                                <expression><![CDATA[$F{organization}]]></expression>
-                            </element>
-                        </detailCell>
-                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
                     </column>
                     <column kind="single" uuid="c33e5720-26fb-4956-bbe0-1d402be78546" width="50">
                         <columnHeader height="30" rowSpan="1" style="Table_CH">
@@ -138,27 +124,27 @@
                         </detailCell>
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
                     </column>
-                    <column kind="single" uuid="04a996f6-d4cc-4630-84d5-cb0b307d0ca3" width="70">
+                    <column kind="single" uuid="04a996f6-d4cc-4630-84d5-cb0b307d0ca3" width="79">
                         <columnHeader height="30" rowSpan="1" style="Table_CH">
-                            <element kind="staticText" uuid="68697a99-b5f3-4124-889a-6e4f9a5d2059" x="0" y="0" width="70" height="30" hTextAlign="Center" vTextAlign="Middle">
+                            <element kind="staticText" uuid="68697a99-b5f3-4124-889a-6e4f9a5d2059" x="0" y="0" width="79" height="30" hTextAlign="Center" vTextAlign="Middle">
                                 <text><![CDATA[Grade]]></text>
                             </element>
                         </columnHeader>
                         <detailCell height="30" style="Table_TD">
-                            <element kind="textField" uuid="e6b44ef0-bbb5-48ce-8c2d-2fa75e42b873" x="0" y="0" width="70" height="30" hTextAlign="Center" vTextAlign="Middle">
+                            <element kind="textField" uuid="e6b44ef0-bbb5-48ce-8c2d-2fa75e42b873" x="0" y="0" width="79" height="30" hTextAlign="Center" vTextAlign="Middle">
                                 <expression><![CDATA[$F{grade}]]></expression>
                             </element>
                         </detailCell>
                         <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
                     </column>
-                    <column kind="single" uuid="1bff1432-ae1d-4315-9051-a7141c1c05df" width="69">
+                    <column kind="single" uuid="1bff1432-ae1d-4315-9051-a7141c1c05df" width="99">
                         <columnHeader height="30" rowSpan="1" style="Table_CH">
-                            <element kind="staticText" uuid="d2f02203-4ce4-4293-8c96-57abfd5a2629" x="0" y="0" width="69" height="30" hTextAlign="Center" vTextAlign="Middle">
+                            <element kind="staticText" uuid="d2f02203-4ce4-4293-8c96-57abfd5a2629" x="0" y="0" width="99" height="30" hTextAlign="Center" vTextAlign="Middle">
                                 <text><![CDATA[Status]]></text>
                             </element>
                         </columnHeader>
                         <detailCell height="30" style="Table_TD">
-                            <element kind="textField" uuid="28065b04-e0bf-454b-bcb0-c63bcd9aba23" x="0" y="0" width="69" height="30" hTextAlign="Center" vTextAlign="Middle">
+                            <element kind="textField" uuid="28065b04-e0bf-454b-bcb0-c63bcd9aba23" x="0" y="0" width="99" height="30" hTextAlign="Center" vTextAlign="Middle">
                                 <expression><![CDATA[$F{status}]]></expression>
                             </element>
                         </detailCell>

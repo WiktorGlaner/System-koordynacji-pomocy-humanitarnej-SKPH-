@@ -114,6 +114,9 @@
   "resources-unit-zl": "zł",
   "resources-toast-add-success": "Udało się dodać zasób!",
   "resources-toast-add-error": "Nie udało się dodać zasobu!",
+  "resources-toast-edit-success": "Udało się edytować zasób!",
+  "resources-toast-edit-error": "Nie udało się edytować zasobu!",
+  "resources-toast-edit-nochange": "Brak zmian w zasobie, nic nie zostało zaktualizowane.",
   "resources-not-allowed": "Zasoby nie są dostępne dla twojej roli.",
   "resources-fetch-error": "Nie udało się pobrać zasobów. Spróbuj ponownie później.",
   "resource-select-organization": "Wybierz organizacje",
@@ -124,6 +127,10 @@
   "resources-donate": "Historia darowizn",
   "resources-table-organisationId": "ID organizacji",
   "resources-table-donorId": "ID darczyńcy",
+  "resource-location": "Lokalizacja",
+  "resource-edit": "Edytuj",
+  "resource-edit-resource": "Edytuj zasób",
+
   "home-raports": "Raporty",
   "home-raports-description": "Sprawdź raporty",
   "home-profile": "Profil",
@@ -327,7 +334,16 @@
   "report-title": "Generowanie raportow",
   "report-type": "Typ raportu",
   "report-download": "Pobierz raport",
-  "report-view": "Podgląd raportu"
-
+  "report-view": "Podgląd raportu",
+  "task-report": "Raport zadań",
+  "request-report": "Raport zgłoszeń",
+  "resource-report": "Raport zasobów",
+  "donation-report": "Raport dotacji",
+  "tax-report": "Raport podatkowy",
+  "report-downloaded-successfully": "Raport poprawnie pobrany",
+  "please-select-report-type": "Prosze wybrać typ raportu",
+  "report-preview-failed": "Błąd przy wyświetlaniu raportu",
+  "report-download-failed": "Błąd przy pobieraniu raportu",
+  "view-report": "Podgląd raportu"
 }
 
