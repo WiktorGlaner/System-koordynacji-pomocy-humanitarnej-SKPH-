@@ -128,7 +128,7 @@ export default {
               headers: authHeader(),
             }
         );
-        this.successMessage = `${this.$t('application-success-accept')} ${applicationId}`;
+        this.successMessage = `${this.$t('application-message-accept')} ${applicationId}`;
         setTimeout(() => (this.successMessage = null), 3000);
         this.nullExists[applicationId] = false;
         this.approvalStatus[applicationId] = true;
@@ -150,7 +150,7 @@ export default {
               headers: authHeader(),
             }
         );
-        this.successMessage = `${this.$t('application-success-reject')} ${applicationId}`;
+        this.successMessage = `${this.$t('application-message-reject')} ${applicationId}`;
         setTimeout(() => (this.successMessage = null), 3000);
         this.nullExists[applicationId] = false;
         this.approvalStatus[applicationId] = false;
