@@ -37,11 +37,12 @@
 //        return pdfBytes; // Zwrócenie wygenerowanego PDF jako byte[]
 //    }
 //}
-package org.ioad.spring.reports;
+package org.ioad.spring.reports.services;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import org.ioad.spring.reports.Report;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,8 +56,6 @@ public class ReportService {
 
     public byte[] generateReport(String type, long userId) throws JRException {
         JasperPrint jasperPrint;
-        System.out.println(userId);
-        // Wybór odpowiedniej metody generowania raportu na podstawie wartości "type"
         switch (type) {
             case "tasks":
                 jasperPrint = report.createHelpActivitiesReport();
@@ -77,7 +76,6 @@ public class ReportService {
                 throw new IllegalArgumentException("Nieprawidłowy typ raportu: " + type);
         }
 
-        // Generowanie PDF i zwracanie jako byte[]
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         JasperExportManager.exportReportToPdfStream(jasperPrint, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();

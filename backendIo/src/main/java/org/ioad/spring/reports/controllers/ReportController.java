@@ -39,9 +39,10 @@
 //        }
 //    }
 //}
-package org.ioad.spring.reports;
+package org.ioad.spring.reports.controllers;
 
 import net.sf.jasperreports.engine.JRException;
+import org.ioad.spring.reports.services.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +52,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/report")
 public class ReportController {
@@ -60,15 +59,15 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-    @CrossOrigin(origins = "*")  // Zezwól na CORS tylko dla tego endpointu
+    @CrossOrigin(origins = "*")
     @GetMapping("/generate")
     public ResponseEntity<byte[]> generateReport(@RequestParam("type") String type, @RequestParam Long userId) {
         try {
             System.out.println(userId);
-            // Przekazanie parametru "type" do serwisu, aby wybrał odpowiednią metodę generowania raportu
+            // Przekazanie parametru "type" oraz "Id"
             byte[] pdfBytes = reportService.generateReport(type, userId);
 
-            // Wysyłanie pliku PDF jako odpowiedź
+            // Plik PDF jako odpowiedz
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=report.pdf")
                     .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
@@ -85,7 +84,6 @@ public class ReportController {
             System.out.println(userId);
             byte[] pdfBytes = reportService.generateReport(type, userId);
 
-            // Zwracamy plik PDF do wyświetlenia w przeglądarce (bez wymuszania pobierania)
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, "application/pdf")
                     .body(pdfBytes);

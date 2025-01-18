@@ -244,7 +244,16 @@
   "report-title": "Generowanie raportow",
   "report-type": "Typ raportu",
   "report-download": "Pobierz raport",
-  "report-view": "Podgląd raportu"
-
+  "report-view": "Podgląd raportu",
+  "task-report": "Raport zadań",
+  "request-report": "Raport zgłoszeń",
+  "resource-report": "Raport zasobów",
+  "donation-report": "Raport dotacji",
+  "tax-report": "Raport podatkowy",
+  "report-downloaded-successfully": "Raport poprawnie pobrany",
+  "please-select-report-type": "Prosze wybrać typ raportu",
+  "report-preview-failed": "Błąd przy wyświetlaniu raportu",
+  "report-download-failed": "Błąd przy pobieraniu raportu",
+  "view-report": "Podgląd raportu"
 }
 

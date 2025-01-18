@@ -6,11 +6,8 @@ import org.ioad.spring.request.models.Request;
 import org.ioad.spring.request.services.IRequestService;
 import org.ioad.spring.resource.models.Donation;
 import org.ioad.spring.resource.models.Resource;
-import org.ioad.spring.resource.models.ResourceType;
 import org.ioad.spring.resource.services.ResourceService;
-import org.ioad.spring.security.postgresql.models.User;
 import org.ioad.spring.task.model.Task;
-import org.ioad.spring.user.models.UserInfo;
 import org.ioad.spring.user.repository.UserInfoRepository;
 
 
@@ -18,7 +15,6 @@ import org.ioad.spring.task.repository.TaskRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,6 +68,8 @@ public class Report {
 //        return print;
 //
 //    }
+
+    // RAPORT DOTACJI DANEGO DARCZYŃCY
 public JasperPrint createReceiptReport(long userId) throws JRException {
     // Pobieranie danych
         List<Donation> donations = new ArrayList<>();
@@ -89,7 +87,7 @@ public JasperPrint createReceiptReport(long userId) throws JRException {
     parameters.put("Data", nowDate);
 
     // Wczytanie pliku raportu jako zasobu
-    String filePath = "DonationReport.jrxml";
+    String filePath = "reportsModels/DonationReport.jrxml";
     InputStream reportStream = getClass().getClassLoader().getResourceAsStream(filePath);
 
     if (reportStream == null) {
@@ -98,8 +96,7 @@ public JasperPrint createReceiptReport(long userId) throws JRException {
 
     // Kompilacja i wypełnienie raportu
     JasperReport report = JasperCompileManager.compileReport(reportStream);
-    JasperPrint print = JasperFillManager.fillReport(report, parameters, taskDataSource);
-    return print;
+    return JasperFillManager.fillReport(report, parameters, taskDataSource);
 }
 
 
@@ -117,6 +114,8 @@ public JasperPrint createReceiptReport(long userId) throws JRException {
 //        return print;
 //
 //    }
+
+    // RAPORT ZASOBÓW
 public JasperPrint createResourcesReport() throws JRException {
     List<Resource> resources = new ArrayList<>();
     resources.add(resourceService.getResourceById(1111));
@@ -128,7 +127,7 @@ public JasperPrint createResourcesReport() throws JRException {
     parameters.put("resourcesDataSet3", taskDataSource);
     parameters.put("Data", nowDate);
 
-    String filePath = "ResourceReport.jrxml";
+    String filePath = "reportsModels/ResourceReport.jrxml";
     InputStream reportStream = getClass().getClassLoader().getResourceAsStream(filePath);
 
     if (reportStream == null) {
@@ -153,6 +152,8 @@ public JasperPrint createResourcesReport() throws JRException {
 //        return print;
 //
 //    }
+
+    // RAPORT REQUEST
 public JasperPrint createRequestReport() throws JRException {
     List<Request> requests = new ArrayList<>();
     requests.add(requestService.getRequestById(1L));
@@ -164,7 +165,7 @@ public JasperPrint createRequestReport() throws JRException {
     parameters.put("resourcesDataSet2", taskDataSource);
     parameters.put("Data", nowDate);
 
-    String filePath = "RequestReport.jrxml";
+    String filePath = "reportsModels/RequestReport.jrxml";
     InputStream reportStream = getClass().getClassLoader().getResourceAsStream(filePath);
 
     if (reportStream == null) {
@@ -193,6 +194,8 @@ public JasperPrint createRequestReport() throws JRException {
 //
 //
 //    }
+
+    // RAPORT AKTYWNOŚCI POMOCOWYCH
 public JasperPrint createHelpActivitiesReport() throws JRException {
         List<Task> tasks = new ArrayList<>();
         List<Task> tasks2 = new ArrayList<>();
@@ -206,7 +209,7 @@ public JasperPrint createHelpActivitiesReport() throws JRException {
     parameters.put("resourcesDataSet", taskDataSource);
     parameters.put("Data", nowDate);
 
-    String filePath = "HelpActivitiesReport.jrxml";
+    String filePath = "reportsModels/HelpActivitiesReport.jrxml";
     InputStream reportStream = getClass().getClassLoader().getResourceAsStream(filePath);
 
     if (reportStream == null) {
@@ -216,8 +219,4 @@ public JasperPrint createHelpActivitiesReport() throws JRException {
     JasperReport report = JasperCompileManager.compileReport(reportStream);
     return JasperFillManager.fillReport(report, parameters, taskDataSource);
 }
-//
-//    JasperPrint createHelpProvidedReport() {
-//
-//    }
 }

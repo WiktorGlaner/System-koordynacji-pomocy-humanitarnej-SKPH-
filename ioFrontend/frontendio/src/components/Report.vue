@@ -295,7 +295,7 @@
         <label for="report-type">{{ $t('report-type') }}</label>
         <select v-model="selectedOption" id="report-type">
           <option v-for="option in options" :key="option.value" :value="option.value">
-            {{ option.label }}
+            {{ $t(option.label) }}
           </option>
         </select>
         <button @click="downloadReport">
@@ -308,7 +308,7 @@
 
       <!-- Podgląd raportu w iframe -->
       <div class="report-preview" v-if="reportUrl">
-        <h2>Podgląd raportu:</h2>
+        <h2>{{ $t('view-report') }}</h2>
         <iframe :src="reportUrl" frameborder="0"></iframe>
       </div>
     </div>
@@ -324,59 +324,85 @@ import ReportService from "@/services/report.service.js";
 export default {
   data() {
     return {
-      options: [
-        { value: "tasks", label: "Raport dotyczący zadań" },
-        { value: "applications", label: "Raport dotyczący wniosków o pomoc" },
-        { value: "resources", label: "Raport dotyczący zasobów" },
-        { value: "donations", label: "Raport dotyczący dotacji" },
-        { value: "taxes", label: "Raport ulgi podatkowej" },
-      ],
+      options: [],
       selectedOption: null,
-      reportUrl: null, // URL dla iframe
-      allowedRoles: ["ROLE_ORGANIZATION", "ROLE_DONOR", "ROLE_AUTHORITY"], // Role z dostępem do raportów
+      reportUrl: null,
+      allowedRoles: ["ROLE_ORGANIZATION", "ROLE_DONOR", "ROLE_AUTHORITY"],
     };
   },
+
   computed: {
     currentUser() {
-      return this.$store.state.auth.user; // Pobieramy aktualnego użytkownika z Vuex
+      return this.$store.state.auth.user;
     },
     allowedRole() {
-      // Sprawdzamy, czy użytkownik ma odpowiednią rolę
-      console.log(this.currentUser)
-
-      return this.currentUser && this.allowedRoles.some((role) => this.currentUser.roles.includes(role));
+      return (
+          this.currentUser &&
+          this.allowedRoles.some((role) => this.currentUser.roles.includes(role))
+      );
     },
   },
+
+  watch: {
+    "$i18n.locale": {
+      handler() {
+        this.updateOptions();
+      },
+      immediate: true,
+    },
+  },
+
   methods: {
+    updateOptions() {
+      this.options = [
+        { value: "tasks", label: this.$t("task-report") },
+        { value: "applications", label: this.$t("request-report") },
+        { value: "resources", label: this.$t("resource-report") },
+        { value: "donations", label: this.$t("donation-report") },
+        { value: "taxes", label: this.$t("tax-report") },
+      ];
+    },
+
     // Pobieranie raportu PDF
     async downloadReport() {
       if (!this.selectedOption) {
-        alert("Proszę wybrać typ raportu.");
+        alert(this.$t("please-select-report-type"));
         return;
       }
       try {
-        console.log(this.selectedOption)
-        await ReportService.generateReport(this.selectedOption, this.$store.state.auth.user.id); // Pobieranie raportu
+        await ReportService.generateReport(
+            this.selectedOption,
+            this.$store.state.auth.user.id
+        );
+        alert(this.$t("report-downloaded-successfully"));
       } catch (error) {
         console.error("Błąd podczas pobierania raportu:", error);
-        alert("Nie udało się pobrać raportu.");
+        alert(this.$t("report-download-failed"));
       }
     },
 
     // Podgląd raportu w iframe
     async showReportPreview() {
       if (!this.selectedOption) {
-        alert("Proszę wybrać typ raportu.");
+        alert(this.$t("please-select-report-type")); // Użycie tłumaczenia
         return;
       }
       try {
-        const url = await ReportService.previewReport(this.selectedOption, this.$store.state.auth.user.id);
+        const url = await ReportService.previewReport(
+            this.selectedOption,
+            this.$store.state.auth.user.id
+        );
         this.reportUrl = url; // Przechowywanie URL raportu
       } catch (error) {
         console.error("Błąd podczas podglądu raportu:", error);
-        alert("Nie udało się wyświetlić raportu.");
+        alert(this.$t("report-preview-failed"));
       }
     },
+  },
+
+  created() {
+    // Inicjalizacja opcji raportów przy montowaniu komponentu
+    this.updateOptions();
   },
 };
 </script>
