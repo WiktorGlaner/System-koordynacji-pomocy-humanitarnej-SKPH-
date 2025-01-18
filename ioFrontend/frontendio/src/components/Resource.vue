@@ -1,11 +1,13 @@
 <template>
   <div v-if="allowedRole">
-    <div v-if="hasRole('ROLE_ORGANIZATION') || hasRole('ROLE_AUTHORITY')">
+    <div v-if="hasRole('ROLE_ORGANIZATION') || hasRole('ROLE_DONOR')">
       <ResourceAdd @resource-add="updateResources"/>
-      <ResourcesList ref="resourcesList"/>
     </div>
-    <div v-else>
-      Work in progress - donations
+    <div v-if="hasRole('ROLE_ORGANIZATION')">
+      <!-- @TODO add resource modify option -->
+    </div>
+    <div v-if="hasRole('ROLE_ORGANIZATION') || hasRole('ROLE_AUTHORITY') || hasRole('ROLE_DONOR')">
+      <ResourcesList ref="resourcesList"/>
     </div>
   </div>
   <div v-else>

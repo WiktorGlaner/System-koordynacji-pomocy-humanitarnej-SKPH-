@@ -1,9 +1,11 @@
 <template>
   <div class="d-flex justify-content-between align-items-center mt-3">
-    <h4>{{$t('resources')}}</h4>
-    <button class="btn btn-primary m-10" @click="showAddResourceModal = true">
-      {{$t('resources-add-resource')}}
-    </button>
+    <div class="d-flex flex-column align-items-start mb-3">
+      <h4 class="mb-2">{{ isDonor ? $t('resources-donate') : $t('resources')}}</h4>
+      <button class="btn btn-primary" @click="showAddResourceModal = true">
+        {{ isDonor ? $t('resources-donate-add') : $t('resources-add-resource')}}
+      </button>
+    </div>
 
     <BModal v-model="showAddResourceModal" :title="$t('resources-add-resource')" @ok="addResource" :ok-disabled="!formValid">
       <BForm ref="form" @submit.prevent="addResource">
@@ -56,6 +58,17 @@
               id="resource-type"
               v-model="newResource.type"
               :options="typeOptions"
+          />
+        </BFormGroup>
+
+        <BFormGroup :label="$t('resource-select-organization')" v-if="isDonor">
+          <BFormSelect
+              id="resource-organisationid"
+              v-model="newResource.organizationId"
+              :options="formattedOrganizationOptions"
+              :placeholder="$t('resource-organization-placeholder')"
+              required
+              :state="isOrganisationIdValid"
           />
         </BFormGroup>
 
@@ -112,6 +125,7 @@
 import {BCol, BForm, BFormGroup, BFormInput, BFormSelect, BFormTextarea, BModal, BRow} from "bootstrap-vue-next";
 import {useToast} from 'vue-toastification';
 import ResourceService from "@/services/resource.service.js";
+import UserService from "@/services/user.service.js";
 
 export default {
   components: {
@@ -124,6 +138,11 @@ export default {
     BRow,
     BCol
   },
+  mounted() {
+    if (this.isDonor) {
+      this.fetchOrganizations();
+    }
+  },
   data() {
     return {
       showAddResourceModal: false,
@@ -135,8 +154,10 @@ export default {
         latitude: 0,
         longitude: 0,
         expDate: null,
-        unit: this.$t('resources-unit-pcs')
+        unit: this.$t('resources-unit-pcs'),
+        organizationId: null,
       },
+      organizationOptions: [],
     }
   },
   watch: {
@@ -145,33 +166,68 @@ export default {
     }
   },
   methods: {
+    async fetchOrganizations() {
+      try {
+        const response = await UserService.getAllOrganizations();
+        this.organizationOptions = response.data.map(org => ({ id: org.id, name: org.name }));
+      } catch (error) {
+        console.error(error);
+        this.errorMessage = this.$t('organization-fetch-error');
+      }
+    },
     async addResource() {
-      // const toast = useToast();
       const toast = useToast();
 
       if (this.formValid) {
         try {
-          const resourceData = {
-            name: this.newResource.name,
-            description: this.newResource.description,
-            quantity: this.newResource.quantity,
-            unit: this.newResource.unit,
-            resourceType: this.newResource.type,
-            location: {
-              latitude: this.newResource.latitude,
-              longitude: this.newResource.longitude,
-            },
-            expDate: this.newResource.expDate,
-            organisationId: 5 // @todo: change later to take organisationId from USER
-          };
+          let response = null;
 
-          const response = await ResourceService.addResource(resourceData);
+          if (this.isDonor) {
+
+            if (!this.newResource.organizationId) {
+              toast.error(this.$t('resources-toast-organization-required'));
+              return;
+            }
+
+            const donationData = {
+              name: this.newResource.name,
+              description: this.newResource.description,
+              quantity: this.newResource.quantity,
+              unit: this.newResource.unit,
+              resourceType: this.newResource.type,
+              location: {
+                latitude: this.newResource.latitude,
+                longitude: this.newResource.longitude,
+              },
+              expDate: this.newResource.expDate,
+              organisationId: this.newResource.organizationId,
+              donorId: this.$store.state.auth.user.id,
+            };
+
+            response = await ResourceService.addDonation(donationData);
+            toast.success(this.$t('resources-toast-donation-success'));
+          } else {
+            const res = await UserService.getOrganizationInfo();
+            const resourceData = {
+              name: this.newResource.name,
+              description: this.newResource.description,
+              quantity: this.newResource.quantity,
+              unit: this.newResource.unit,
+              resourceType: this.newResource.type,
+              location: {
+                latitude: this.newResource.latitude,
+                longitude: this.newResource.longitude,
+              },
+              expDate: this.newResource.expDate,
+              organisationId: res.data.id
+            };
+
+            response = await ResourceService.addResource(resourceData);
+            toast.success(this.$t("resources-toast-add-success"));
+          }
+
           this.showAddResourceModal = false;
-
           this.$emit('resource-add', response.data);
-
-          toast.success(this.$t('resources-toast-add-success'));
-
           this.resetForm();
         } catch (error) {
           console.log(error);
@@ -188,7 +244,8 @@ export default {
         latitude: 0,
         longitude: 0,
         expDate: null,
-        unit: this.$t('resources-unit-pcs')
+        unit: this.$t('resources-unit-pcs'),
+        organizationId: null,
       };
     },
     nextDay() {
@@ -201,6 +258,15 @@ export default {
     }
   },
   computed: {
+    formattedOrganizationOptions() {
+      return this.organizationOptions.map(org => ({
+        value: org.id,
+        text: org.name || org.id.toString(),
+      }));
+    },
+    isDonor() {
+      return this.$store.state.auth.user.roles.includes('ROLE_DONOR');
+    },
     formValid() {
       return this.isExpDateValid
           && this.isQuantityValid
@@ -257,6 +323,9 @@ export default {
       }
       return true;
     },
+    isOrganisationIdValid() {
+      return this.newResource.organizationId !== undefined && this.newResource.organizationId !== null && this.newResource.organizationId !== "";
+    }
   }
 }
 </script>

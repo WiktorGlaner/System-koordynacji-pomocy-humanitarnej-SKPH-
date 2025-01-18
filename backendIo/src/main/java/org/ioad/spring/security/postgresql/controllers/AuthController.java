@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 
+import org.ioad.spring.language.ILangService;
 import org.ioad.spring.language.services.LangService;
 import org.ioad.spring.security.postgresql.repository.UserRepository;
 import org.ioad.spring.user.user.IUserService;
@@ -58,7 +59,7 @@ public class AuthController {
     IUserService iUserService;
 
     @Autowired
-    LangService langService;
+    ILangService iLangService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -79,10 +80,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        System.out.println(signUpRequest.getUsername());
-        System.out.println(signUpRequest.getEmail());
-        System.out.println(signUpRequest.getPassword());
-        System.out.println(signUpRequest.getRole());
+
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
         }
@@ -122,7 +120,7 @@ public class AuthController {
         }
         user.setRoles(roles);
         userRepository.save(user);
-        langService.addLangRecord("en", user);
+        iLangService.addLangRecord("en", user);
         if (roles.stream().anyMatch(role -> role.getName().equals(ERole.ROLE_ORGANIZATION))) {
             iUserService.addOrganizationInfo(signUpRequest.getUsername());
         } else {

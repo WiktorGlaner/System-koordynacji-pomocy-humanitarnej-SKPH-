@@ -134,11 +134,11 @@ export default {
           headers: authHeader(),
         });
         //console.log(info.data.id)
-        const response = await fetch(`http://localhost:8080/resource?organisationId=${info.data.id}`);
-        if (!response.ok) {
-          throw new Error("Błąd podczas ładowania zasobów");
-        }
-        const resources = await response.json();
+        const response = await axios.get(`http://localhost:8080/resource?organisationId=${info.data.id}`, {
+          headers: authHeader(),
+        });
+
+        const resources = response.data;
         //console.log("Resources:", resources);
 
         resources.forEach((resource) => {
@@ -184,11 +184,11 @@ export default {
     },
     async loadAllResources() {
       try {
-        const response = await fetch("http://localhost:8080/resource?status=AVAILABLE");
-        if (!response.ok) {
-          throw new Error("Błąd podczas ładowania zasobów");
-        }
-        const resources = await response.json();
+        const response = await axios.get("http://localhost:8080/resource?status=AVAILABLE", {
+          headers: authHeader(),
+        });
+
+        const resources = response.data;
         //console.log("Resources:", resources);
 
         resources.forEach((resource) => {

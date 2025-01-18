@@ -13,7 +13,6 @@ import org.ioad.spring.user.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -27,7 +26,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasRole('ROLE_VOLUNTEER') || hasRole('ROLE_AUTHORITY')" )
+    @PreAuthorize("hasRole('ROLE_VOLUNTEER') || hasRole('ROLE_AUTHORITY') || hasRole('ROLE_DONOR')" )
     @GetMapping("/allOrganizations")
     public ResponseEntity<List<OrganizationInfoDataResponse>> getAllOrganizations() {
         List<OrganizationInfoDataResponse> organizations = userService.getAllOrganizations();

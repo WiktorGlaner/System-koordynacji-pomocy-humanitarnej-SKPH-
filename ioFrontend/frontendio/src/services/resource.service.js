@@ -15,9 +15,17 @@ class ResourceService {
     getOrganisationAvailableResources(organisationId) {
         return axios.get(API_URL + `resource?organisationId=${organisationId}&status=AVAILABLE`, { headers: authHeader() });
     }
+    
+    getDonorResources(donorId) {
+        return axios.get(API_URL + `donation/${donorId}`, { headers: authHeader() });
+    }
 
     addResource(resource) {
         return axios.post(API_URL + 'resource', resource, { headers: authHeader() });
+    }
+
+    async addDonation(donation) {
+        return axios.post(API_URL + 'donation', donation, { headers: authHeader() });
     }
 
     async getTotalAssignedQuantity() {

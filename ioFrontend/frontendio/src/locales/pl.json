@@ -106,6 +106,7 @@
   "resources-table-addedDate": "Data dodania",
   "resources-table-expDate": "Termin ważności",
   "resources-add-resource": "Dodaj Zasób",
+  "resources-donate-add": "Przekaż darowiznę",
   "resources-unit-grams": "g",
   "resources-unit-kilograms": "kg",
   "resources-unit-liters": "L",
@@ -114,9 +115,15 @@
   "resources-toast-add-success": "Udało się dodać zasób!",
   "resources-toast-add-error": "Nie udało się dodać zasobu!",
   "resources-not-allowed": "Zasoby nie są dostępne dla twojej roli.",
-
   "resources-fetch-error": "Nie udało się pobrać zasobów. Spróbuj ponownie później.",
-
+  "resource-select-organization": "Wybierz organizacje",
+  "resource-organization-placeholder": "Wybierz organizacje...",
+  "organization-fetch-error": "Nie udało się pobrać organizacji",
+  "resources-toast-organization-required": "Musisz wybrać organizację!",
+  "resources-toast-donation-success": "Udało się przekazać zasób!",
+  "resources-donate": "Historia darowizn",
+  "resources-table-organisationId": "ID organizacji",
+  "resources-table-donorId": "ID darczyńcy",
   "home-raports": "Raporty",
   "home-raports-description": "Sprawdź raporty",
   "home-profile": "Profil",
@@ -149,13 +156,31 @@
   "nav-login": "Zaloguj się",
   "nav-sign-up": "Zarejestruj się",
   "nav-logout": "Wyloguj się",
+  
   "validation-username-required": "Nazwa użytkownika jest wymagana",
   "validation-password-required": "Hasło jest wymagane",
   "login-username": "Nazwa użytkownika",
   "login-password": "Hasło",
   "login-button": "Zaloguj się",
-  "task-submit": "Zatwierdź"
 
+  "signup-role": "Rola",
+  "signup-select-role": "Wybierz rolę",
+  "signup-victim": "Poszkodowany",
+  "signup-donor": "Darczyńca",
+  "signup-volunteer": "Wolontariusz",
+  "signup-organization": "Organizacja",
+  "signup-authority": "Przedstawiciel władz",
+  "signup-button" : "Zarejestruj się",
+  "signup-emailreq" : "Email jest wymagany!",
+  "signup-emailinv" : "Email jest nieprawidłowy!",
+  "signup-emailmax" : "Email może mieć maksymalnie 50 znaków!",
+  "signup-usernamereq" : "Nazwa użytkownika jest wymagana!",
+  "signup-usernamemin" : "Nazwa użytkownika musi mieć co najmniej 3 znaki!",
+  "signup-usernamemax" : "Nazwa użytkownika może mieć maksymalnie 20 znaków!",
+  "signup-passreq" : "Hasło jest wymagane!",
+  "signup-passmin" : "Hasło musi miec co najmniej 6 znaków!",
+  "signup-passmax" : "Hasło może mieć maksymalnie 40 znaków!",
+  "signup-rolereq" : "Rola jest wymagana!"
 
 }
 
