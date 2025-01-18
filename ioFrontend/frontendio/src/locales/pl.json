@@ -203,6 +203,9 @@
   "req-delete-fail": "Usunięcie zgłoszenia nie powiodło się.",
   "req-none": "Brak",
   "req-form-title": "Stwórz zgłoszenie",
+  "req-access-denied": "Odmowa dostępu",
+  "req-back-home": "Wróć na stronę główną",
+
   "signup-role": "Rola",
   "signup-select-role": "Wybierz rolę",
   "signup-victim": "Poszkodowany",

@@ -199,6 +199,9 @@
   "req-delete-fail": "Request delete failed.",
   "req-none": "None",
   "req-form-title": "Create a request",
+  "req-access-denied": "Access denied",
+  "req-back-home": "Come back home",
+
   "signup-role": "Role",
   "signup-select-role": "Select a role",
   "signup-victim": "Victim",
