@@ -20,6 +20,7 @@ const Volunteer = () => import("./components/Volunteer.vue")
 const Application = () => import("./components/Application.vue")
 const VolunteerInfo = () => import("./components/VolunteerInfo.vue")
 const ApplicationInfo = () => import("./components/ApplicationInfo.vue")
+const Report = () => import("./components/Report.vue")
 
 const routes = [
   {
@@ -127,6 +128,11 @@ const routes = [
     path: "/application/info/:id",
     component: ApplicationInfo,
     props: true,
+  },
+  {
+    path: "/reports",
+    name: "report",
+    component: Report,
   },
 ];
 

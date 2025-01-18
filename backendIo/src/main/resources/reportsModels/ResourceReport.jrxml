@@ -1,0 +1,168 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="ResourcesTest" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="36945bd9-2d8a-4a39-83f2-75fa4c4b2759">
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<dataset name="resourcesDataSet3" uuid="a732a0fc-9979-4e1b-86bb-613ad629dac1">
+		<query language="sql"><![CDATA[]]></query>
+		<field name="id" class="java.lang.Long"/>
+		<field name="name" class="java.lang.String"/>
+		<field name="quantity" class="java.lang.Double"/>
+		<field name="unit" class="java.lang.String"/>
+		<field name="resourceType" class="org.ioad.spring.resource.models.ResourceType"/>
+		<field name="description" class="java.lang.String"/>
+		<field name="status" class="org.ioad.spring.resource.models.ResourceStatus"/>
+	</dataset>
+	<parameter name="resourcesDataSet3" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="Data" class="java.util.Date"/>
+	<query language="sql"><![CDATA[]]></query>
+	<background splitType="Stretch"/>
+	<title height="80" splitType="Stretch">
+		<element kind="staticText" uuid="4f9f6cbe-43ed-4abe-956f-ded08ef4b9cf" x="30" y="19" width="499" height="39" fontSize="30.0" hTextAlign="Center">
+			<text><![CDATA[Resource Report]]></text>
+		</element>
+		<element kind="staticText" uuid="18079999-2e71-4c2f-8195-a8d4e842e3eb" x="340" y="-11" width="119" height="30" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Data wykonania raportu: ]]></text>
+			<property name="com.jaspersoft.studio.unit.x" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="textField" uuid="d617bbe1-b3ec-48f9-ab05-849af14c4f84" x="460" y="-11" width="110" height="30" hTextAlign="Left" vTextAlign="Middle">
+			<expression><![CDATA[$P{Data}]]></expression>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<property name="com.jaspersoft.studio.unit.x" value="px"/>
+		</element>
+	</title>
+	<detail>
+		<band height="260" splitType="Stretch">
+			<element kind="component" uuid="87593a57-7166-4922-91b3-0505dda207b3" x="4" y="0" width="550" height="200">
+				<component kind="table">
+					<datasetRun uuid="6000df0e-2a2e-4a8d-b7f0-7609282b2baa" subDataset="resourcesDataSet3">
+						<dataSourceExpression><![CDATA[$P{resourcesDataSet3}]]></dataSourceExpression>
+					</datasetRun>
+					<column kind="single" uuid="c1b081b1-f34b-4463-aed1-ddec779455e2" width="50">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="7555733f-2197-4cf1-b7d1-0314b01c3084" x="0" y="0" width="50" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Id]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="af5ded65-b190-42ec-bd79-2fc514b7e7aa" x="0" y="0" width="50" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{id}]]></expression>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+					</column>
+					<column kind="single" uuid="935c9731-ff5e-49d1-8d85-26efce992722" width="90">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="b062554c-dce7-485d-99f8-39a81c884c60" x="0" y="0" width="90" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Name]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="7ae3ecf4-af42-4150-9c7a-cdb7e9389ec5" x="0" y="0" width="90" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{name}]]></expression>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+					</column>
+					<column kind="single" uuid="2b22437f-93e2-420a-b60d-8ba11941eea9" width="70">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="8df5b278-e827-448f-8601-70b1d05d3c58" x="0" y="0" width="70" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Quantity]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="61e12631-6f32-4cda-913c-5d4e6ff55346" x="0" y="0" width="70" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{quantity}]]></expression>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+					</column>
+					<column kind="single" uuid="b28ba61b-5dec-466f-9331-135ec0e3eeb7" width="40">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="83aa1b77-e2f5-45cd-be7f-0725e53251ad" x="0" y="0" width="40" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Unit]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="d51489f5-3909-4ad4-8e72-ecd5ecea4a74" x="0" y="0" width="40" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{unit}]]></expression>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+					</column>
+					<column kind="single" uuid="7dc536b4-663d-478b-86e5-9c5d48275e72" width="99">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="df3f535f-6d63-4cfa-889c-fefa430b16e7" x="0" y="0" width="99" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[ResourceType]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="94dd0ba3-0bd1-4dfd-8c00-e6f44bb00c7c" x="0" y="0" width="99" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{resourceType}]]></expression>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+					</column>
+					<column kind="single" uuid="c33e5720-26fb-4956-bbe0-1d402be78546" width="101">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="70cd59bc-8751-4dcd-a045-4c0e0de5fa33" x="0" y="0" width="101" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Description]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="903a6283-ce26-423a-98b4-5017b43604a9" x="0" y="0" width="101" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{description}]]></expression>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+					</column>
+					<column kind="single" uuid="04a996f6-d4cc-4630-84d5-cb0b307d0ca3" width="99">
+						<columnHeader height="30" rowSpan="1" style="Table_CH">
+							<element kind="staticText" uuid="68697a99-b5f3-4124-889a-6e4f9a5d2059" x="0" y="0" width="99" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<text><![CDATA[Status]]></text>
+							</element>
+						</columnHeader>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="e6b44ef0-bbb5-48ce-8c2d-2fa75e42b873" x="0" y="0" width="99" height="30" hTextAlign="Center" vTextAlign="Middle">
+								<expression><![CDATA[$F{status}]]></expression>
+							</element>
+						</detailCell>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+					</column>
+				</component>
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+				<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+				<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="45" splitType="Stretch"/>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>

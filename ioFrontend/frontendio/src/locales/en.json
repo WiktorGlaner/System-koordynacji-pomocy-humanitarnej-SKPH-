@@ -244,7 +244,19 @@
   "taskInfo-pesel": "PESEL",
   "taskInfo-email": "Email",
   "taskInfo-active": "Active",
-  "taskInfo-expirationDate": "Expiration Date"
-
-  
+  "taskInfo-expirationDate": "Expiration Date",
+  "report-title": "Generating Reports",
+  "report-type": "Report Type",
+  "report-download": "Download Report",
+  "report-view": "View report",
+  "task-report": "Task report",
+  "request-report": "Request report",
+  "resource-report": "Resource report",
+  "donation-report": "Donation report",
+  "tax-report": "Tax report",
+  "report-downloaded-successfully": "Report successfully downloaded",
+  "please-select-report-type": "Choose report-type",
+  "report-preview-failed": "Report preview Failed",
+  "report-download-failed": "Report download Failed",
+  "view-report": "Report preview"
 }
