@@ -159,7 +159,7 @@
   "nav-login": "Login",
   "nav-sign-up": "Sign Up",
   "nav-logout": "Logout",
-  "nav-request": "Request",
+  "nav-request": "Requests",
 
   "validation-username-required": "Username is required",
   "validation-password-required": "Password is required",
