@@ -240,8 +240,11 @@
   "taskInfo-pesel": "PESEL",
   "taskInfo-email": "E-mail",
   "taskInfo-active": "Aktywny",
-  "taskInfo-expirationDate": "Data wygaśnięcia"
-
+  "taskInfo-expirationDate": "Data wygaśnięcia",
+  "report-title": "Generowanie raportow",
+  "report-type": "Typ raportu",
+  "report-download": "Pobierz raport",
+  "report-view": "Podgląd raportu"
 
 }
 

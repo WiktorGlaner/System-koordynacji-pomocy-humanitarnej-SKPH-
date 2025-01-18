@@ -237,7 +237,10 @@
   "taskInfo-pesel": "PESEL",
   "taskInfo-email": "Email",
   "taskInfo-active": "Active",
-  "taskInfo-expirationDate": "Expiration Date"
-
+  "taskInfo-expirationDate": "Expiration Date",
+  "report-title": "Generating Reports",
+  "report-type": "Report Type",
+  "report-download": "Download Report",
+  "report-view": "View report"
   
 }
