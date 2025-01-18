@@ -1,4 +1,3 @@
-<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
 <jasperReport name="ResourcesTest" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="36945bd9-2d8a-4a39-83f2-75fa4c4b2759">
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
@@ -70,7 +69,7 @@
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="af5ded65-b190-42ec-bd79-2fc514b7e7aa" x="0" y="0" width="50" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="af5ded65-b190-42ec-bd79-2fc514b7e7aa" x="0" y="0" width="50" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{id}]]></expression>
 							</element>
 						</detailCell>
@@ -83,7 +82,7 @@
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="7ae3ecf4-af42-4150-9c7a-cdb7e9389ec5" x="0" y="0" width="90" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="7ae3ecf4-af42-4150-9c7a-cdb7e9389ec5" x="0" y="0" width="90" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{name}]]></expression>
 							</element>
 						</detailCell>
@@ -96,7 +95,7 @@
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="61e12631-6f32-4cda-913c-5d4e6ff55346" x="0" y="0" width="70" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="61e12631-6f32-4cda-913c-5d4e6ff55346" x="0" y="0" width="70" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{quantity}]]></expression>
 							</element>
 						</detailCell>
@@ -109,7 +108,7 @@
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="d51489f5-3909-4ad4-8e72-ecd5ecea4a74" x="0" y="0" width="40" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="d51489f5-3909-4ad4-8e72-ecd5ecea4a74" x="0" y="0" width="40" height="30" fontName="SansSerif" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{unit}]]></expression>
 							</element>
 						</detailCell>
@@ -122,7 +121,7 @@
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="94dd0ba3-0bd1-4dfd-8c00-e6f44bb00c7c" x="0" y="0" width="99" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="94dd0ba3-0bd1-4dfd-8c00-e6f44bb00c7c" x="0" y="0" width="99" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{resourceType}]]></expression>
 							</element>
 						</detailCell>
@@ -135,7 +134,7 @@
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="903a6283-ce26-423a-98b4-5017b43604a9" x="0" y="0" width="101" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="903a6283-ce26-423a-98b4-5017b43604a9" x="0" y="0" width="101" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{description}]]></expression>
 							</element>
 						</detailCell>
@@ -148,7 +147,7 @@
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="e6b44ef0-bbb5-48ce-8c2d-2fa75e42b873" x="0" y="0" width="99" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="e6b44ef0-bbb5-48ce-8c2d-2fa75e42b873" x="0" y="0" width="99" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{status}]]></expression>
 							</element>
 						</detailCell>

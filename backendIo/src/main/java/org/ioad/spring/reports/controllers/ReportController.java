@@ -81,7 +81,6 @@ public class ReportController {
     @GetMapping(value = "/preview", produces = "application/pdf")
     public ResponseEntity<byte[]> previewReport(@RequestParam("type") String type, @RequestParam Long userId) {
         try {
-            System.out.println(userId);
             byte[] pdfBytes = reportService.generateReport(type, userId);
 
             return ResponseEntity.ok()
