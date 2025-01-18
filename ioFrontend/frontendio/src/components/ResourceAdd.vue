@@ -7,7 +7,7 @@
       </button>
     </div>
 
-    <BModal v-model="showAddResourceModal" :title="$t('resources-add-resource')" @ok="addResource" :ok-disabled="!formValid">
+    <BModal v-model="showAddResourceModal" :title="$t('resources-add-resource')" @ok="addResource" :ok-disabled="!formValid" @shown="onModalShown">
       <BForm ref="form" @submit.prevent="addResource">
         <BFormGroup :label="$t('resources-table-name')" label-for="resource-name">
           <BFormInput
@@ -52,6 +52,9 @@
           </BCol>
         </BRow>
 
+        <BFormGroup :label="$t('resource-location')" label-for="resource-location">
+          <div :id="`map-container`"></div>
+        </BFormGroup>
 
         <BFormGroup :label="$t('resources-table-type')" label-for="resource-type">
           <BFormSelect
@@ -71,40 +74,6 @@
               :state="isOrganisationIdValid"
           />
         </BFormGroup>
-
-        <BRow>
-          <BCol md="6">
-            <BFormGroup :label="$t('resources-table-latitude')" label-for="resource-latitude">
-              <BFormInput
-                  id="resource-latitude"
-                  v-model="newResource.latitude"
-                  type="number"
-                  step="any"
-                  min="-180"
-                  max="180"
-                  required
-                  :placeholder="$t('resources-table-latitude-placeholder')"
-                  :state="isLatitudeValid"
-              />
-            </BFormGroup>
-          </BCol>
-
-          <BCol md="6">
-            <BFormGroup :label="$t('resources-table-longitude')" label-for="resource-longitude">
-              <BFormInput
-                  id="resource-longitude"
-                  v-model="newResource.longitude"
-                  type="number"
-                  step="any"
-                  min="-90"
-                  max="90"
-                  required
-                  :placeholder="$t('resources-table-longitude-placeholder')"
-                  :state="isLongitudeValid"
-              />
-            </BFormGroup>
-          </BCol>
-        </BRow>
 
         <BFormGroup :label="$t('resources-table-expDate')" label-for="resource-expDate">
           <BFormInput
@@ -138,10 +107,11 @@ export default {
     BRow,
     BCol
   },
-  mounted() {
+  async mounted() {
     if (this.isDonor) {
-      this.fetchOrganizations();
+      await this.fetchOrganizations();
     }
+    await this.initMap();
   },
   data() {
     return {
@@ -151,17 +121,18 @@ export default {
         description: '',
         quantity: 0,
         type: 'OTHER',
-        latitude: 0,
-        longitude: 0,
+        latitude: 51.75,
+        longitude: 19.45,
         expDate: null,
         unit: this.$t('resources-unit-pcs'),
         organizationId: null,
       },
       organizationOptions: [],
+      blueCircle: null,
     }
   },
   watch: {
-    '$i18n.locale': function(newLang) {
+    '$i18n.locale': function() {
       this.newResource.unit = this.$t('resources-unit-pcs');
     }
   },
@@ -174,6 +145,40 @@ export default {
         console.error(error);
         this.errorMessage = this.$t('organization-fetch-error');
       }
+    },
+    onModalShown() {
+      if (this.map) {
+        this.$nextTick(() => {
+          this.map.invalidateSize();
+        });
+      }
+    },
+    async initMap() {
+      const mapContainer = document.getElementById(`map-container`);
+      mapContainer.style.height = '250px';
+      mapContainer.style.width = '100%';
+      this.map = L.map(mapContainer).setView([51.75, 19.45], 14);
+
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(this.map);
+
+      this.map.on('click', (e) => {
+        const { lat, lng } = e.latlng;
+        if (this.blueCircle) {
+          this.map.removeLayer(this.blueCircle);
+        }
+        this.blueCircle = L.circle([lat, lng], {
+          color: 'blue',
+          fillColor: '#03f',
+          fillOpacity: 0.5,
+          radius: 75,
+        }).addTo(this.map);
+
+        this.newResource.latitude = lat;
+        this.newResource.longitude = lng;
+      });
     },
     async addResource() {
       const toast = useToast();
@@ -241,8 +246,8 @@ export default {
         description: '',
         quantity: 0,
         type: 'OTHER',
-        latitude: 0,
-        longitude: 0,
+        latitude: 51.75,
+        longitude: 19.45,
         expDate: null,
         unit: this.$t('resources-unit-pcs'),
         organizationId: null,
