@@ -76,6 +76,14 @@
             <template #cell(dynamicId)="data">
               {{ currentUser.roles.includes('ROLE_AUTHORITY') ? data.item.organisationId : data.item.donorId }}
             </template>
+
+            <template #cell(actions)="data">
+              <BButton v-if="currentUser.roles.includes('ROLE_ORGANIZATION')"
+                  variant="primary" size="sm" @click="openEditModal(data.item)" :disabled="data.item.status !== 'AVAILABLE'">
+                <font-awesome-icon icon="edit" />
+                {{ $t('resource-edit') }}
+              </BButton>
+            </template>
           </BTable>
           <div v-if="errorMessage" class="alert alert-danger">
             {{ errorMessage }}
@@ -89,9 +97,14 @@
           />
         </div>
       </BCard>
-
     </div>
   </div>
+  <ResourceEdit
+      :isVisible="isEditModalVisible"
+      :resourceData="resourceToEdit"
+      @close="closeEditModal"
+      @save="saveResourceChanges"
+  />
 </template>
 
 <script>
@@ -103,10 +116,12 @@ import {
   BFormGroup,
   BPagination,
   BRow,
-  BTable
+  BTable,
+  BButton,
 } from 'bootstrap-vue-next';
 import ResourceService from "@/services/resource.service.js";
 import UserService from "@/services/user.service.js";
+import ResourceEdit from "@/components/ResourceEdit.vue";
 
 export default {
   components: {
@@ -118,6 +133,8 @@ export default {
     BFormCheckbox,
     BTable,
     BPagination,
+    BButton,
+    ResourceEdit,
   },
   data() {
     return {
@@ -133,6 +150,16 @@ export default {
         FULLY_ASSIGNED: 'resources-fullyassigned',
         EXPIRED: 'resources-expired',
         DAMAGED: 'resources-damaged'
+      },
+      isEditModalVisible: false,
+      resourceToEdit: {
+        description: '',
+        quantity: 0,
+        status: null,
+        location: {
+          latitude: null,
+          longitude: null,
+        }
       },
       errorMessage: '',
     };
@@ -152,7 +179,7 @@ export default {
     },
     fields() {
       const baseFields = [
-        { key: "id", label: "id", sortable: true },
+        // { key: "id", label: "id", sortable: true },
         { key: "name", label: this.$t('resources-table-name'), sortable: true },
         { key: "description", label: this.$t('resources-table-description') },
         { key: "quantity", label: this.$t('resources-table-quantity'), sortable: true },
@@ -165,6 +192,7 @@ export default {
         baseFields.push({ key: "dynamicId", label: this.$t('resources-table-organisationId') });
       } else if (this.currentUser.roles.includes("ROLE_ORGANIZATION")) {
         baseFields.push({ key: "dynamicId", label: this.$t('resources-table-donorId') });
+        baseFields.push({ key: "actions", label: '', class: "text-center" });
       }
 
       return baseFields;
@@ -186,6 +214,20 @@ export default {
     },
   },
   methods: {
+    openEditModal(resource) {
+      this.resourceToEdit = { ...resource };
+      this.isEditModalVisible = true;
+    },
+    closeEditModal() {
+      this.isEditModalVisible = false;
+    },
+    saveResourceChanges(updatedResource) {
+      const index = this.resources.findIndex(r => r.id === updatedResource.id);
+      if (index !== -1) {
+        this.resources[index] = { ...updatedResource };
+      }
+      this.closeEditModal();
+    },
     onPageChange(page) {
       this.currentPage = page;
     },

@@ -53,7 +53,7 @@
         </BRow>
 
         <BFormGroup :label="$t('resource-location')" label-for="resource-location">
-          <div :id="`map-container`"></div>
+          <div :id="`resource-add-map-container`"></div>
         </BFormGroup>
 
         <BFormGroup :label="$t('resources-table-type')" label-for="resource-type">
@@ -154,7 +154,7 @@ export default {
       }
     },
     async initMap() {
-      const mapContainer = document.getElementById(`map-container`);
+      const mapContainer = document.getElementById(`resource-add-map-container`);
       mapContainer.style.height = '250px';
       mapContainer.style.width = '100%';
       this.map = L.map(mapContainer).setView([51.75, 19.45], 14);

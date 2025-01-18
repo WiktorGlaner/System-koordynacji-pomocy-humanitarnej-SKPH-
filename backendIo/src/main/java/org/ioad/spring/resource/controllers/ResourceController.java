@@ -57,16 +57,18 @@ public class ResourceController {
     @PreAuthorize("hasRole('ROLE_ORGANIZATION')")
     @PatchMapping(path = "/resource/{resourceId}")
     public ResponseEntity<String> modifyResource(@PathVariable("resourceId") Long resourceId,
-                               @RequestParam(required = false) String description,
-                               @RequestParam(required = false) Double latitude,
-                               @RequestParam(required = false) Double longitude,
-                               @RequestParam(required = false) Double quantity,
-                               @RequestParam(required = false) String status) {
+                               @RequestBody ResourceUpdateDTO  request) {
         Location location = null;
-        if (latitude != null && longitude != null) {
-            location = new Location(latitude, longitude);
+        if (request.getLatitude() != null && request.getLongitude() != null) {
+            location = new Location(request.getLatitude(), request.getLongitude());
         }
-        resourceService.modifyResource(resourceId, description, location, quantity, status);
+        resourceService.modifyResource(
+                resourceId,
+                request.getDescription(),
+                location,
+                request.getQuantity(),
+                request.getStatus()
+        );
         return ResponseEntity.ok("Resource modified successfully.");
     }
 
