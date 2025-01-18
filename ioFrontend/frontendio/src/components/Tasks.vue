@@ -2,7 +2,7 @@
   <div class="container mt-5">
     <!-- Alert for unauthorized users -->
     <div v-if="!allowedRole" class="alert alert-danger text-center" style="font-size: 18px; margin-top: 20px;">
-      Only users with the "ROLE_ORGANIZATION" or "ROLE_VOLUNTEER" or "ROLE_AUTHORITY" role have access to this page.
+      Only users with the "ROLE_ORGANIZATION" or "ROLE_VOLUNTEER" role have access to this page.
     </div>
 
     <!-- Tasks table and search filters, visible only if allowedRole() is true -->
@@ -162,13 +162,14 @@ export default {
     };
   },
   created() {
-    if (this.hasRole('ROLE_ORGANIZATION')) {
-      this.fetchOrganizationInfo();
-    }
-    this.fetchTasks();
-  },
-  mounted() {
-    if (!this.currentUser) {
+    if(this.currentUser){
+      if (this.hasRole('ROLE_ORGANIZATION')) {
+        this.fetchOrganizationInfo();
+      }
+      if (this.hasRole('ROLE_ORGANIZATION') || this.hasRole('ROLE_VOLUNTEER')) {
+        this.fetchTasks();
+      }
+    }else{
       this.$router.push("/login");
     }
   },
@@ -258,7 +259,6 @@ export default {
     async fetchOrganizationInfo() {
       try {
         const response = await UserService.getOrganizationInfo();
-        console.log('Organization info:', response.data);
         this.organizationInfo = response.data;
       } catch (error) {
         console.error('Error fetching organization info:', error);
@@ -271,26 +271,27 @@ export default {
         this.getVolunteersTasks(this.currentUser.username);
       }
     },
-    getAllTasks() {
-      TaskService.getAllTasks().then(
-        (response) => {
-          this.tasks = response.data;
-          this.filterOptions.organization = [
-            ...new Map(this.tasks.map((t) => t.task.organization.name)
-              .map((org) => [org, org])
-            ).values()
-          ].map((org) => ({ value: org, label: org }));
+    updateFilterOptions() {
+    this.filterOptions.organization = [
+      ...new Map(this.tasks.map((t) => t.task.organization.name)
+        .map((org) => [org, org])
+      ).values()
+    ].map((org) => ({ value: org, label: org }));
 
-          console.log(this.filterOptions);
-
-        this.filterOptions.location = [...new Set(this.tasks.map((t) => t.task.location))]
-          .map((loc) => ({ value: loc, label: loc }));
-        },
-        (error) => {
-          console.log(error.response?.data?.message || error.message || error.toString());
-        }
-      );
-    },
+    this.filterOptions.location = [...new Set(this.tasks.map((t) => t.task.location))]
+      .map((loc) => ({ value: loc, label: loc }));
+  },
+  getAllTasks() {
+    TaskService.getAllTasks().then(
+      (response) => {
+        this.tasks = response.data;
+        this.updateFilterOptions();
+      },
+      (error) => {
+        console.log(error.response?.data?.message || error.message || error.toString());
+      }
+    );
+  },
     getVolunteersTasks(username) {
       TaskService.getVolunteersTasks(this.currentUser.username).then(
         (response) => {
@@ -327,6 +328,11 @@ export default {
       return this.currentUser.roles.includes(role);
     }
   },
+  watch: {
+  '$i18n.locale': function () {
+    this.updateFilterOptions();
+  }
+},
 };
 </script>
 
