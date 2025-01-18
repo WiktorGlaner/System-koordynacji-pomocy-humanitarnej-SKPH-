@@ -67,7 +67,8 @@
           </ul>
 
           <h2 class="text-center mt-4">{{ $t('taskInfo-volunteers') }}</h2>
-          <ul class="list-group mt-3" v-if="task.task.volunteers">
+          <ul class="list-group mt-3" v-if="task && task.task && task.task.volunteers && task.task.volunteers.length">
+
             <li class="list-group-item" v-for="volunteer in task.task.volunteers" :key="volunteer.id">
               <p><strong>{{ $t('taskInfo-nameAndSurname') }}:</strong> {{ volunteer.name }} {{ volunteer.surname }}</p>
               <p><strong>{{ $t('taskInfo-username') }}:</strong> {{ volunteer.user.username }}</p>
@@ -118,6 +119,7 @@ export default {
       try {
         const response = await TaskService.getTask(this.id);
         this.task = response.data;
+        console.log("Task details:", this.task);
       } catch (error) {
         console.error("Error fetching task details:", error);
       }

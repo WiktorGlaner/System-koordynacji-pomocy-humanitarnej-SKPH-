@@ -1,7 +1,7 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 
-const API_URL = 'http://localhost:8080/api/test/';
+const API_URL = 'http://localhost:8080/tasks/';
 
 class TaskService {
     getAllTasks() {
@@ -9,7 +9,7 @@ class TaskService {
         headers: authHeader() });
     }
     getVolunteersTasks(username) {
-      return axios.get(API_URL + 'tasks/volunteer', { 
+      return axios.get(API_URL + 'volunteerTasks', { 
         params: { username: username },
         headers: authHeader() });
     }

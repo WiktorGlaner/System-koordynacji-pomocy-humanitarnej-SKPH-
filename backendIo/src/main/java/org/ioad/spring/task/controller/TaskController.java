@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 
-@RequestMapping("/api/test")
+@RequestMapping("/tasks")
 @RestController
 @CrossOrigin(origins = "*")
 public class TaskController {
@@ -21,6 +21,7 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @PreAuthorize("hasRole('ROLE_ORGANIZATION')")
     @PostMapping("/createTask")
     public ResponseEntity<ResponseTaskDTO> createTask(@Valid @RequestBody CreateTaskDTO createTaskDTO) {
         validateCreateTaskData(createTaskDTO);
@@ -33,43 +34,49 @@ public class TaskController {
         return ResponseEntity.ok(taskService.calculateAverageGradeForUser(username));
     }
     
+    @PreAuthorize("hasRole('ROLE_ORGANIZATION')" + "or hasRole('ROLE_VOLUNTEER')")
     @GetMapping("/getTask")
     public ResponseEntity<ResponseTaskDTO> getTask(@Valid @RequestParam("id") long id) {
         ResponseTaskDTO task = taskService.getTask(id);
         return ResponseEntity.ok(task);
     }
 
+    @PreAuthorize("hasRole('ROLE_ORGANIZATION')")
     @PutMapping("/endTask")
     public ResponseEntity<ResponseTaskDTO> endTask(@Valid @RequestParam("id") long id) {
         ResponseTaskDTO task = taskService.endTask(id);
         return ResponseEntity.ok(task);
     }
 
-
+    @PreAuthorize("hasRole('ROLE_ORGANIZATION')")
     @GetMapping("/getAllTasks")
     public ResponseEntity<List<ResponseTaskDTO>> getAllTasks() {
         List<ResponseTaskDTO> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
 
-    @GetMapping("/tasks/volunteer")
+    @PreAuthorize("hasRole('ROLE_VOLUNTEER')")
+    @GetMapping("/volunteerTasks")
     public List<ResponseTaskDTO> getTasksByVolunteerUsername(@RequestParam String username) {
 
         return taskService.getTasksByVolunteerUsername(username);
     }
 
+    @PreAuthorize("hasRole('ROLE_ORGANIZATION')")
     @PutMapping("/editTask")
     public ResponseEntity<ResponseTaskDTO> editTask(@RequestParam("id") long id, @RequestBody Task updatedTask) {
         ResponseTaskDTO editedTask = taskService.editTask(id, updatedTask);
         return ResponseEntity.ok(editedTask);
     }
 
+    @PreAuthorize("hasRole('ROLE_ORGANIZATION')")    
     @PutMapping("/gradeTask")
     public ResponseEntity<ResponseTaskDTO> gradeTask(@RequestParam("id") long id, @RequestParam int grade) {
         ResponseTaskDTO gradedTask = taskService.gradeTask(id, grade); // GlobalExceptionHandler obsłuży wyjątek, jeśli wystąpi
         return ResponseEntity.ok(gradedTask);
     }
 
+    @PreAuthorize("hasRole('ROLE_ORGANIZATION')" + "or hasRole('ROLE_VOLUNTEER')")
     @GetMapping("/filterTasks")
     public ResponseEntity<List<ResponseTaskDTO>> filterTasks(
             @RequestParam(name = "location", required = false) String location,
