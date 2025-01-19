@@ -242,6 +242,7 @@ export default {
                 const response = await fetch(`http://localhost:8080/api/request/${this.currentUser.username}/requests/addrequest`, {
                   method: "POST",
                   headers: {
+                    ...authHeader(),
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({

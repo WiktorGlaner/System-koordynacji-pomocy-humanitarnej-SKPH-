@@ -142,8 +142,8 @@
             </td>
             <td v-if="hasRole('ROLE_ORGANIZATION')">
               <button 
-                class="btn btn-info btn-sm text-center w-100" 
-                @click="designateRoute(task.resource.location, {latitude: task.task.request.latitude, longitude: task.task.request.longitude})"
+                class="btn btn-info btn-sm text-center w-100"
+                @click="designateRoute(this.tasks.find(t => t.task.id === task.task.id)?.resources[0]?.location, { latitude: task.task.request.latitude, longitude: task.task.request.longitude })"
                 :disabled="task.task.status === 'COMPLETED' || task.task.status === 'GRADED' || task.task.organization.id !== organizationInfo.id"
                 :class="{ 'disabled-gray': task.task.organization.id !== organizationInfo.id }"
               >
@@ -152,8 +152,8 @@
             </td>
             <td v-if="hasRole('ROLE_VOLUNTEER')">
               <button 
-                class="btn btn-info btn-sm text-center w-100" 
-                @click="designateRoute(task.resource.location, {latitude: task.task.request.latitude, longitude: task.task.request.longitude})"
+                class="btn btn-info btn-sm text-center w-100"
+                @click="designateRoute(this.tasks.find(t => t.task.id === task.task.id)?.resources[0]?.location, { latitude: task.task.request.latitude, longitude: task.task.request.longitude })"
                 :disabled="task.task.status === 'COMPLETED' || task.task.status === 'GRADED'"
               >
               <font-awesome-icon :icon="['fas', 'route']" /> {{ $t('tasks-route') }}
@@ -374,14 +374,10 @@ export default {
         }
       );
     },
-    designateRoute(location, requestLocation) {
-      this.$router.push({
-        name: 'Map2',
-        query: {
-          location: location,
-          requestLocation: requestLocation
-        }
-      });
+    designateRoute(resourceLocation, requestLocation) {
+      console.log(requestLocation.latitude, requestLocation.longitude);
+      // Przekazujemy zarówno latitude, jak i longitude
+      this.$router.push(`/map2/${resourceLocation.latitude}/${resourceLocation.longitude}/${requestLocation.latitude}/${requestLocation.longitude}`);
     },
     hasRole(role) {
       return this.currentUser.roles.includes(role);
