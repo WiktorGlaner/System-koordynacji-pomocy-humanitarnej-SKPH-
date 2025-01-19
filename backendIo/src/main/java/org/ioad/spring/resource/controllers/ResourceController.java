@@ -115,7 +115,7 @@ public class ResourceController {
         return ResponseEntity.ok("Resource revoked succesfully.");
     }
 
-    @PreAuthorize("hasRole('ROLE_ORGANIZATION') || hasRole('ROLE_AUTHORITY')")
+    @PreAuthorize("hasRole('ROLE_ORGANIZATION') || hasRole('ROLE_AUTHORITY') || hasRole('ROLE_DONOR')")
     @GetMapping(path = "/assignments/{resourceId}")
     public ResponseEntity<List<ResourceAssignment>> getResourceAssignments(@PathVariable("resourceId") Long resourceId) {
         List<ResourceAssignment> assignments = resourceService.getResourceAssignments(resourceId);

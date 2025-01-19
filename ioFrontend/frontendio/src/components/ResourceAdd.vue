@@ -7,7 +7,7 @@
       </button>
     </div>
 
-    <BModal v-model="showAddResourceModal" :title="$t('resources-add-resource')" @ok="addResource" :ok-disabled="!formValid" @shown="onModalShown">
+    <BModal v-model="showAddResourceModal" :title="isDonor ? $t('resources-add-donation') : $t('resources-add-resource')" @ok="addResource" :ok-disabled="!formValid" @shown="onModalShown">
       <BForm ref="form" @submit.prevent="addResource">
         <BFormGroup :label="$t('resources-table-name')" label-for="resource-name">
           <BFormInput
