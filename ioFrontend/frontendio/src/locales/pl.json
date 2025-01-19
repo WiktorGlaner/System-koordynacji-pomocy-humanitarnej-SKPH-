@@ -194,7 +194,7 @@
   "req-name-error": "Pole nazwa nie może być puste.",
   "req-amount-error": "Liczba musi być dodatnia.",
   "req-loc-error": "Lokacja musi być zaznaczona.",
-  "req-type-error": "Typ zasobu musi zostać wybrany..",
+  "req-type-error": "Typ zasobu musi zostać wybrany.",
   "req-add-succ": "Zgłoszenie zostało wysłane.",
   "req-add-fail": "Wysłanie zgłoszenia nie powiodło się.",
   "req-update-succ": "Zgłoszenie zostało zaktualizowane.",
@@ -205,6 +205,7 @@
   "req-form-title": "Stwórz zgłoszenie",
   "req-access-denied": "Odmowa dostępu",
   "req-back-home": "Wróć na stronę główną",
+  "req-loc-map-error": "Nie można uzyskać twojej lokalizacji",
 
   "signup-role": "Rola",
   "signup-select-role": "Wybierz rolę",
@@ -250,6 +251,9 @@
   "tasks-high": "Wysoki",
   "tasks-medium": "Średni",
   "tasks-low": "Niski",
+  "tasks-prev": "Poprzedni",
+  "tasks-next": "Następny",
+  "tasks-route": "Trasa",
 
   "taskInfo-goBack": "Powrót",
   "taskInfo-title": "Tytuł",

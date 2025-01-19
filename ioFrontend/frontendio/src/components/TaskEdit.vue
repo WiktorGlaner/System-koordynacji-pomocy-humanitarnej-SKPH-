@@ -248,10 +248,6 @@ import TaskService from '../services/task.service';
             this.errors.title = 'Title cannot be empty.'; 
         }
 
-        if (!this.task.task.description || this.task.task.description.trim() === '') {
-            this.errors.description = 'Description cannot be empty.'; 
-        }
-
         if (!this.task.task.location || this.task.task.location.trim() === '') {
             this.errors.location = 'Location cannot be empty.';
         }

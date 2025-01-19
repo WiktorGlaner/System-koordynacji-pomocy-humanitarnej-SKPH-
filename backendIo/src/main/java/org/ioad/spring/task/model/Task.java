@@ -35,6 +35,7 @@ public class Task {
     @Column(nullable = false)
     private String title;
 
+    @Column(nullable = true)
     private String description;
 
     @ManyToOne(optional = false)

@@ -189,7 +189,7 @@
   "req-COMPLETED": "Completed",
   "req-name-error": "Resource name cannot be empty.",
   "req-amount-error": "Amount must be a positive number.",
-  "req-loc-error": "Location have to be marked..",
+  "req-loc-error": "Location have to be marked.",
   "req-type-error": "Resource type have to be selected.",
   "req-add-succ": "Request added successfully.",
   "req-add-fail": "Request add failed",
@@ -201,6 +201,7 @@
   "req-form-title": "Create a request",
   "req-access-denied": "Access denied",
   "req-back-home": "Come back home",
+  "req-loc-map-error": "Your location is unavailable",
 
   "signup-role": "Role",
   "signup-select-role": "Select a role",
@@ -246,6 +247,9 @@
   "tasks-high": "High",
   "tasks-medium": "Medium",
   "tasks-low": "Low",
+  "tasks-prev": "Previous",
+  "tasks-next": "Next",
+  "tasks-route": "Route",
 
   
   "taskInfo-goBack": "Go back",
