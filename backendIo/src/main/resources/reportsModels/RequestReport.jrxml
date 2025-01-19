@@ -47,7 +47,7 @@
 			<text><![CDATA[Request Report]]></text>
 		</element>
 		<element kind="staticText" uuid="80d8866b-ddf9-4e55-bf92-98bb6f36e510" x="340" y="-11" width="119" height="30" hTextAlign="Center" vTextAlign="Middle">
-			<text><![CDATA[Data wykonania raportu: ]]></text>
+			<text><![CDATA[Date of the report: ]]></text>
 			<property name="com.jaspersoft.studio.unit.x" value="px"/>
 			<property name="com.jaspersoft.studio.unit.y" value="px"/>
 		</element>
@@ -64,27 +64,27 @@
 					<datasetRun uuid="6000df0e-2a2e-4a8d-b7f0-7609282b2baa" subDataset="resourcesDataSet2">
 						<dataSourceExpression><![CDATA[$P{resourcesDataSet2}]]></dataSourceExpression>
 					</datasetRun>
-					<column kind="single" uuid="c1b081b1-f34b-4463-aed1-ddec779455e2" width="61">
+					<column kind="single" uuid="c1b081b1-f34b-4463-aed1-ddec779455e2" width="70">
 						<columnHeader height="30" rowSpan="1" style="Table_CH">
-							<element kind="staticText" uuid="7555733f-2197-4cf1-b7d1-0314b01c3084" x="0" y="0" width="61" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="staticText" uuid="7555733f-2197-4cf1-b7d1-0314b01c3084" x="0" y="0" width="70" height="30" hTextAlign="Center" vTextAlign="Middle">
 								<text><![CDATA[ID]]></text>
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="af5ded65-b190-42ec-bd79-2fc514b7e7aa" x="0" y="0" width="61" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="af5ded65-b190-42ec-bd79-2fc514b7e7aa" x="0" y="0" width="70" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{requestId}]]></expression>
 							</element>
 						</detailCell>
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 					</column>
-					<column kind="single" uuid="935c9731-ff5e-49d1-8d85-26efce992722" width="79">
+					<column kind="single" uuid="935c9731-ff5e-49d1-8d85-26efce992722" width="77">
 						<columnHeader height="30" rowSpan="1" style="Table_CH">
-							<element kind="staticText" uuid="b062554c-dce7-485d-99f8-39a81c884c60" x="0" y="0" width="79" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="staticText" uuid="b062554c-dce7-485d-99f8-39a81c884c60" x="0" y="0" width="77" height="30" hTextAlign="Center" vTextAlign="Middle">
 								<text><![CDATA[Name]]></text>
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="7ae3ecf4-af42-4150-9c7a-cdb7e9389ec5" x="0" y="0" width="79" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="7ae3ecf4-af42-4150-9c7a-cdb7e9389ec5" x="0" y="0" width="77" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{resourceName}]]></expression>
 							</element>
 						</detailCell>
@@ -97,72 +97,72 @@
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="61e12631-6f32-4cda-913c-5d4e6ff55346" x="0" y="0" width="73" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="61e12631-6f32-4cda-913c-5d4e6ff55346" x="0" y="0" width="73" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{resourceType}]]></expression>
 							</element>
 						</detailCell>
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 					</column>
-					<column kind="single" uuid="b28ba61b-5dec-466f-9331-135ec0e3eeb7" width="62">
+					<column kind="single" uuid="b28ba61b-5dec-466f-9331-135ec0e3eeb7" width="63">
 						<columnHeader height="30" rowSpan="1" style="Table_CH">
-							<element kind="staticText" uuid="83aa1b77-e2f5-45cd-be7f-0725e53251ad" x="0" y="0" width="62" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="staticText" uuid="83aa1b77-e2f5-45cd-be7f-0725e53251ad" x="0" y="0" width="63" height="30" hTextAlign="Center" vTextAlign="Middle">
 								<text><![CDATA[Amount]]></text>
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="d51489f5-3909-4ad4-8e72-ecd5ecea4a74" x="0" y="0" width="62" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="d51489f5-3909-4ad4-8e72-ecd5ecea4a74" x="0" y="0" width="63" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{amount}]]></expression>
 							</element>
 						</detailCell>
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 					</column>
-					<column kind="single" uuid="7dc536b4-663d-478b-86e5-9c5d48275e72" width="88">
+					<column kind="single" uuid="7dc536b4-663d-478b-86e5-9c5d48275e72" width="72">
 						<columnHeader height="30" rowSpan="1" style="Table_CH">
-							<element kind="staticText" uuid="df3f535f-6d63-4cfa-889c-fefa430b16e7" x="0" y="0" width="88" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="staticText" uuid="df3f535f-6d63-4cfa-889c-fefa430b16e7" x="0" y="0" width="72" height="30" hTextAlign="Center" vTextAlign="Middle">
 								<text><![CDATA[Latitude]]></text>
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="94dd0ba3-0bd1-4dfd-8c00-e6f44bb00c7c" x="0" y="0" width="88" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="94dd0ba3-0bd1-4dfd-8c00-e6f44bb00c7c" x="0" y="0" width="72" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{latitude}]]></expression>
 							</element>
 						</detailCell>
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 					</column>
-					<column kind="single" uuid="c33e5720-26fb-4956-bbe0-1d402be78546" width="72">
+					<column kind="single" uuid="c33e5720-26fb-4956-bbe0-1d402be78546" width="79">
 						<columnHeader height="30" rowSpan="1" style="Table_CH">
-							<element kind="staticText" uuid="70cd59bc-8751-4dcd-a045-4c0e0de5fa33" x="0" y="0" width="72" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="staticText" uuid="70cd59bc-8751-4dcd-a045-4c0e0de5fa33" x="0" y="0" width="79" height="30" hTextAlign="Center" vTextAlign="Middle">
 								<text><![CDATA[Longitude]]></text>
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="903a6283-ce26-423a-98b4-5017b43604a9" x="0" y="0" width="72" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="903a6283-ce26-423a-98b4-5017b43604a9" x="0" y="0" width="79" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{longitude}]]></expression>
 							</element>
 						</detailCell>
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 					</column>
-					<column kind="single" uuid="04a996f6-d4cc-4630-84d5-cb0b307d0ca3" width="73">
+					<column kind="single" uuid="04a996f6-d4cc-4630-84d5-cb0b307d0ca3" width="65">
 						<columnHeader height="30" rowSpan="1" style="Table_CH">
-							<element kind="staticText" uuid="68697a99-b5f3-4124-889a-6e4f9a5d2059" x="0" y="0" width="73" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="staticText" uuid="68697a99-b5f3-4124-889a-6e4f9a5d2059" x="0" y="0" width="65" height="30" hTextAlign="Center" vTextAlign="Middle">
 								<text><![CDATA[Description]]></text>
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="e6b44ef0-bbb5-48ce-8c2d-2fa75e42b873" x="0" y="0" width="73" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="e6b44ef0-bbb5-48ce-8c2d-2fa75e42b873" x="0" y="0" width="65" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{description}]]></expression>
 							</element>
 						</detailCell>
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
 					</column>
-					<column kind="single" uuid="1bff1432-ae1d-4315-9051-a7141c1c05df" width="72">
+					<column kind="single" uuid="1bff1432-ae1d-4315-9051-a7141c1c05df" width="81">
 						<columnHeader height="30" rowSpan="1" style="Table_CH">
-							<element kind="staticText" uuid="d2f02203-4ce4-4293-8c96-57abfd5a2629" x="0" y="0" width="72" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="staticText" uuid="d2f02203-4ce4-4293-8c96-57abfd5a2629" x="0" y="0" width="81" height="30" hTextAlign="Center" vTextAlign="Middle">
 								<text><![CDATA[Status]]></text>
 							</element>
 						</columnHeader>
 						<detailCell height="30" style="Table_TD">
-							<element kind="textField" uuid="28065b04-e0bf-454b-bcb0-c63bcd9aba23" x="0" y="0" width="72" height="30" hTextAlign="Center" vTextAlign="Middle">
+							<element kind="textField" uuid="28065b04-e0bf-454b-bcb0-c63bcd9aba23" x="0" y="0" width="81" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Center" vTextAlign="Middle">
 								<expression><![CDATA[$F{status}]]></expression>
 							</element>
 						</detailCell>

@@ -15,6 +15,7 @@ const BoardModerator = () => import("./components/BoardModerator.vue")
 const BoardUser = () => import("./components/BoardUser.vue")
 const Communcation = () => import("./components/Communication.vue")
 const Map = () => import("./components/Map.vue")
+const Map2 = () => import("./components/Map2.vue")
 const Organization = () => import("./components/Organization.vue")
 const Volunteer = () => import("./components/Volunteer.vue")
 const Application = () => import("./components/Application.vue")
@@ -82,6 +83,12 @@ const routes = [
     name: "map",
     // lazy-loaded
     component: Map,
+  },
+  {
+    path: '/map2/:resourceLatitude/:resourceLongitude/:requestLatitude/:requestLongitude',
+    name: 'Map2',
+    component: Map2,
+    props: true
   },
   {
     path: "/profile",

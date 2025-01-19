@@ -36,11 +36,6 @@ public class ResourceService implements IResourceService {
     }
 
     @Override
-    public Resource getResourceById(long id) {
-        return resourceRepository.findByResourceId(id);
-    }
-
-    @Override
     public List<ResourceAssignment> getAllResourceAssignment() {
         return resourceAssignmentRepository.findAll();
     }

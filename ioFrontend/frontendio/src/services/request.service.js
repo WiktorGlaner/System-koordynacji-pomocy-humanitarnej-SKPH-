@@ -27,11 +27,11 @@ class RequestService {
     }
 
     deleteRequest(username, id) {
-        return axios.delete(API_URL + username + '/requests/deleterequest/' + id );
+        return axios.delete(API_URL + username + '/requests/deleterequest/' + id, { headers: authHeader() } );
     }
 
     getRequestTypes() {
-        return axios.get("http://localhost:8080/resourceTypes");
+        return axios.get("http://localhost:8080/resourceTypes", { headers: authHeader() });
     }
 
     addRequest(username, newRequestData) {
@@ -39,7 +39,7 @@ class RequestService {
     }
 
     getRequestsByUser(username) {
-        return axios.get(API_URL + username + "/requests");
+        return axios.get(API_URL + username + "/requests", { headers: authHeader() });
     }
 
     changeRequest(username, newRequestData, id) {

@@ -150,7 +150,7 @@ export default {
     },
     async loadAllRequests() {
       try {
-        const response = await fetch(`http://localhost:8080/api/request/requests`);
+        const response = await fetch(`http://localhost:8080/api/request/requests`, { headers: authHeader() });
         if (!response.ok) {
           throw new Error("Błąd podczas ładowania próśb");
         }
@@ -167,7 +167,7 @@ export default {
     },
     async loadVictimsRequests() {
       try {
-        const response = await fetch(`http://localhost:8080/api/request/${this.currentUser.username}/requests`);
+        const response = await fetch(`http://localhost:8080/api/request/${this.currentUser.username}/requests`, { headers: authHeader() });
         if (!response.ok) {
           throw new Error("Błąd podczas ładowania próśb");
         }
@@ -242,6 +242,7 @@ export default {
                 const response = await fetch(`http://localhost:8080/api/request/${this.currentUser.username}/requests/addrequest`, {
                   method: "POST",
                   headers: {
+                    ...authHeader(),
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
