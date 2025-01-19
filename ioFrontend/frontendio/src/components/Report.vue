@@ -1,290 +1,3 @@
-
-<!--<template>-->
-<!--  <div>-->
-<!--    <h1>Generowanie Raportów</h1>-->
-
-<!--    &lt;!&ndash; Sprawdzamy, czy użytkownik ma odpowiednią rolę &ndash;&gt;-->
-<!--    <div v-if="allowedRole">-->
-<!--      <div>-->
-<!--        <label for="report-type">Wybierz typ raportu:</label>-->
-<!--        <select v-model="selectedOption" id="report-type">-->
-<!--          <option v-for="option in options" :key="option.value" :value="option.value">-->
-<!--            {{ option.label }}-->
-<!--          </option>-->
-<!--        </select>-->
-<!--      </div>-->
-
-<!--      <button @click="acceptOption">Zatwierdź raport</button>-->
-
-<!--      &lt;!&ndash; Możemy tutaj dodać iframe lub inną metodę do wyświetlania wygenerowanego raportu &ndash;&gt;-->
-
-<!--    </div>-->
-<!--    <div v-else>-->
-<!--      <p>Nie masz uprawnień do generowania raportów.</p>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</template>-->
-
-
-<!--<script>-->
-<!--import ReportService from "@/services/report.service.js";-->
-
-<!--export default {-->
-<!--  data() {-->
-<!--    return {-->
-<!--      options: [-->
-<!--        { value: 'tasks', label: 'Raport dotyczący zadań' },-->
-<!--        { value: 'applications', label: 'Raport dotyczący wniosków o pomoc' },-->
-<!--        { value: 'resources', label: 'Raport dotyczący zasobów' },-->
-<!--      ],-->
-<!--      selectedOption: null,-->
-<!--      reportUrl: null,  // Zmienna do przechowywania linku do wygenerowanego raportu-->
-<!--      allowedRoles: ["ROLE_ORGANIZATION", "ROLE_DONOR", "ROLE_AUTHORITY"],  // Role, które mają dostęp do raportów-->
-<!--    };-->
-<!--  },-->
-<!--  computed: {-->
-<!--    currentUser() {-->
-<!--      return this.$store.state.auth.user;  // Pobieramy aktualnego użytkownika z Vuex-->
-<!--    },-->
-<!--    allowedRole() {-->
-<!--      // Sprawdzamy, czy użytkownik ma odpowiednią rolę-->
-<!--      return this.currentUser && this.allowedRoles.some(role => this.currentUser.roles.includes(role));-->
-<!--    },-->
-<!--  },-->
-<!--  methods: {-->
-<!--    // Funkcja, która jest wywoływana po kliknięciu przycisku "Zatwierdź raport"-->
-<!--    async acceptOption() {-->
-<!--      if (!this.selectedOption) {-->
-<!--        alert('Proszę wybrać typ raportu.');-->
-<!--        return;-->
-<!--      }-->
-
-<!--      if (!this.allowedRole) {-->
-<!--        alert('Nie masz uprawnień do generowania raportu.');-->
-<!--        return;-->
-<!--      }-->
-
-<!--      try {-->
-<!--        // Wywołanie metody do generowania raportu z wybranym typem-->
-<!--        await this.generateReport(this.selectedOption);-->
-<!--      } catch (error) {-->
-<!--        console.error('Błąd podczas generowania raportu:', error);-->
-<!--        alert('Nie udało się wygenerować raportu.');-->
-<!--      }-->
-<!--    },-->
-
-<!--    // Funkcja do generowania raportu-->
-<!--    async generateReport(reportType) {-->
-<!--      try {-->
-<!--        await ReportService.generateReport(reportType);  // Przesyłanie typu raportu-->
-<!--      } catch (error) {-->
-<!--        console.error('Błąd podczas generowania raportu:', error);-->
-<!--        alert('Błąd generowania raportu.');-->
-<!--      }-->
-<!--    },-->
-<!--  },-->
-<!--};-->
-<!--</script>-->
-
-<!--<style scoped>-->
-<!--label {-->
-<!--  margin-right: 10px;-->
-<!--}-->
-<!--button {-->
-<!--  margin-left: 10px;-->
-<!--}-->
-<!--</style>-->
-<!--<template>-->
-<!--  <div class="report-container">-->
-<!--    <h1>Generowanie Raportów</h1>-->
-
-<!--    &lt;!&ndash; Sprawdzamy, czy użytkownik ma odpowiednią rolę &ndash;&gt;-->
-<!--    <div v-if="allowedRole">-->
-<!--      <div class="report-selection">-->
-<!--        <label for="report-type">Wybierz typ raportu:</label>-->
-<!--        <select v-model="selectedOption" id="report-type">-->
-<!--          <option v-for="option in allowedRoles" :key="option.value" :value="option.value">-->
-<!--            {{ option.label }}-->
-<!--          </option>-->
-<!--        </select>-->
-<!--        <button @click="downloadReport">-->
-<!--          <i class="fa fa-download"></i> Pobierz raport PDF-->
-<!--        </button>-->
-<!--        <button @click="showReportPreview">-->
-<!--          <i class="fa fa-eye"></i> Podgląd raportu-->
-<!--        </button>-->
-<!--      </div>-->
-
-<!--      &lt;!&ndash; Podgląd raportu w iframe &ndash;&gt;-->
-<!--      <div class="report-preview" v-if="reportUrl">-->
-<!--        <h2>Podgląd raportu:</h2>-->
-<!--        <iframe :src="reportUrl" frameborder="0"></iframe>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div v-else>-->
-<!--      <p>Nie masz uprawnień do generowania raportów.</p>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--import ReportService from "@/services/report.service.js";-->
-
-<!--export default {-->
-<!--  data() {-->
-<!--    return {-->
-<!--      options: [-->
-<!--        {userRole: ["ROLE_DONOR", "ROLE_AUTHORITY"] ,  value: "tasks", label: "Raport dotyczący zadań"},-->
-<!--        {userRole: ["ROLE_DONOR", "ROLE_AUTHORITY"], value: "applications", label: "Raport dotyczący wniosków o pomoc" },-->
-<!--        {userRole: ["ROLE_DONOR", "ROLE_AUTHORITY"],  value: "resources", label: "Raport dotyczący zasobów" },-->
-<!--      ],-->
-<!--      selectedOption: null,-->
-<!--      reportUrl: null, // URL dla iframe-->
-<!--      userRoles: ["ROLE_ORGANIZATION", "ROLE_DONOR", "ROLE_AUTHORITY"], // Role z dostępem do raportów-->
-
-<!--    };-->
-<!--  },-->
-
-<!--  computed: {-->
-<!--    filteredOptions() {-->
-<!--      // Filtruj opcje na podstawie roli użytkownika-->
-<!--      console.log(this.currentUser)-->
-<!--      return this.options.filter(option => option.userRole.includes(this.currentUser.roles[0]));-->
-<!--      //return this.currentUser && this.userRole.some((role) => this.currentUser.roles.includes(role));-->
-<!--    },-->
-
-<!--    currentUser() {-->
-<!--      return this.$store.state.auth.user; // Pobieramy aktualnego użytkownika z Vuex-->
-<!--    },-->
-<!--    allowedRole() {-->
-<!--      // Sprawdzamy, czy użytkownik ma odpowiednią rolę-->
-<!--      return this.currentUser && this.userRoles.some((role) => this.currentUser.roles.includes(role));-->
-
-<!--    },-->
-<!--  },-->
-<!--  methods: {-->
-<!--    // Pobieranie raportu PDF-->
-<!--    async downloadReport() {-->
-<!--      if (!this.selectedOption) {-->
-<!--        alert("Proszę wybrać typ raportu.");-->
-<!--        return;-->
-<!--      }-->
-<!--      try {-->
-<!--        await ReportService.generateReport(this.selectedOption); // Pobieranie raportu-->
-<!--      } catch (error) {-->
-<!--        console.error("Błąd podczas pobierania raportu:", error);-->
-<!--        alert("Nie udało się pobrać raportu.");-->
-<!--      }-->
-<!--    },-->
-
-<!--    // Podgląd raportu w iframe-->
-<!--    async showReportPreview() {-->
-<!--      if (!this.selectedOption) {-->
-<!--        alert("Proszę wybrać typ raportu.");-->
-<!--        return;-->
-<!--      }-->
-<!--      try {-->
-<!--        const url = await ReportService.previewReport(this.selectedOption);-->
-<!--        this.reportUrl = url; // Przechowywanie URL raportu-->
-<!--      } catch (error) {-->
-<!--        console.error("Błąd podczas podglądu raportu:", error);-->
-<!--        alert("Nie udało się wyświetlić raportu.");-->
-<!--      }-->
-<!--    },-->
-<!--  },-->
-<!--};-->
-<!--</script>-->
-<!--<template>-->
-<!--  <div class="report-container">-->
-<!--    <h1>Generowanie Raportów</h1>-->
-
-<!--    &lt;!&ndash; Sprawdzamy, czy użytkownik ma odpowiednią rolę &ndash;&gt;-->
-<!--    <div v-if="allowedRole">-->
-<!--      <div class="report-selection">-->
-<!--        <label for="report-type">Wybierz typ raportu:</label>-->
-<!--        <select v-model="selectedOption" id="report-type">-->
-<!--          <option v-for="option in options" :key="option.value" :value="option.value">-->
-<!--            {{ option.label }}-->
-<!--          </option>-->
-<!--        </select>-->
-<!--        <button @click="downloadReport">-->
-<!--          <i class="fa fa-download"></i> Pobierz raport PDF-->
-<!--        </button>-->
-<!--        <button @click="showReportPreview">-->
-<!--          <i class="fa fa-eye"></i> Podgląd raportu-->
-<!--        </button>-->
-<!--      </div>-->
-
-<!--      &lt;!&ndash; Podgląd raportu w iframe &ndash;&gt;-->
-<!--      <div class="report-preview" v-if="reportUrl">-->
-<!--        <h2>Podgląd raportu:</h2>-->
-<!--        <iframe :src="reportUrl" frameborder="0"></iframe>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div v-else>-->
-<!--      <p>Nie masz uprawnień do generowania raportów.</p>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--import ReportService from "@/services/report.service.js";-->
-
-<!--export default {-->
-<!--  data() {-->
-<!--    return {-->
-<!--      options: [-->
-<!--        { value: "tasks", label: "Raport dotyczący zadań" },-->
-<!--        { value: "applications", label: "Raport dotyczący wniosków o pomoc" },-->
-<!--        { value: "resources", label: "Raport dotyczący zasobów" },-->
-<!--      ],-->
-<!--      selectedOption: null,-->
-<!--      reportUrl: null, // URL dla iframe-->
-<!--      allowedRoles: ["ROLE_ORGANIZATION", "ROLE_DONOR", "ROLE_AUTHORITY"], // Role z dostępem do raportów-->
-<!--    };-->
-<!--  },-->
-<!--  computed: {-->
-<!--    currentUser() {-->
-<!--      return this.$store.state.auth.user; // Pobieramy aktualnego użytkownika z Vuex-->
-<!--    },-->
-<!--    allowedRole() {-->
-<!--      // Sprawdzamy, czy użytkownik ma odpowiednią rolę-->
-<!--      return this.currentUser && this.allowedRoles.some((role) => this.currentUser.roles.includes(role));-->
-<!--    },-->
-<!--  },-->
-<!--  methods: {-->
-<!--    // Pobieranie raportu PDF-->
-<!--    async downloadReport() {-->
-<!--      if (!this.selectedOption) {-->
-<!--        alert("Proszę wybrać typ raportu.");-->
-<!--        return;-->
-<!--      }-->
-<!--      try {-->
-<!--        await ReportService.generateReport(this.selectedOption); // Pobieranie raportu-->
-<!--      } catch (error) {-->
-<!--        console.error("Błąd podczas pobierania raportu:", error);-->
-<!--        alert("Nie udało się pobrać raportu.");-->
-<!--      }-->
-<!--    },-->
-
-<!--    // Podgląd raportu w iframe-->
-<!--    async showReportPreview() {-->
-<!--      if (!this.selectedOption) {-->
-<!--        alert("Proszę wybrać typ raportu.");-->
-<!--        return;-->
-<!--      }-->
-<!--      try {-->
-<!--        const url = await ReportService.previewReport(this.selectedOption);-->
-<!--        this.reportUrl = url; // Przechowywanie URL raportu-->
-<!--      } catch (error) {-->
-<!--        console.error("Błąd podczas podglądu raportu:", error);-->
-<!--        alert("Nie udało się wyświetlić raportu.");-->
-<!--      }-->
-<!--    },-->
-<!--  },-->
-<!--};-->
-<!--</script>-->
-
 <template>
   <div class="report-container">
     <h1> {{ $t('report-title') }}</h1>
@@ -354,14 +67,31 @@ export default {
 
   methods: {
     updateOptions() {
-      this.options = [
-        { value: "tasks", label: this.$t("task-report") },
-        { value: "applications", label: this.$t("request-report") },
-        { value: "resources", label: this.$t("resource-report") },
-        { value: "donations", label: this.$t("donation-report") },
-        { value: "taxes", label: this.$t("tax-report") },
-      ];
+      this.options = [];
+
+      // Dodajemy opcje widoczne tylko dla `ROLE_ORGANIZATION` i `ROLE_AUTHORITY`
+      if (
+          this.currentUser &&
+          (this.currentUser.roles.includes("ROLE_ORGANIZATION") ||
+              this.currentUser.roles.includes("ROLE_AUTHORITY"))
+      ) {
+        this.options.push(
+            { value: "tasks", label: this.$t("task-report") },
+            { value: "applications", label: this.$t("request-report") },
+            { value: "resources", label: this.$t("resource-report") }
+        );
+      }
+
+      // Dodajemy opcje widoczne tylko dla `ROLE_DONOR`
+      if (this.currentUser && this.currentUser.roles.includes("ROLE_DONOR")) {
+        this.options.push(
+            { value: "donations", label: this.$t("donation-report") },
+            { value: "taxes", label: this.$t("tax-report") }
+        );
+      }
     },
+
+
 
     // Pobieranie raportu PDF
     async downloadReport() {
