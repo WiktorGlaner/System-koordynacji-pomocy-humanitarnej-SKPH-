@@ -68,7 +68,7 @@ export default {
   data() {
     return {
       localResource: { ...this.resourceData },
-      isDamagedChecked: false,
+      isDamagedChecked: this.resourceData.status === "DAMAGED",
     };
   },
   watch: {
@@ -96,6 +96,7 @@ export default {
         this.$nextTick(() => {
           this.updateMapPosition()
           this.map.invalidateSize();
+          this.isDamagedChecked = this.resourceData.status === "DAMAGED";
         });
       }
     },
@@ -127,7 +128,10 @@ export default {
         editResourceParams.quantity = this.localResource.quantity;
       }
 
-      if (this.isDamagedChecked && res.data.status !== "DAMAGED") {
+      if (!this.isDamagedChecked && res.data.status !== "AVAILABLE") {
+        editResourceParams.status = "AVAILABLE";
+        this.localResource.status = "AVAILABLE";
+      } else if (this.isDamagedChecked && res.data.status !== "DAMAGED"){
         editResourceParams.status = "DAMAGED";
         this.localResource.status = "DAMAGED";
       }

@@ -30,6 +30,17 @@
           </BCol>
         </BRow>
 
+        <BRow class="mb-3">
+          <BCol>
+            <BFormGroup :label="$t('resources-search-label')">
+              <BFormInput
+                  v-model="nameFilter"
+                  :placeholder="$t('resources-search-placeholder')"
+              />
+            </BFormGroup>
+          </BCol>
+        </BRow>
+
         <div v-if="isLoading" class="d-flex justify-content-center align-items-center" style="height: 200px;">
           <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
@@ -74,14 +85,39 @@
             </template>
 
             <template #cell(dynamicId)="data">
-              {{ currentUser.roles.includes('ROLE_AUTHORITY') ? data.item.organisationId : data.item.donorId }}
+              <div v-if="currentUser.roles.includes('ROLE_AUTHORITY')">
+                {{this.organizationInfo[data.item.organisationId] ? this.organizationInfo[data.item.organisationId] : data.item.organisationId}}
+              </div>
             </template>
 
             <template #cell(actions)="data">
-              <BButton v-if="currentUser.roles.includes('ROLE_ORGANIZATION')"
-                  variant="primary" size="sm" @click="openEditModal(data.item)" :disabled="data.item.status !== 'AVAILABLE'">
+              <BButton
+                  v-if="currentUser.roles.includes('ROLE_DONOR')"
+                  variant="info"
+                  size="sm"
+                  @click="openDonorInfoModal(data.item)"
+                  class="ms-2"
+              >
+                {{ $t('resource-info-button') }}
+              </BButton>
+              <BButton
+                  v-if="currentUser.roles.includes('ROLE_ORGANIZATION')"
+                  variant="primary"
+                  size="sm"
+                  @click="openEditModal(data.item)"
+                  :disabled="data.item.status !== 'AVAILABLE' && data.item.status !== 'DAMAGED'"
+              >
                 <font-awesome-icon icon="edit" />
                 {{ $t('resource-edit') }}
+              </BButton>
+              <BButton
+                  v-if="currentUser.roles.includes('ROLE_ORGANIZATION')"
+                  variant="danger"
+                  size="sm"
+                  @click="deleteResource(data.item)"
+                  class="ms-2"
+              >
+                {{ $t('resource-delete') }}
               </BButton>
             </template>
           </BTable>
@@ -99,6 +135,25 @@
       </BCard>
     </div>
   </div>
+  <BModal
+      id="donor-info-modal"
+      v-model="isDonorInfoModalVisible"
+      :title="$t('resource-donation-usage')"
+      hide-footer
+      size="lg"
+  >
+    <div v-if="selectedResourceInfo !== null && selectedResourceInfo.length > 0">
+      <ul>
+        <li v-for="(info, index) in selectedResourceInfo" :key="index" class="mb-3">
+          <strong>{{ $t('resource-info-request-id') }}:</strong> {{ info.requestId }} &nbsp;
+          <strong>{{ $t('resource-info-quantity') }}:</strong> {{ info.assignedQuantity }} {{ info.resource.unit }}
+        </li>
+      </ul>
+    </div>
+    <div v-else>
+      <p>{{ $t('resource-info-no-usage-found') }}</p>
+    </div>
+  </BModal>
   <ResourceEdit
       :isVisible="isEditModalVisible"
       :resourceData="resourceToEdit"
@@ -118,10 +173,13 @@ import {
   BRow,
   BTable,
   BButton,
+  BFormInput,
+  BModal
 } from 'bootstrap-vue-next';
 import ResourceService from "@/services/resource.service.js";
 import UserService from "@/services/user.service.js";
 import ResourceEdit from "@/components/ResourceEdit.vue";
+import {useToast} from 'vue-toastification';
 
 export default {
   components: {
@@ -135,6 +193,8 @@ export default {
     BPagination,
     BButton,
     ResourceEdit,
+    BFormInput,
+    BModal
   },
   data() {
     return {
@@ -161,7 +221,11 @@ export default {
           longitude: null,
         }
       },
+      nameFilter: '',
       errorMessage: '',
+      organizationInfo: [],
+      isDonorInfoModalVisible: false,
+      selectedResourceInfo: null,
     };
   },
   computed: {
@@ -171,7 +235,9 @@ export default {
             this.typeFilter.length === 0 || this.typeFilter.includes(resource.resourceType);
         const matchesStatus =
             this.statusFilter.length === 0 || this.statusFilter.includes(resource.status);
-        return matchesType && matchesStatus;
+        const matchesName =
+            !this.nameFilter || resource.name.toLowerCase().includes(this.nameFilter.toLowerCase());
+        return matchesType && matchesStatus && matchesName;
       });
     },
     currentUser() {
@@ -179,7 +245,7 @@ export default {
     },
     fields() {
       const baseFields = [
-        // { key: "id", label: "id", sortable: true },
+        { key: "id", label: "id", sortable: true },
         { key: "name", label: this.$t('resources-table-name'), sortable: true },
         { key: "description", label: this.$t('resources-table-description') },
         { key: "quantity", label: this.$t('resources-table-quantity'), sortable: true },
@@ -189,17 +255,19 @@ export default {
       ];
 
       if (this.currentUser.roles.includes("ROLE_AUTHORITY")) {
-        baseFields.push({ key: "dynamicId", label: this.$t('resources-table-organisationId') });
-      } else if (this.currentUser.roles.includes("ROLE_ORGANIZATION")) {
-        baseFields.push({ key: "dynamicId", label: this.$t('resources-table-donorId') });
-        baseFields.push({ key: "actions", label: '', class: "text-center" });
+        baseFields.push({ key: "dynamicId", label: this.$t('resources-table-organisation') });
       }
+
+      baseFields.push({ key: "actions", label: '', class: "text-center" });
 
       return baseFields;
     },
   },
-  mounted() {
-    this.fetchResourcesAndAssignments();
+  async mounted() {
+    if (this.currentUser.roles.includes("ROLE_AUTHORITY")) {
+      await this.fetchOrganizations();
+    }
+    await this.fetchResourcesAndAssignments();
     this.startAutoUpdate();
   },
   beforeDestroy() {
@@ -214,6 +282,23 @@ export default {
     },
   },
   methods: {
+    async openDonorInfoModal(resource) {
+      try {
+        this.isDonorInfoModalVisible = true;
+        const response = await ResourceService.getResourceUsage(resource.id);
+        this.selectedResourceInfo = response.data;
+      } catch (error) {
+        this.selectedResourceInfo = {
+          requestId: 'N/A',
+          quantity: 'N/A',
+          usageDetails: [this.$t('resource-info-fetch-error')],
+        };
+      }
+    },
+    closeDonorInfoModal() {
+      this.isDonorInfoModalVisible = false;
+      this.selectedResourceInfo = null;
+    },
     openEditModal(resource) {
       this.resourceToEdit = { ...resource };
       this.isEditModalVisible = true;
@@ -236,6 +321,45 @@ export default {
     },
     resetPagination() {
       this.currentPage = 1;
+    },
+    async fetchOrganizations() {
+      try {
+        const response = await UserService.getAllOrganizations();
+        this.organizationInfo = response.data.reduce((map, org) => {
+          map[org.id] = org.name;
+          return map;
+        }, {});
+      } catch (error) {
+        console.error(error);
+        this.errorMessage = this.$t('organization-fetch-error');
+      }
+    },
+    async deleteResource(resource) {
+      const toast = useToast();
+      try {
+        if (resource.assignedQuantity > 0) {
+          toast.error(this.$t('resource-delete-error'), {
+            title: this.$t('resource-error'),
+            variant: 'danger',
+            solid: true,
+          });
+          return;
+        }
+        await ResourceService.deleteResource(resource.id);
+        this.resources = this.resources.filter((r) => r.id !== resource.id);
+        toast.success(this.$t('resource-delete-success'), {
+          title: this.$t('resource-success'),
+          variant: 'success',
+          solid: true,
+        });
+      } catch (error) {
+        console.error(error);
+        toast.error(this.$t('resource-delete-failure'), {
+          title: this.$t('resource-error'),
+          variant: 'danger',
+          solid: true,
+        });
+      }
     },
     async fetchResourcesAndAssignments() {
       try {

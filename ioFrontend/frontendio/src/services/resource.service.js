@@ -49,6 +49,14 @@ class ResourceService {
             return acc;
         }, {});
     }
+
+    deleteResource(id) {
+        return axios.delete(API_URL + `resource/${id}`, { headers: authHeader() });
+    }
+
+    getResourceUsage(id) {
+        return axios.get(API_URL + `assignments/${id}`, { headers: authHeader() });
+    }
 }
 
 export default new ResourceService();
