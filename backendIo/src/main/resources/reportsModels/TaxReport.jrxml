@@ -1,10 +1,12 @@
-<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
 <jasperReport name="Blank_A4" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4ecc5c5a-e7d2-4277-9d8b-0e720efce377">
+	<dataset name="resourcesDataSet3" uuid="97cafe25-cd7b-46f7-a148-25b28c33b241">
+		<query language="sql"><![CDATA[]]></query>
+	</dataset>
 	<parameter name="kwota" class="java.lang.Double"/>
-	<parameter name="imie" class="java.lang.String"/>
-	<parameter name="nazwisko" class="java.lang.String"/>
-	<parameter name="pesel" class="java.lang.Integer"/>
 	<parameter name="Data" class="java.util.Date"/>
+	<parameter name="name" class="java.lang.String"/>
+	<parameter name="surname" class="java.lang.String"/>
+	<parameter name="pesel" class="java.lang.String"/>
 	<query language="sql"><![CDATA[]]></query>
 	<background splitType="Stretch"/>
 	<title height="79" splitType="Stretch">
@@ -17,38 +19,57 @@
 			<expression><![CDATA[$P{Data}]]></expression>
 			<property name="com.jaspersoft.studio.unit.y" value="px"/>
 			<property name="com.jaspersoft.studio.unit.x" value="px"/>
+			<box>
+				<bottomPen lineWidth="1.0"/>
+			</box>
 		</element>
 		<element kind="staticText" uuid="a7e0d22e-b308-4b98-8580-4fe28b8312de" x="331" y="5" width="119" height="30" hTextAlign="Center" vTextAlign="Middle">
 			<text><![CDATA[Data rozliczenia: ]]></text>
 		</element>
 	</pageHeader>
 	<detail>
-		<band height="131" splitType="Stretch">
-			<element kind="staticText" uuid="1b266dd2-b68e-4ef6-9e49-ad167a716730" x="30" y="0" width="100" height="30" hTextAlign="Center" vTextAlign="Middle">
+		<band height="139" splitType="Stretch">
+			<element kind="staticText" uuid="1b266dd2-b68e-4ef6-9e49-ad167a716730" x="30" y="0" width="100" height="30" backcolor="#6EC0FA" hTextAlign="Center" vTextAlign="Middle">
 				<text><![CDATA[Imie:]]></text>
 			</element>
-			<element kind="staticText" uuid="68677634-69db-4e1a-9ccf-25e531aad5a5" x="30" y="30" width="100" height="30" hTextAlign="Center" vTextAlign="Middle">
+			<element kind="staticText" uuid="68677634-69db-4e1a-9ccf-25e531aad5a5" x="30" y="30" width="100" height="30" backcolor="#6EC0FA" hTextAlign="Center" vTextAlign="Middle">
 				<text><![CDATA[Nazwisko:]]></text>
 			</element>
-			<element kind="staticText" uuid="fdfed16b-4585-434a-b69b-e2d168fc454b" x="30" y="90" width="120" height="30" hTextAlign="Center" vTextAlign="Middle">
+			<element kind="staticText" uuid="fdfed16b-4585-434a-b69b-e2d168fc454b" x="30" y="90" width="120" height="30" backcolor="#6EC0FA" hTextAlign="Center" vTextAlign="Middle">
 				<text><![CDATA[Suma ulgi podatkowej:]]></text>
 			</element>
-			<element kind="staticText" uuid="d85ae314-58d6-4dcb-8c93-46256df4d20a" x="30" y="60" width="100" height="30" hTextAlign="Center" vTextAlign="Middle">
+			<element kind="staticText" uuid="d85ae314-58d6-4dcb-8c93-46256df4d20a" x="30" y="60" width="100" height="30" backcolor="#6EC0FA" hTextAlign="Center" vTextAlign="Middle">
 				<text><![CDATA[PESEL]]></text>
 			</element>
-			<element kind="textField" uuid="3239b46b-2686-49a6-a9a3-6dc381e6944f" x="130" y="0" width="250" height="30" hTextAlign="Left" vTextAlign="Middle">
-				<expression><![CDATA[$P{imie}]]></expression>
+			<element kind="textField" uuid="3239b46b-2686-49a6-a9a3-6dc381e6944f" x="130" y="0" width="250" height="30" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Left" vTextAlign="Middle">
+				<expression><![CDATA[$P{name}]]></expression>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
 			</element>
-			<element kind="textField" uuid="664f9638-d306-4130-85ac-9ba578a92653" x="130" y="30" width="250" height="30" hTextAlign="Left" vTextAlign="Middle">
-				<expression><![CDATA[$P{nazwisko}]]></expression>
+			<element kind="textField" uuid="664f9638-d306-4130-85ac-9ba578a92653" x="130" y="30" width="250" height="30" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Left" vTextAlign="Middle">
+				<expression><![CDATA[$P{surname}]]></expression>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
 			</element>
-			<element kind="textField" uuid="b6ba8720-1747-4770-9288-17d16a070886" x="130" y="60" width="250" height="30" hTextAlign="Left" vTextAlign="Middle">
+			<element kind="textField" uuid="b6ba8720-1747-4770-9288-17d16a070886" x="130" y="60" width="250" height="30" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Left" vTextAlign="Middle">
 				<expression><![CDATA[$P{pesel}]]></expression>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
 			</element>
-			<element kind="textField" uuid="ab320aef-c895-4e41-8174-59bd866f172e" x="150" y="90" width="230" height="30" vTextAlign="Middle">
+			<element kind="textField" uuid="ab320aef-c895-4e41-8174-59bd866f172e" x="150" y="90" width="230" height="30" pdfEncoding="Cp1250" pdfEmbedded="true" vTextAlign="Middle">
 				<expression><![CDATA[$P{kwota}]]></expression>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="c28bd45b-49db-48c0-a434-165cd772f607" x="380" y="90" width="100" height="30" pdfFontName="Times-Roman" pdfEncoding="Cp1250" pdfEmbedded="true" hTextAlign="Left" vTextAlign="Middle">
+				<text><![CDATA[zł]]></text>
 			</element>
 		</band>
 	</detail>
 	<summary height="42" splitType="Stretch"/>
 </jasperReport>
+
