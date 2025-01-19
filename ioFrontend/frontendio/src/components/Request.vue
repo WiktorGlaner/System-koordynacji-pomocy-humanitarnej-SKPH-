@@ -15,8 +15,11 @@
         <RequestInfoVictim/>
       </div>
     </div>
-    <div v-else>
-      <h1 style="display: flex; justify-content: center; margin-top: 100px;">You are not allowed to use requests</h1>
+    <div class="denied" v-else>
+      <h1>{{$t('req-access-denied')}}</h1>
+      <div class="deniedspan">
+        <a href="/home"><span>{{$t('req-back-home')}}</span></a>
+      </div>
     </div>
   </div>
 </template>
@@ -82,5 +85,24 @@ export default {
     padding: 30px;
     display: flex;
     gap: 20px;
+  }
+
+  .denied {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .denied h1 {
+    margin-bottom: 20px;
+  }
+  .denied a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 18px;
+  }
+  .denied a:hover {
+    font-size: 19px;
   }
 </style>

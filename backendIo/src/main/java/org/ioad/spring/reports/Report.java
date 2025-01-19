@@ -117,7 +117,7 @@ public JasperPrint createResourcesReport() throws JRException {
     Date nowDate = new Date();
 
     List<Resource> resources = new ArrayList<>();
-    resources.add(resourceService.getResourceById(1111));
+    resources.add(resourceService.getResourceById(1111L));
     resources.addAll(resourceService.getAllResources());
 
     JRBeanCollectionDataSource taskDataSource = new JRBeanCollectionDataSource(resources);
