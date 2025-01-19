@@ -41,7 +41,7 @@ public class TaskController {
         return ResponseEntity.ok(task);
     }
 
-    @PreAuthorize("hasRole('ROLE_ORGANIZATION')")
+    @PreAuthorize("hasRole('ROLE_ORGANIZATION')" + "or hasRole('ROLE_VOLUNTEER')")
     @PutMapping("/endTask")
     public ResponseEntity<ResponseTaskDTO> endTask(@Valid @RequestParam("id") long id) {
         ResponseTaskDTO task = taskService.endTask(id);

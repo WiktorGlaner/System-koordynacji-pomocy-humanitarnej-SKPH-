@@ -133,29 +133,67 @@ export default {
     async getMapDefault() {
       await this.$nextTick();
       const mapContainer = document.getElementById(`map-container`);
+      if ("geolocation" in navigator) {
+        const toast = useToast();
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              this.map = L.map(mapContainer).setView([latitude, longitude], 14);
 
-      this.map = L.map(mapContainer).setView([51.75, 19.45], 14);
+              L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+              }).addTo(this.map);
 
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      }).addTo(this.map);
+              this.map.on('click', (ee) => {
+                const { lat, lng } = ee.latlng;
+                if (this.blueCircle) {
+                  this.map.removeLayer(this.blueCircle);
+                }
+                this.blueCircle = L.circle([lat, lng], {
+                  color: 'blue',
+                  fillColor: '#03f',
+                  fillOpacity: 0.5,
+                  radius: 75,
+                }).addTo(this.map);
 
-      this.map.on('click', (ee) => {
-        const { lat, lng } = ee.latlng;
-        if (this.blueCircle) {
-          this.map.removeLayer(this.blueCircle);
-        }
-        this.blueCircle = L.circle([lat, lng], {
-          color: 'blue',
-          fillColor: '#03f',
-          fillOpacity: 0.5,
-          radius: 75,
+                this.newCords.lat = lat;
+                this.newCords.lng = lng;
+              });
+            },
+            () => {
+              toast.info(this.$t('req-loc-map-error'));
+              this.map = L.map(mapContainer).setView([51.75, 19.45], 14);
+              L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+              }).addTo(this.map);
+
+              this.map.on('click', (ee) => {
+                const { lat, lng } = ee.latlng;
+                if (this.blueCircle) {
+                  this.map.removeLayer(this.blueCircle);
+                }
+                this.blueCircle = L.circle([lat, lng], {
+                  color: 'blue',
+                  fillColor: '#03f',
+                  fillOpacity: 0.5,
+                  radius: 75,
+                }).addTo(this.map);
+
+                this.newCords.lat = lat;
+                this.newCords.lng = lng;
+              });
+            }
+        );
+      } else {
+        console.warn("Geolocation not supported by your browser.");
+        this.map = L.map(mapContainer).setView([51.75, 19.45], 14);
+        L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         }).addTo(this.map);
-
-        this.newCords.lat = lat;
-        this.newCords.lng = lng;
-      });
+      }
     },
   }
 };

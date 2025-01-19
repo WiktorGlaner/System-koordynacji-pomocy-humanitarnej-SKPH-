@@ -7,7 +7,7 @@ import org.ioad.spring.request.services.RequestService;
 import org.ioad.spring.resource.models.Resource;
 import org.ioad.spring.resource.models.ResourceAssignment;
 import org.ioad.spring.resource.services.ResourceService;
-import org.ioad.spring.task.TaskServiceCommunication;
+import org.ioad.spring.task.ITaskService;
 import org.ioad.spring.task.exceptions.*;
 import org.ioad.spring.task.model.*;
 import org.ioad.spring.task.repository.TaskRepo;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TaskService implements TaskServiceCommunication {
+public class TaskService implements ITaskService {
 
     @Autowired
     TaskRepo taskRepo;
@@ -133,20 +133,22 @@ public class TaskService implements TaskServiceCommunication {
 
     public ResponseTaskDTO editTask(Long id, Task updatedTask) {
         return taskRepo.findById(id).map(existingTask -> {
-
+    
             if (existingTask.getStatus() == TaskStatus.COMPLETED) {
                 throw new IllegalStateException("Task with status 'COMPLETED' cannot be edited.");
             }
-
+    
             validateTaskFields(updatedTask);
-
+    
             existingTask.setTitle(updatedTask.getTitle());
-            existingTask.setDescription(updatedTask.getDescription());
+            if (updatedTask.getDescription() != null && !updatedTask.getDescription().trim().isEmpty()) {
+                existingTask.setDescription(updatedTask.getDescription());
+            }
             existingTask.setLocation(updatedTask.getLocation());
             existingTask.setPriority(updatedTask.getPriority());
-
+    
             taskRepo.save(existingTask);
-
+    
             return buildResponseTaskDTO(existingTask);
         }).orElseThrow(() -> new TaskNotFoundException("Task not found with id " + id));
     }
@@ -272,11 +274,6 @@ public class TaskService implements TaskServiceCommunication {
 
     @Autowired
     UserService userService;
-
-    @Override
-    public List<Integer> getAllVolunteers() {
-        return List.of();
-    }
 
     @Override
     public List<Request> getRequestList() {
