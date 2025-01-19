@@ -132,15 +132,15 @@
                         <div class="d-flex justify-content-between mt-3">
                             <button
                                 class="btn btn-secondary"
-                                @click="prevPageRequest"
+                                @click.prevent="prevPageRequest"
                                 :disabled="currentPageRequest === 0"
                             >
                                 {{ $t('taskCreate-previous') }}
                             </button>
                             <button
                                 class="btn btn-secondary"
-                                @click="nextPageRequest"
-                                :disabled="currentPageRequest === totalPagesRequest - 1"
+                                @click.prevent="nextPageRequest"
+                                :disabled="currentPageRequest === totalPagesRequset - 1"
                             >
                                 {{ $t('taskCreate-next') }}
                             </button>
@@ -587,10 +587,7 @@ import { all } from 'axios';
           this.errors.title = 'Title cannot be empty.';
         }
   
-        // Sprawdzanie opisu
-        if (!this.task.task.description || this.task.task.description.trim() === '') {
-          this.errors.description = 'Description cannot be empty.';
-        }
+        
   
         // Sprawdzanie lokalizacji
         if (!this.task.task.location || this.task.task.location.trim() === '') {

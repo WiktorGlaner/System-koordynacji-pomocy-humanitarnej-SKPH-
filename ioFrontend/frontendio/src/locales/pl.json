@@ -251,6 +251,9 @@
   "tasks-high": "Wysoki",
   "tasks-medium": "Średni",
   "tasks-low": "Niski",
+  "tasks-prev": "Poprzedni",
+  "tasks-next": "Następny",
+  "tasks-route": "Trasa",
 
   "taskInfo-goBack": "Powrót",
   "taskInfo-title": "Tytuł",

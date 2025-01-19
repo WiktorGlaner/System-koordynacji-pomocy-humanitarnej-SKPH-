@@ -75,11 +75,12 @@
             <th v-for="(header, index) in translatedTableHeaders" :key="index">{{ header }}</th>
             <th class="text-center" style="width: 1%;">{{ $t('tasks-info') }}</th>
             <th class="text-center" style="width: 1%;" v-if="hasRole('ROLE_ORGANIZATION')">{{ $t('tasks-edit') }}</th>
-            <th class="text-center" style="width: 1%;" v-if="hasRole('ROLE_ORGANIZATION')">{{ $t('tasks-end') }}</th>
+            <th class="text-center" style="width: 1%;" v-if="hasRole('ROLE_ORGANIZATION') || hasRole('ROLE_VOLUNTEER')">{{ $t('tasks-end') }}</th>
+            <th class="text-center" style="width: 1%;" v-if="hasRole('ROLE_ORGANIZATION') || hasRole('ROLE_VOLUNTEER')">Guzik</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="task in filteredTasks" :key="task.task.id">
+          <tr v-for="task in paginatedTasks" :key="task.task.id">
             <td>{{ task.task.id }}</td>
             <td>{{ task.task.title }}</td>
             <td>{{ task.task.organization.name }}</td>
@@ -130,9 +131,47 @@
                 <font-awesome-icon icon="trash-alt" /> {{ $t('tasks-end') }}
               </button>
             </td>
+            <td v-if="hasRole('ROLE_VOLUNTEER')">
+              <button 
+                class="btn btn-danger btn-sm text-center w-100" 
+                @click="endTask(task.task.id)"
+                :disabled="task.task.status === 'COMPLETED' || task.task.status === 'GRADED'"
+              >
+                <font-awesome-icon icon="trash-alt" /> {{ $t('tasks-end') }}
+              </button>
+            </td>
+            <td v-if="hasRole('ROLE_ORGANIZATION')">
+              <button 
+                class="btn btn-info btn-sm text-center w-100" 
+                @click="designateRoute(task.resource.location, {latitude: task.task.request.latitude, longitude: task.task.request.longitude})"
+                :disabled="task.task.status === 'COMPLETED' || task.task.status === 'GRADED' || task.task.organization.id !== organizationInfo.id"
+                :class="{ 'disabled-gray': task.task.organization.id !== organizationInfo.id }"
+              >
+              <font-awesome-icon :icon="['fas', 'route']" /> {{ $t('tasks-route') }}
+              </button>
+            </td>
+            <td v-if="hasRole('ROLE_VOLUNTEER')">
+              <button 
+                class="btn btn-info btn-sm text-center w-100" 
+                @click="designateRoute(task.resource.location, {latitude: task.task.request.latitude, longitude: task.task.request.longitude})"
+                :disabled="task.task.status === 'COMPLETED' || task.task.status === 'GRADED'"
+              >
+              <font-awesome-icon :icon="['fas', 'route']" /> {{ $t('tasks-route') }}
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" :class="{ disabled: currentPage === 1 }">
+            <button class="page-link" @click="currentPage--" :disabled="currentPage === 1">{{$t('tasks-prev')}}</button>
+          </li>
+          <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+            <button class="page-link" @click="currentPage++" :disabled="currentPage === totalPages">{{$t('tasks-next')}}</button>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </template>
@@ -141,9 +180,9 @@
 import TaskService from '../services/task.service';
 import UserService from '@/services/user.service';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faInfoCircle, faEdit, faTrashAlt, faStar, faPlus} from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faEdit, faTrashAlt, faStar, faPlus, faRoute} from '@fortawesome/free-solid-svg-icons';
 
-library.add(faInfoCircle, faEdit, faTrashAlt, faStar, faPlus);
+library.add(faInfoCircle, faEdit, faTrashAlt, faStar, faPlus, faRoute);
 
 export default {
   name: 'Task',
@@ -159,6 +198,8 @@ export default {
         status: "",
         titleKeyword: "",
       },
+      currentPage: 1,
+      pageSize: 8,
     };
   },
   created() {
@@ -174,6 +215,14 @@ export default {
     }
   },
   computed: {
+    paginatedTasks() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.filteredTasks.slice(start, end);
+    },
+    totalPages() {
+      return Math.ceil(this.filteredTasks.length / this.pageSize);
+    },
     filterOptions() {
     return {
       status: [
@@ -235,6 +284,8 @@ export default {
         );
       }
 
+
+      console.log(filtered);
       return filtered;
     },
     currentUser() {
@@ -296,8 +347,7 @@ export default {
       TaskService.getVolunteersTasks(this.currentUser.username).then(
         (response) => {
           this.tasks = response.data;
-          this.filterOptions.organization = [...new Set(this.tasks.map((t) => t.task.organization))];
-          this.filterOptions.location = [...new Set(this.tasks.map((t) => t.task.location))];
+          this.updateFilterOptions();
         },
         (error) => {
           console.log(error.response?.data?.message || error.message || error.toString());
@@ -323,6 +373,15 @@ export default {
           console.log(error.response?.data?.message || error.message || error.toString());
         }
       );
+    },
+    designateRoute(location, requestLocation) {
+      this.$router.push({
+        name: 'Map2',
+        query: {
+          location: location,
+          requestLocation: requestLocation
+        }
+      });
     },
     hasRole(role) {
       return this.currentUser.roles.includes(role);
