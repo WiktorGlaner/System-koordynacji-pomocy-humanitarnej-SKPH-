@@ -47,7 +47,7 @@
 			<text><![CDATA[Request Report]]></text>
 		</element>
 		<element kind="staticText" uuid="80d8866b-ddf9-4e55-bf92-98bb6f36e510" x="340" y="-11" width="119" height="30" hTextAlign="Center" vTextAlign="Middle">
-			<text><![CDATA[Data wykonania raportu: ]]></text>
+			<text><![CDATA[Date of the report: ]]></text>
 			<property name="com.jaspersoft.studio.unit.x" value="px"/>
 			<property name="com.jaspersoft.studio.unit.y" value="px"/>
 		</element>

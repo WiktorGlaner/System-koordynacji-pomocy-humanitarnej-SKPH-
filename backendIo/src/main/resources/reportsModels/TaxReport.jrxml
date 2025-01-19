@@ -24,7 +24,7 @@
 			</box>
 		</element>
 		<element kind="staticText" uuid="a7e0d22e-b308-4b98-8580-4fe28b8312de" x="331" y="5" width="119" height="30" hTextAlign="Center" vTextAlign="Middle">
-			<text><![CDATA[Data rozliczenia: ]]></text>
+			<text><![CDATA[Date of the report: ]]></text>
 		</element>
 	</pageHeader>
 	<detail>

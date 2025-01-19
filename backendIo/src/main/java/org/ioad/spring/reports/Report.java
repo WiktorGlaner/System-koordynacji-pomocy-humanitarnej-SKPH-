@@ -37,8 +37,9 @@ public class Report {
     @Autowired
     private AuthService authService;
 
-    Date nowDate = new Date();
+//    Date nowDate = new Date();
     public JasperPrint createTaxReport(long userId) throws JRException {
+        Date nowDate = new Date();
         double kwota = resourceService.getSumOfQuantityByTypeAndDonorId(ResourceType.FINANCIAL, userId);
         User user = authService.getUserById(userId);
         String username = user.getUsername();
@@ -79,7 +80,9 @@ public class Report {
     // RAPORT DOTACJI DANEGO DARCZYŃCY
 public JasperPrint createReceiptReport(long userId) throws JRException {
     // Pobieranie danych
-        List<Donation> donations = new ArrayList<>();
+    Date nowDate = new Date();
+
+    List<Donation> donations = new ArrayList<>();
         List<Donation> donations2 = new ArrayList<>();
         donations2.addAll(resourceService.getByDonationDonorId(userId));
         donations.add(donations2.get(0));
@@ -111,6 +114,8 @@ public JasperPrint createReceiptReport(long userId) throws JRException {
 
     // RAPORT ZASOBÓW
 public JasperPrint createResourcesReport() throws JRException {
+    Date nowDate = new Date();
+
     List<Resource> resources = new ArrayList<>();
     resources.add(resourceService.getResourceById(1111));
     resources.addAll(resourceService.getAllResources());
@@ -136,6 +141,8 @@ public JasperPrint createResourcesReport() throws JRException {
 
     // RAPORT REQUEST
 public JasperPrint createRequestReport() throws JRException {
+    Date nowDate = new Date();
+
     List<Request> requests = new ArrayList<>();
     requests.add(requestService.getRequestById(1L));
     requests.addAll(requestService.getAllRequests());
@@ -161,7 +168,9 @@ public JasperPrint createRequestReport() throws JRException {
 
     // RAPORT AKTYWNOŚCI POMOCOWYCH
 public JasperPrint createHelpActivitiesReport() throws JRException {
-        List<Task> tasks = new ArrayList<>();
+    Date nowDate = new Date();
+
+    List<Task> tasks = new ArrayList<>();
         List<Task> tasks2 = new ArrayList<>();
         tasks2.addAll(taskRepo.findAll());
         tasks.add(tasks2.get(0));

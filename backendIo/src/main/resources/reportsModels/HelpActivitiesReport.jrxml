@@ -49,7 +49,7 @@
             <expression><![CDATA[$P{Data}]]></expression>
         </element>
         <element kind="staticText" uuid="1a30946c-0179-43e8-ab57-3ee914aa2ac4" x="340" y="-11" width="119" height="30" hTextAlign="Center" vTextAlign="Middle">
-            <text><![CDATA[Data wykonania raportu: ]]></text>
+            <text><![CDATA[Date of the report: ]]></text>
         </element>
     </title>
     <detail>
