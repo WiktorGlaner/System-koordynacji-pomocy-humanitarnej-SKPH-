@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.security.jwt;//package org.ioad.spring.security.postgresql.security.jwt;
+package org.ioad.spring.auth.security.jwt;//package org.ioad.spring.security.postgresql.security.jwt;
 
 import java.io.IOException;
 import java.util.HashMap;

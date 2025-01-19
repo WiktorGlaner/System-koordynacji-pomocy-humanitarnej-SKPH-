@@ -1,7 +1,7 @@
 <template>
    <div class="container">
     <div v-if="!allowedRole">
-      <p style="color: red; text-align: center;">{{ $t('map-Info') }}</p>
+      <p style="text-align: center;">{{ $t('map-Info') }}</p>
     </div>
     <div class="content" v-else>
       <div class="table-container">

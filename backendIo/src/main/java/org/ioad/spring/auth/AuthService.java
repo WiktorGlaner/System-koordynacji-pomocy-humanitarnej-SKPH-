@@ -1,10 +1,10 @@
-package org.ioad.spring.security.postgresql;
+package org.ioad.spring.auth;
 
-import org.ioad.spring.security.postgresql.models.ERole;
-import org.ioad.spring.security.postgresql.models.Role;
-import org.ioad.spring.security.postgresql.models.User;
-import org.ioad.spring.security.postgresql.repository.RoleRepository;
-import org.ioad.spring.security.postgresql.repository.UserRepository;
+import org.ioad.spring.auth.models.ERole;
+import org.ioad.spring.auth.models.Role;
+import org.ioad.spring.auth.models.User;
+import org.ioad.spring.auth.repository.RoleRepository;
+import org.ioad.spring.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

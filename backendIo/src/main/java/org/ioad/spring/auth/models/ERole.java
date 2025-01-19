@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.models;
+package org.ioad.spring.auth.models;
 
 public enum ERole {
   ROLE_USER,

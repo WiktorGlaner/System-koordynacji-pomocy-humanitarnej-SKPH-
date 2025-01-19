@@ -1,9 +1,9 @@
-package org.ioad.spring.security.postgresql.controllers;//package org.ioad.spring.security.postgresql.controllers;
+package org.ioad.spring.auth.controllers;//package org.ioad.spring.security.postgresql.controllers;
 
-import org.ioad.spring.security.postgresql.IAuthService;
-import org.ioad.spring.security.postgresql.models.Role;
-import org.ioad.spring.security.postgresql.models.User;
-import org.ioad.spring.security.postgresql.repository.UserRepository;
+import org.ioad.spring.auth.IAuthService;
+import org.ioad.spring.auth.models.Role;
+import org.ioad.spring.auth.models.User;
+import org.ioad.spring.auth.repository.UserRepository;
 import org.ioad.spring.user.models.UserInfo;
 import org.ioad.spring.user.user.UserService;
 import org.springframework.http.ResponseEntity;

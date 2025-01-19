@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.payload.request;
+package org.ioad.spring.auth.payload.request;
 
 import jakarta.validation.constraints.NotBlank;
 

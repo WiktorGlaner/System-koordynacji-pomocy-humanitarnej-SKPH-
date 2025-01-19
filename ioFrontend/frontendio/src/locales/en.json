@@ -386,7 +386,7 @@
     "HOUSING": "Housing",
     "OTHER": "Other"
   },
-  
+  "task-denied": "Only organizations and volunteers can access this page",
 
   "report-title": "Generating Reports",
   "report-type": "Report Type",
@@ -401,5 +401,8 @@
   "please-select-report-type": "Choose report-type",
   "report-preview-failed": "Report preview Failed",
   "report-download-failed": "Report download Failed",
-  "view-report": "Report preview"
+  "view-report": "Report preview",
+  "report-denied": "You don't have permission to generate reports"
+
+
 }

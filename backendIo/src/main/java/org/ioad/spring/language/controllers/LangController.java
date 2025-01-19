@@ -1,11 +1,8 @@
 package org.ioad.spring.language.controllers;
 
-import org.ioad.spring.language.models.Language;
-import org.ioad.spring.language.repository.LangRepository;
 import org.ioad.spring.language.services.LangService;
-import org.ioad.spring.security.postgresql.IAuthService;
-import org.ioad.spring.security.postgresql.models.User;
-import org.ioad.spring.security.postgresql.repository.UserRepository;
+import org.ioad.spring.auth.IAuthService;
+import org.ioad.spring.auth.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

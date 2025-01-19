@@ -1,8 +1,8 @@
 <template>
   <div class="container mt-5">
     <!-- Alert for unauthorized users -->
-    <div v-if="!allowedRole" class="alert alert-danger text-center" style="font-size: 18px; margin-top: 20px;">
-      Only users with the "ROLE_ORGANIZATION" or "ROLE_VOLUNTEER" role have access to this page.
+    <div v-if="!allowedRole" class="alert text-center" style="font-size: 18px; margin-top: 20px;">
+      {{ $t('task-denied') }}
     </div>
 
     <!-- Tasks table and search filters, visible only if allowedRole() is true -->

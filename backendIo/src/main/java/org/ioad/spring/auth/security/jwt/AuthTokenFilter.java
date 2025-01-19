@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.security.jwt;//package org.ioad.spring.security.postgresql.security.jwt;
+package org.ioad.spring.auth.security.jwt;//package org.ioad.spring.security.postgresql.security.jwt;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.ioad.spring.security.postgresql.security.services.UserDetailsServiceImpl;
+import org.ioad.spring.auth.security.services.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

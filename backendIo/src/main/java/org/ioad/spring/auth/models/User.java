@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.models;
+package org.ioad.spring.auth.models;
 
 import java.util.HashSet;
 import java.util.Set;

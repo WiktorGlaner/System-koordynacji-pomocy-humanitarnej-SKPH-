@@ -1,9 +1,9 @@
-package org.ioad.spring.security.postgresql.security.jwt;//package org.ioad.spring.security.postgresql.security.jwt;
+package org.ioad.spring.auth.security.jwt;//package org.ioad.spring.security.postgresql.security.jwt;
 
 import java.security.Key;
 import java.util.Date;
 
-import org.ioad.spring.security.postgresql.security.services.UserDetailsImpl;
+import org.ioad.spring.auth.security.services.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

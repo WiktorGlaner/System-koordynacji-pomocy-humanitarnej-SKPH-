@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.controllers;//package org.ioad.spring.security.postgresql.controllers;
+package org.ioad.spring.auth.controllers;//package org.ioad.spring.security.postgresql.controllers;
 
 import java.util.HashSet;
 import java.util.List;
@@ -9,8 +9,7 @@ import java.util.stream.Collectors;
 import jakarta.validation.Valid;
 
 import org.ioad.spring.language.ILangService;
-import org.ioad.spring.language.services.LangService;
-import org.ioad.spring.security.postgresql.repository.UserRepository;
+import org.ioad.spring.auth.repository.UserRepository;
 import org.ioad.spring.user.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,16 +24,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.ioad.spring.security.postgresql.models.ERole;
-import org.ioad.spring.security.postgresql.models.Role;
-import org.ioad.spring.security.postgresql.models.User;
-import org.ioad.spring.security.postgresql.payload.request.LoginRequest;
-import org.ioad.spring.security.postgresql.payload.request.SignupRequest;
-import org.ioad.spring.security.postgresql.payload.response.JwtResponse;
-import org.ioad.spring.security.postgresql.payload.response.MessageResponse;
-import org.ioad.spring.security.postgresql.repository.RoleRepository;
-import org.ioad.spring.security.postgresql.security.jwt.JwtUtils;
-import org.ioad.spring.security.postgresql.security.services.UserDetailsImpl;
+import org.ioad.spring.auth.models.ERole;
+import org.ioad.spring.auth.models.Role;
+import org.ioad.spring.auth.models.User;
+import org.ioad.spring.auth.payload.request.LoginRequest;
+import org.ioad.spring.auth.payload.request.SignupRequest;
+import org.ioad.spring.auth.payload.response.JwtResponse;
+import org.ioad.spring.auth.payload.response.MessageResponse;
+import org.ioad.spring.auth.repository.RoleRepository;
+import org.ioad.spring.auth.security.jwt.JwtUtils;
+import org.ioad.spring.auth.security.services.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

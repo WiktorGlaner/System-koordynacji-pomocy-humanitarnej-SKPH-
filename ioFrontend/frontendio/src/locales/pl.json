@@ -388,8 +388,9 @@
     "HOUSING": "Mieszkania",
     "OTHER": "Inne"
   },
+  "task-denied": "Tylko organizacje i wolontariusze mogą zarządzać zadaniami",
 
-  "report-title": "Generowanie raportow",
+  "report-title": "Generowanie raportów",
   "report-type": "Typ raportu",
   "report-download": "Pobierz raport",
   "report-view": "Podgląd raportu",
@@ -402,6 +403,7 @@
   "please-select-report-type": "Prosze wybrać typ raportu",
   "report-preview-failed": "Błąd przy wyświetlaniu raportu",
   "report-download-failed": "Błąd przy pobieraniu raportu",
-  "view-report": "Podgląd raportu"
+  "view-report": "Podgląd raportu",
+  "report-denied": "Nie masz uprawnień do generowania raportów"
 }
 

@@ -8,12 +8,10 @@ import org.ioad.spring.resource.models.Donation;
 import org.ioad.spring.resource.models.Resource;
 import org.ioad.spring.resource.models.ResourceType;
 import org.ioad.spring.resource.services.ResourceService;
-import org.ioad.spring.security.postgresql.AuthService;
-import org.ioad.spring.security.postgresql.IAuthService;
-import org.ioad.spring.security.postgresql.models.User;
+import org.ioad.spring.auth.AuthService;
+import org.ioad.spring.auth.models.User;
 import org.ioad.spring.task.model.Task;
 import org.ioad.spring.user.models.UserInfo;
-import org.ioad.spring.user.repository.UserInfoRepository;
 
 
 import org.ioad.spring.task.repository.TaskRepo;

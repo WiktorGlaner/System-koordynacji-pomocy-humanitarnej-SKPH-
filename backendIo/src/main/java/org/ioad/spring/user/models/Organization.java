@@ -3,8 +3,7 @@ package org.ioad.spring.user.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import org.ioad.spring.security.postgresql.models.User;
+import org.ioad.spring.auth.models.User;
 
 import java.util.List;
 

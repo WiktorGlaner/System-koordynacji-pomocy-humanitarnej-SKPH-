@@ -1,10 +1,10 @@
 package org.ioad.spring.user.user;
 
-import org.ioad.spring.security.postgresql.IAuthService;
+import org.ioad.spring.auth.IAuthService;
 import org.ioad.spring.user.models.Application;
 import org.ioad.spring.user.models.Organization;
 import org.ioad.spring.user.models.UserInfo;
-import org.ioad.spring.security.postgresql.models.User;
+import org.ioad.spring.auth.models.User;
 import org.ioad.spring.user.payload.request.FillDataRequest;
 import org.ioad.spring.user.payload.request.OrganizationDataRequest;
 import org.ioad.spring.user.payload.response.ApplicationDataResponse;
@@ -14,7 +14,6 @@ import org.ioad.spring.user.payload.response.VolunteerDataResponse;
 import org.ioad.spring.user.repository.OrganizationRepository;
 import org.ioad.spring.user.repository.UserInfoRepository;
 import org.ioad.spring.user.repository.ApplicationRepository;
-import org.ioad.spring.security.postgresql.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

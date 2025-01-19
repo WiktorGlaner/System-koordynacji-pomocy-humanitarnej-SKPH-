@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.payload.response;
+package org.ioad.spring.auth.payload.response;
 
 import java.util.List;
 

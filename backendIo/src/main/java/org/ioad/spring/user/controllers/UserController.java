@@ -1,7 +1,7 @@
 package org.ioad.spring.user.controllers;
 
 import jakarta.validation.Valid;
-import org.ioad.spring.security.postgresql.payload.response.MessageResponse;
+import org.ioad.spring.auth.payload.response.MessageResponse;
 import org.ioad.spring.user.payload.request.ApplicationRequest;
 import org.ioad.spring.user.payload.request.FillDataRequest;
 import org.ioad.spring.user.payload.request.OrganizationDataRequest;

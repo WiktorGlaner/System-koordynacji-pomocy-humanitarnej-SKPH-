@@ -1,15 +1,13 @@
-package org.ioad.spring.security.postgresql.repository;
+package org.ioad.spring.auth.repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import org.ioad.spring.security.postgresql.models.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import org.ioad.spring.security.postgresql.models.User;
+import org.ioad.spring.auth.models.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.security;//package org.ioad.spring.security.postgresql.security;
+package org.ioad.spring.auth.security;//package org.ioad.spring.security.postgresql.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,9 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import org.ioad.spring.security.postgresql.security.jwt.AuthEntryPointJwt;
-import org.ioad.spring.security.postgresql.security.jwt.AuthTokenFilter;
-import org.ioad.spring.security.postgresql.security.services.UserDetailsServiceImpl;
+import org.ioad.spring.auth.security.jwt.AuthEntryPointJwt;
+import org.ioad.spring.auth.security.jwt.AuthTokenFilter;
+import org.ioad.spring.auth.security.services.UserDetailsServiceImpl;
 
 @Configuration
 @EnableMethodSecurity

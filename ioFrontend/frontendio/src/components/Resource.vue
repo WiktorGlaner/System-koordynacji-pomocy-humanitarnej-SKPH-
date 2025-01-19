@@ -10,7 +10,7 @@
       <ResourcesList ref="resourcesList"/>
     </div>
   </div>
-  <div v-else>
+  <div v-else class="alert text-center" >
     {{$t('resources-not-allowed')}}
   </div>
 </template>

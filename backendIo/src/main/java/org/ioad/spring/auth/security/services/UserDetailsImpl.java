@@ -1,4 +1,4 @@
-package org.ioad.spring.security.postgresql.security.services;//package org.ioad.spring.security.postgresql.security.services;
+package org.ioad.spring.auth.security.services;//package org.ioad.spring.security.postgresql.security.services;
 
 import java.util.Collection;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import org.ioad.spring.security.postgresql.models.User;
+import org.ioad.spring.auth.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserDetailsImpl implements UserDetails {

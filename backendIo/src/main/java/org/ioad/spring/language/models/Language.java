@@ -2,7 +2,7 @@ package org.ioad.spring.language.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.ioad.spring.security.postgresql.models.User;
+import org.ioad.spring.auth.models.User;
 
 @Data
 @AllArgsConstructor

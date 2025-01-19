@@ -26,7 +26,7 @@
       </div>
     </div>
     <div v-else>
-      <p>Nie masz uprawnień do generowania raportów.</p>
+      <p>{{ $t('report-denied') }}</p>
     </div>
   </div>
 </template>
