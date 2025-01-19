@@ -8,7 +8,6 @@ import java.util.List;
 public interface IResourceService {
     List<Donation> getAllDonations();
     List<Resource> getAllResources();
-    Resource getResourceById(long id);
     List<ResourceAssignment> getAllResourceAssignment();
     void modifyResource(Long resourceId, String description, Location location, Double quantity, String status);
     List<Resource> getResourceByType(ResourceType type);

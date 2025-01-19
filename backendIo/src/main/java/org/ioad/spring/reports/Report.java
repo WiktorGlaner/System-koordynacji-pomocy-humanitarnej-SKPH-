@@ -118,7 +118,7 @@ public JasperPrint createReceiptReport(long userId) throws JRException {
     // RAPORT ZASOBÓW
 public JasperPrint createResourcesReport() throws JRException {
     List<Resource> resources = new ArrayList<>();
-    resources.add(resourceService.getResourceById(1111));
+    resources.add(resourceService.getResourceById(1111L));
     resources.addAll(resourceService.getAllResources());
 
     JRBeanCollectionDataSource taskDataSource = new JRBeanCollectionDataSource(resources);
