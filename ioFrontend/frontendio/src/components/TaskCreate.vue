@@ -96,7 +96,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="request in filteredRequests" :key="request.requestId">
+                                <tr v-for="request in paginatedRequests" :key="request.requestId">
                                     <td>{{ request.requestId }}</td>
                                     <td>{{ request.resourceName }}</td>
                                     <td>{{ request.description }}</td>
@@ -140,7 +140,7 @@
                             <button
                                 class="btn btn-secondary"
                                 @click.prevent="nextPageRequest"
-                                :disabled="currentPageRequest === totalPagesRequset - 1"
+                                :disabled="currentPageRequest === totalPagesRequest - 1"
                             >
                                 {{ $t('taskCreate-next') }}
                             </button>
@@ -246,7 +246,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="resource in filteredResources" :key="resource.id">
+                            <tr v-for="resource in paginatedResources" :key="resource.id">
                                 <td>{{ resource.name || $t('taskCreate-noNameProvided') }}</td>
                                 <td>{{ resource.description }}</td>
                                 <td>{{ translatedResourceTypes[resource.resourceType] }}</td>
@@ -349,7 +349,7 @@ import { all } from 'axios';
         pageSizeVolunteer: 10,
 
         currentPageRequest: 0,
-        pageSizeRequest: 10,
+        pageSizeRequest: 2,
 
         currentPageResource: 0,
         pageSizeResource: 10,
@@ -387,20 +387,26 @@ import { all } from 'axios';
         paginatedRequests() {
             const start = this.currentPageRequest * this.pageSizeRequest;
             const end = start + this.pageSizeRequest;
-            return this.allRequests.slice(start, end);
+            return this.filteredRequests.slice(start, end);
             },
             
-        totalPagesRequset() {
-        return Math.ceil(this.allRequests.length / this.pageSizeRequest);
-        },
+            totalPagesRequest() {
+                const filtered = this.filteredRequests; // Pobieramy przefiltrowane dane
+                return Math.ceil(filtered.length / this.pageSizeRequest); // Obliczamy liczbę stron na podstawie przefiltrowanych danych
+            },
 
         paginatedResources() {
+            // Pobieramy przefiltrowane zasoby
+            const filteredResources = this.filteredResources;
+
+            // Obliczamy zakres paginacji na przefiltrowanych danych
             const start = this.currentPageResource * this.pageSizeResource;
             const end = start + this.pageSizeResource;
-            return this.allResources.slice(start, end);
+
+            return filteredResources.slice(start, end);
         },
         totalPagesResource() {
-            return Math.ceil(this.allResources.length / this.pageSizeResource);
+            return Math.ceil(this.filteredResources.length / this.pageSizeResource);
         },
         uniqueResourceTypes() {
         return [...new Set(this.allResources.map(resource => resource.resourceType))];
@@ -480,11 +486,11 @@ import { all } from 'axios';
         try {
         const organisationId = this.task.task.organization.id;  // Przyjmując, że organizacja ma ID
         const response = await ResourceService.getOrganisationAvailableResources(this.task.task.organization.id);
-        this.allResources = response.data;  // Przypisanie danych do allResources
-        console.log(this.allResources);
+        this.allResources = response.data;
         } catch (error) {
         console.error('Error fetching resources:', error);
         }
+        console.log(this.allResources)
     },
 
       prevPageVolunteer() {
@@ -500,24 +506,28 @@ import { all } from 'axios';
 
 
         prevPageRequest() {
+            console.log('Prev page', this.currentPageRequest);
             if (this.currentPageRequest > 0) {
                 this.currentPageRequest--;
             }
         },
         nextPageRequest() {
-            if (this.currentPageRequest < this.totalPagesRequset - 1) {
+            if (this.currentPageRequest < this.totalPagesRequest - 1) {
                 this.currentPageRequest++;
             }
         },
 
         prevPageResource() {
+            console.log('Prev page', this.currentPageRequest);
             if (this.currentPageResource > 0) {
-            this.currentPageResource--;
+                this.currentPageResource--;
             }
         },
+
         nextPageResource() {
+            console.log('Next page', this.currentPageResource);
             if (this.currentPageResource < this.totalPagesResource - 1) {
-            this.currentPageResource++;
+                this.currentPageResource++;
             }
         },
 
@@ -586,8 +596,6 @@ import { all } from 'axios';
         if (!this.task.task.title || this.task.task.title.trim() === '') {
           this.errors.title = 'Title cannot be empty.';
         }
-  
-        
   
         // Sprawdzanie lokalizacji
         if (!this.task.task.location || this.task.task.location.trim() === '') {

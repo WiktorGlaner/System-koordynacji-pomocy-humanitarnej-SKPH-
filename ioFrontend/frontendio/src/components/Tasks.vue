@@ -76,7 +76,7 @@
             <th class="text-center" style="width: 1%;">{{ $t('tasks-info') }}</th>
             <th class="text-center" style="width: 1%;" v-if="hasRole('ROLE_ORGANIZATION')">{{ $t('tasks-edit') }}</th>
             <th class="text-center" style="width: 1%;" v-if="hasRole('ROLE_ORGANIZATION') || hasRole('ROLE_VOLUNTEER')">{{ $t('tasks-end') }}</th>
-            <th class="text-center" style="width: 1%;" v-if="hasRole('ROLE_ORGANIZATION') || hasRole('ROLE_VOLUNTEER')">Guzik</th>
+            <th class="text-center" style="width: 1%;" v-if="hasRole('ROLE_ORGANIZATION') || hasRole('ROLE_VOLUNTEER')">{{$t('tasks-route')}}</th>
           </tr>
         </thead>
         <tbody>
@@ -143,7 +143,7 @@
             <td v-if="hasRole('ROLE_ORGANIZATION')">
               <button 
                 class="btn btn-info btn-sm text-center w-100" 
-                @click="designateRoute(task.resource.location, {latitude: task.task.request.latitude, longitude: task.task.request.longitude})"
+                @click="designateRoute(this.tasks.find(t => t.task.id === task.task.id)?.resources[0]?.location, { latitude: task.task.request.latitude, longitude: task.task.request.longitude })"
                 :disabled="task.task.status === 'COMPLETED' || task.task.status === 'GRADED' || task.task.organization.id !== organizationInfo.id"
                 :class="{ 'disabled-gray': task.task.organization.id !== organizationInfo.id }"
               >
@@ -153,7 +153,7 @@
             <td v-if="hasRole('ROLE_VOLUNTEER')">
               <button 
                 class="btn btn-info btn-sm text-center w-100" 
-                @click="designateRoute(task.resource.location, {latitude: task.task.request.latitude, longitude: task.task.request.longitude})"
+                @click="designateRoute(this.tasks.find(t => t.task.id === task.task.id)?.resources[0]?.location, { latitude: task.task.request.latitude, longitude: task.task.request.longitude })"
                 :disabled="task.task.status === 'COMPLETED' || task.task.status === 'GRADED'"
               >
               <font-awesome-icon :icon="['fas', 'route']" /> {{ $t('tasks-route') }}
@@ -199,7 +199,7 @@ export default {
         titleKeyword: "",
       },
       currentPage: 1,
-      pageSize: 8,
+      pageSize: 7,
     };
   },
   created() {
@@ -283,9 +283,6 @@ export default {
           task.task.title.toLowerCase().includes(this.filters.titleKeyword.toLowerCase())
         );
       }
-
-
-      console.log(filtered);
       return filtered;
     },
     currentUser() {
@@ -374,14 +371,8 @@ export default {
         }
       );
     },
-    designateRoute(location, requestLocation) {
-      this.$router.push({
-        name: 'Map2',
-        query: {
-          location: location,
-          requestLocation: requestLocation
-        }
-      });
+    designateRoute(resourceLocation, requestLocation) {
+        this.$router.push(`/map2/${resourceLocation.latitude}/${resourceLocation.longitude}/${requestLocation.latitude}/${requestLocation.longitude}`);
     },
     hasRole(role) {
       return this.currentUser.roles.includes(role);

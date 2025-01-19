@@ -143,6 +143,8 @@ public class TaskService implements ITaskService {
             existingTask.setTitle(updatedTask.getTitle());
             if (updatedTask.getDescription() != null && !updatedTask.getDescription().trim().isEmpty()) {
                 existingTask.setDescription(updatedTask.getDescription());
+            }else {
+                existingTask.setDescription(null);
             }
             existingTask.setLocation(updatedTask.getLocation());
             existingTask.setPriority(updatedTask.getPriority());
@@ -244,10 +246,6 @@ public class TaskService implements ITaskService {
 
         if (updatedTask.getPriority() == null || !isValidPriority(updatedTask.getPriority())) {
             throw new IllegalArgumentException("Invalid priority value. Must be one of: LOW, MEDIUM, HIGH, CRITICAL.");
-        }
-
-        if (updatedTask.getDescription() == null || updatedTask.getDescription().trim().isEmpty()) {
-            throw new IllegalArgumentException("Description cannot be empty.");
         }
 
         if (updatedTask.getDescription().length() > 500) {

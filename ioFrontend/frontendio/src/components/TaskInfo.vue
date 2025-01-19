@@ -51,7 +51,7 @@
                 {{ translatedStatus[task.task.request.status] || task.task.request.status || $t('taskInfo-notProvided')}}
               </p>
               <p><strong>{{ $t('taskInfo-reporter') }}:</strong>
-                {{ task.task.request.reporter && task.task.request.reporter.name && task.task.request.reporter.surname ? task.task.requester.name + ' ' + task.task.requester.surname : $t('taskInfo-notProvided') }}
+                {{ task.task.request.reporter && task.task.request.reporter.name && task.task.request.reporter.surname ? task.task.request.name + ' ' + task.task.request.surname : $t('taskInfo-notProvided') }}
               </p>
             </li>
           </ul>
