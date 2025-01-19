@@ -170,6 +170,11 @@
   "home-organizationVol-description": "Sprawdź złożone wnioski oraz aplikuj do organizacji",
   "home-organization": "Organizacje",
   "home-organization-description": "Sprawdź dostępne organizacje",
+  "home-tasks": "Zadania",
+  "home-tasks-description": "Podgląd zadań",
+  "home-requests": "Zgłoszenia",
+  "home-requests-description": "Podgląd zgłoszeń",
+
   "nav-home": "Strona główna",
   "nav-admin-board": "Panel administratora",
   "nav-moderator-board": "Panel moderatora",

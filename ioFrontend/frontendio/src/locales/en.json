@@ -166,6 +166,11 @@
   "home-organizationVol-description": "Check application to organiaztion",
   "home-organization": "Organization",
   "home-organization-description": "Check available organizations",
+  "home-tasks": "Tasks",
+  "home-tasks-description": "Check tasks",
+  "home-requests": "Requests",
+  "home-requests-description": "Check requests",
+
   "nav-home": "Home",
   "nav-admin-board": "Admin Board",
   "nav-moderator-board": "Moderator Board",
