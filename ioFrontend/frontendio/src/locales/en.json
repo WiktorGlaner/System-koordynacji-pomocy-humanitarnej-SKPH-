@@ -210,6 +210,9 @@
   "tasks-high": "High",
   "tasks-medium": "Medium",
   "tasks-low": "Low",
+  "tasks-prev": "Previous",
+  "tasks-next": "Next",
+  "tasks-route": "Route",
 
   
   "taskInfo-goBack": "Go back",

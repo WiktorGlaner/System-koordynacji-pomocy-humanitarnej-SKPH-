@@ -10,9 +10,7 @@ import org.ioad.spring.user.models.UserInfo;
 import java.util.List;
 import java.util.Optional;
 
-public interface TaskServiceCommunication {
-    List<Integer> getAllVolunteers();
-
+public interface ITaskService {
     //Integracja z modułem Request
     List<Request> getRequestList();
     Request getRequest(long id);
