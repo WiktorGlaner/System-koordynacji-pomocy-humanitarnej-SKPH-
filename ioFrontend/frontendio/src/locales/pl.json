@@ -147,6 +147,7 @@
   "resource-info-no-usage-found": "Nie znaleziono informacji o użyciu...",
   "resource-info-fetch-error": "Błąd podczas pobierania informacji o zasobie.",
   "resource-donation-usage": "Użycie darowizny",
+  "resource-delete-confirm": "Czy na pewno chcesz usunąć ten zasób?",
 
   "home-raports": "Raporty",
   "home-raports-description": "Sprawdź raporty",

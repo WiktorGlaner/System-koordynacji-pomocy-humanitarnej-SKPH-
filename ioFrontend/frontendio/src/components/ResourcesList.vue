@@ -81,7 +81,7 @@
             </template>
 
             <template #cell(quantity)="data">
-              {{ data.item.assignedQuantity ? data.item.quantity + "/" + (data.item.assignedQuantity + data.item.quantity) : data.item.quantity  }} {{ data.item.unit }}
+              {{ data.item.assignedQuantity ? data.item.quantity + "/" + (data.item.assignedQuantity + Number(data.item.quantity)) : data.item.quantity  }} {{ data.item.unit }}
             </template>
 
             <template #cell(dynamicId)="data">
@@ -345,13 +345,15 @@ export default {
           });
           return;
         }
-        await ResourceService.deleteResource(resource.id);
-        this.resources = this.resources.filter((r) => r.id !== resource.id);
-        toast.success(this.$t('resource-delete-success'), {
-          title: this.$t('resource-success'),
-          variant: 'success',
-          solid: true,
-        });
+        if (confirm(this.$t('resource-delete-confirm'))) {
+          await ResourceService.deleteResource(resource.id);
+          this.resources = this.resources.filter((r) => r.id !== resource.id);
+          toast.success(this.$t('resource-delete-success'), {
+            title: this.$t('resource-success'),
+            variant: 'success',
+            solid: true,
+          });
+        }
       } catch (error) {
         console.error(error);
         toast.error(this.$t('resource-delete-failure'), {

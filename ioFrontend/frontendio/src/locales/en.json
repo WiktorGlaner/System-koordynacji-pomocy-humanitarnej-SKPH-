@@ -147,6 +147,7 @@
   "resource-info-no-usage-found": "No usage information found...",
   "resource-info-fetch-error": "Error fetching resource information.",
   "resource-donation-usage": "Donation usage",
+  "resource-delete-confirm": "Do you really want to delete this resource?",
 
   "home-raports": "Raports",
   "home-raports-description": "Check the reports",
