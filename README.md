@@ -3,8 +3,8 @@
 DB credentials:
 backendIo\src\main\resources\application.properties
 
-żeby działało najlepiej usunąć starą bazę i postawić na nowo
-po uruchomieniu springa jak już się wygenerują tabele to trzeba te inserty
+Aby program działał najlepiej należy usunąć starą bazę danych i postawić na nowo
+po uruchomieniu springa, jak już się wygenerują tabele należy dodać te inserty:
 ```sql
 INSERT INTO roles(name) VALUES('ROLE_USER');
 INSERT INTO roles(name) VALUES('ROLE_MODERATOR');
